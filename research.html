@@ -120,7 +120,7 @@
 													Observations from wide-field quasar
 													surveys indicate that the quasar auto-correlation length increases
 													dramatically from z~2 to z~4. The clustering
-													amplitude at z~4 is so extreme that it has been difficult to
+													amplitude measured at z~4 is so extreme that it has been difficult to
 													reproduce theoretically, even when assuming
 													that quasars are hosted by the most massive dark matter
 													halos residing in the most extreme environments at that redshift.
@@ -130,14 +130,28 @@
 													cosmological
 													simulations that have been developed in recent years by multiple
 													teams. I created a model that
-													simultaneously reproduces both the observed quasar auto-correlation
-													and quasar luminosity functions. The model builds on a novel method
+													simultaneously reproduces both the observed quasar clustering
+													and quasar demographics. The model builds on a novel method
 													to compute the halo mass and halo cross-correlation functions by
 													combining multiple large-volume dark-matter-only cosmological
 													simulations with different box sizes and resolutions. Armed with
 													these halo properties, the model exploits the conditional luminosity
 													function framework to describe the stochastic relationship between
-													quasar luminosity, L, and halo mass, M.
+													quasar luminosity, L, and halo mass, M, and it is able to quickly
+													predict observables such as the quasar auto-correlation function
+													and the quasar luminosity function as well as other relevant quantities
+													such as the quasar luminosity-halo mass relation, the
+													quasar host mass function, and the quasar duty cycle.
+
+													We apply this model to observations of the quasar clustering and
+													demographics at z~2 and z~4, and we find that we can reproduce all
+													the data very well. The very large clustering amplitude at z~4 implies
+													that the relation between quasar luminosity and halo mass is very steep
+													and has very little intrinsic scatter. This has profound
+													consequences in terms of accretion physics and the growth of supermassive
+													black holes at high redshift.
+													<i>(figure from Pizzati et al. 2024a)</i>
+
 												</div>
 											</section>
 
@@ -146,7 +160,7 @@
 											<section id="quasar_z6">
 
 											<header>
-												<h2>A unified model for the clustering of quasars and galaxies at high redshift </h2>
+												<h2>A unified model for the clustering of quasars and galaxies at z>6 </h2>
 
 											</header>
 
@@ -181,56 +195,66 @@
 													a strong evolution of the host halo mass and duty cycle of quasars
 														at 𝑧 ≈ 2 − 6, and calls for new investigations of the role of
 													quasar activity across cosmic time
+													<i>(figure from Pizzati et al. 2024b)</i>
+
 												</div>
 											</section>
 
 
 
-<!--											<section id="flamingo">-->
+											<section id="flamingo">
 
-<!--											<header>-->
-<!--												<h2>Massive black holes and quasars in the FLAMINGO simulation </h2>-->
+											<header>
+												<h2>Massive black holes and quasars in the FLAMINGO simulation </h2>
 
-<!--											</header>-->
+											</header>
 
-<!--												<div class="image left"><img src="images/flamingo_resized.png" alt="" style="width:100%; height:auto;"  /></div>-->
+												<div class="image left"><img src="images/flamingo_resized.png" alt="" style="width:100%; height:auto;"  /></div>
 
-<!--												<div style="padding-bottom: 100px;">-->
-<!--													Cosmological hydrodynamical simulations follow the non-linear-->
-<!--													evolution of structures in the Universe by modeling a large-->
-<!--													variety of processes that are important to the physics of galaxies,-->
-<!--													stars, and black holes. In the last decade, these simulations have-->
-<!--													become capable of reproducing a large number of observed galaxy-->
-<!--													properties. As a consequence, they have started to play a key role-->
-<!--													in shaping our understanding of the formation and evolution of-->
-<!--													galaxies in the universe, as well as the relation between galaxies-->
-<!--													and the supermassive black holes (SMBHs) that are harbored at their-->
-<!--													center. While much effort has been devoted to the study of the-->
-<!--													connection between SMBHs and their hosting galaxies in terms of-->
-<!--													gas fueling and AGN feedback, only few studies have focused on-->
-<!--													the global properties of SMBHs and their evolution over cosmic-->
-<!--													time. Specifically, SMBHs are visible at cosmological distances-->
-<!--													when they turn into bright quasars. Quasars are, however, extremely-->
-<!--													rare objects, and hence their statistical properties (such as their-->
-<!--													luminosity and spatial distributions) can only be studied-->
-<!--													theoretically when large simulated volumes are available.-->
-<!--													In this project, we use the cosmological simulations from-->
-<!--													the FLAMINGO suite (which are the largest ever run) to-->
-<!--													reproduce two basic observational probes of quasar activity:-->
-<!--													the quasar luminosity function and the quasar autocorrelation-->
-<!--													function. We study how well FLAMINGO can match observational-->
-<!--													constraints on these quantities at different redshifts. We-->
-<!--													investigate which black holes contribute to the bright quasar-->
-<!--													population, and split their relative contribution in terms of-->
-<!--													black hole mass, host halo mass, and Eddington ratio. Finally,-->
+												<div style="padding-bottom: 100px;">
+													Cosmological hydrodynamical simulations follow the non-linear
+													evolution of structures in the Universe by modeling a large
+													variety of processes that are important to the physics of galaxies,
+													stars, and black holes. In the last decade, these simulations have
+													become capable of reproducing a large number of observed galaxy
+													properties. As a consequence, they have started to play a key role
+													in shaping our understanding of the formation and evolution of
+													galaxies in the universe, as well as the relation between galaxies
+													and the supermassive black holes (SMBHs) that are harbored at their
+													center. While much effort has been devoted to the study of the
+													connection between SMBHs and their hosting galaxies in terms of
+													gas fueling and AGN feedback, only few studies have focused on
+													the global properties of SMBHs and their evolution over cosmic
+													time. Specifically, SMBHs are visible at cosmological distances
+													when they turn into bright quasars. Quasars are, however, extremely
+													rare objects, and hence their statistical properties (such as their
+													luminosity and spatial distributions) can only be studied
+													theoretically when large simulated volumes are available.
+													In a project that I am co-supervising, we use the cosmological simulations from
+													the FLAMINGO suite (which are the largest ever run) to
+													reproduce two basic observational probes of quasar activity:
+													the quasar luminosity function and the quasar autocorrelation
+													function. We study how well FLAMINGO can match observational
+													constraints on these quantities at different redshifts. We also
+													investigate which black holes contribute to the bright quasar
+													population, and split their relative contribution in terms of
+													black hole mass, host halo mass, and Eddington ratio. We are also
+													interested in the relation between massive black holes and galaxies
+													in FLAMINGO across cosmic time. Thanks to the state-of-the-art
+													capabilities of FLAMINGO, for the first time we can probe
+													the ability of large-volume hydrodynamical
+													simulations to capture the evolution of massive black holes and
+													quasar activity across cosmic time
+<!--													Finally,-->
 <!--													we discuss the redshift evolution of other relevant quantities-->
 <!--													such as the black hole mass function, the Eddington ratio-->
 <!--													distribution function, and the stellar/halo mass-black hole-->
-<!--													mass scaling relation.-->
+<!--													mass scaling relation -->
+													<i>(figure from Schaye et al. 2023)</i>.
 
 
-<!--												</div>-->
-<!--											</section>-->
+												</div>
+											</section>
 
 
 											<section id="outflows" style="display: block;">
@@ -244,25 +268,24 @@
 												<div style="padding-bottom: 100px;">
 
 													Investigating the complex environments of galaxies during the Epoch of Reionization
-													(EoR) is one of the most pressing research goals of modern astrophysics.
-													As shown by cosmological simulations, galaxies are already forming
-													in the EoR, and they present different properties with respect to the ones
+													is one of the most pressing research goals of modern astrophysics.
+													As shown by cosmological simulations, galaxies are already at these epochs,
+													and they present different properties with respect to the ones
 													in the local Universe. Unraveling how galaxies formed and evolved during these
 													remote epochs (i.e., a few hundred million years after the Big Bang)
 													is at the heart of our understanding of cosmic evolution.
-													In this context, the advent of the Atacama Large Millimeter/submillimeter Array (ALMA)
-													and the NOrthern Extended Millimeter Array (NOEMA) have opened a new
+													In this context, the advent of telescopes such as ALMA and NOEMA have opened a new
 													window on the primordial Universe, allowing us to shed light on
 													the obscured star formation and ISM line emission at rest-frame FIR
 													wavelengths up to z~7.
-													Combining the
-													information coming from the dust continuum emission, as well as from some relevant
-													FIR emission lines such as [CII], [O III], and CO from various rotational
-													levels, we are rapidly improving our understanding of the small-scale,
-													internal properties and assembly history of galaxies in the EoR.
+<!--													Combining the-->
+<!--													information coming from the dust continuum emission, as well as from some relevant-->
+<!--													FIR emission lines such as [CII], [O III], and CO from various rotational-->
+<!--													levels, we are rapidly improving our understanding of the small-scale,-->
+<!--													internal properties and assembly history of galaxies in the EoR.-->
 
 													One of the most compelling findings made by ALMA is that a significant
-													fraction of z~4-6 galaxies is surrounded by extended (10-15 kpc)
+													fraction of z>4 galaxies is surrounded by extended (10-15 kpc)
 													[C II]-emitting haloes that are not predicted by even the most
 													advanced zoom-in simulations.
 													This discovery poses a series of thorny theoretical questions,
@@ -281,10 +304,9 @@
 													and we conclude that outflows represent a promising answer to explain the origin of the
 													observed [C II] halos. In a series of two papers, we analyzed
 													the properties of [CII] halos in stacked and individual observations
-													(from the ALPINE survey) and showed that the outflows that are needed
+													(from the ALMA ALPINE survey) and showed that the outflows that are needed
 													to generate such halos have mass loading factors in the range ~4-7,
-													with higher values for lower mass and lower star formation rate
-													systems, and scale with stellar mass in a way that is
+													 and scale with stellar mass in a way that is
 													consistent with the momentum-driven hypothesis. Our model
 													 points to the presence of extended [CII] emission at high redshifts
 													as a tangible sign of star-formation-driven feedback mechanisms
@@ -310,40 +332,41 @@
 													Constraining the strength of gas turbulence in protoplanetary discs is an open problem
 													that has very relevant implications for the physics of gas accretion and planet formation.
 													A promising method to gauge the level of gas turbulence in discs is to measure the vertical
-													scale height of the dust component, which is expected to be coupled to the gas component
+													scale height of the dust component - which is expected to be coupled to the gas component
 													through the gas-dust coupling. This has become possible in the last few years
 													thanks to the very high-resolution observations provided by the ALMA telescope.
 													These observations uncovered a large amount of features in the 2d images
 													of protoplanetary discs, including dark gaps and emission rings.
-													As shown by Pinte et al. 2016,
-													it is possible to exploit these features to uncover 3-d morphology of discs.
+													As shown by <i>Pinte et al. 2016</i>,
+													it is possible to exploit these features to uncover the 3-d morphology of discs.
 													The idea is very simple: due to projection effects, a gap in a disc emission
 													profiles will be partly filled by the emission coming from the
 													neighbouring regions. This effect is stronger along the minor axis
 													of the disc, whereas the major axis is only marginally affected.
 													For this reason, one can compare the gap contrast along the major and
 													minor axes to infer the amount of "filling" that has taken place.
-													This gap filling is directly dependent on the vertical structure of the
-													disc (see figure on the left). Hence, a measurement of the gap contrast
+													The extent of this gap filling is directly dependent on the vertical structure of the
+													disc. Hence, a measurement of the gap contrast
 													along the major and minor axes can be used to infer the vertical scale
 													height of the disc, and to indirectly gauge the amount of gas turbulence in discs.
 
-													In a work I have done with Giovanni Rosotti
+													In a work done with Giovanni Rosotti
 													and Benoit Tabone, we applied this method to the sample of discs
 													observed by the DSHARP collaboration, for which high resolution images
 													are available. We built a radiative transfer model to reproduce the
 													observed gap constrast for different values of the dust scale heights.
-													and found that (a) the scale heights that yield a better agreement with data are
-													generally low (less than ~4 AU at a radial distance of 100 AU), and in
-													almost all cases we are only able to place upper limits on their exact values;
-													these conclusions imply
-													low levels of gas turbulence in discs; (b) for a significant fraction of
-													the DSHARP sample, our method yields no significant constraints on the disc
-													vertical structure; we concluded
+													and found that the scale heights that yield a better agreement with data are
+													generally low, implying
+													low levels of gas turbulence in discs. This represents an important
+													step towards understanding the physical processes that govern the
+													formation of planets in discs.
+													We also investigated the properties of the sources
+													for which our method yields no significant constraints on the disc
+													vertical structure, and concluded
 													that this is because these discs have either a low inclination or gaps
 													that are not deep enough. Based on our analysis, we provided an empirical
 													criterion to assess whether a given disc is suitable to measure the
-													vertical scale height.
+													vertical scale height <i>(figure from Pizzati et al. 2023)</i>.
 
 												</div>
 
@@ -394,14 +417,17 @@
 													it is possible to correctly infer the properties of
 													multiple overlapping signals even
 													with the current data-analysis infrastructure. By studying different
-													configurations of overlapping signals, varying their time
-													and phase at coalescence, as well as
-													their signal-to-noise ratios, we find that the is robust provided
+													configurations of overlapping signals, we find that the parameter
+													inference is robust provided
 													that the coalescence times of the signals in the detector frame
-													are more than ~1-2 seconds apart. Signals whose coalescence epochs lie
-													within ~0.5 seconds of each other suffer from significant
+													are more than ~1-2 seconds apart. This implies that for the vast
+													majority of the signals that will be detected by future detectors,
+													our current framework for parameter inference will work just fine.
+													Signals whose coalescence epochs lie
+													within ~0.5 seconds of each other, however, suffer from significant
 													biases in parameter inference, and new strategies and algorithms
-													will be required in the future to overcome such biases.
+													will be required in the future to overcome such biases
+													<i>(figure from Pizzati et al. 2022)</i>.
 
 												</div>
 
