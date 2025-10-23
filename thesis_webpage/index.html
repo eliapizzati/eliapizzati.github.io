@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>From a biased perspective | Elia Pizzati</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --primary: #9aac15d8; /* apple green */
+    --secondary: #9ec532ff; /* light apple green */
+    --bg-overlay: rgba(255, 255, 255, 0.35); /* lighter overlay for stronger background visibility */
+    --text: #1b1b1b;
+    --card-bg: #ffffffcc;
+    --disabled: #9ca3af;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-overlay: rgba(0, 0, 0, 0.55);
+      --text: #e8f5e9;
+      --card-bg: #1b1f1acc;
+      --disabled: #6b7280;
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: "Inter", sans-serif;
+    color: var(--text);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    /* subtle background image overlay */
+    background:
+      linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+      url("cover_image.jpg") center center / cover no-repeat fixed;
+    background-attachment: fixed;
+  }
+
+  header {
+    color: #f9f9f9ff;
+    text-align: center;
+    padding: 4rem 1rem 7rem;
+    backdrop-filter: brightness(1.15) blur(6px);
+    background: linear-gradient(135deg, rgba(29, 28, 88, 0.29), rgba(42, 63, 14, 0.36));
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+    color: #f9f9f9ff;
+  }
+
+  header .subtitle {
+    font-size: 1.7rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    color: #f9f9f9ff;
+  }
+
+  header .meta {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #f9f9f9ff;
+  }
+
+  header .tagline {
+    font-size: 0.95rem;
+    opacity: 0.95;
+    color: #f9f9f9ff;
+  }
+
+  main {
+    width: 100%;
+    max-width: 1040px;
+    margin: -5rem auto 4rem;
+    padding: 0 1rem;
+  }
+
+  .chapters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    padding: 1.7rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    background: var(--card-bg); /* no white flash */
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+    border-color: rgba(154, 172, 21, 0.35); /* subtle apple-green accent */
+  }
+
+  .card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .links {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+
+  .links a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    position: relative;
+  }
+
+  .links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: width 0.2s ease;
+  }
+
+  .links a:hover::after {
+    width: 100%;
+  }
+
+  .disabled-link {
+    color: var(--disabled);
+    font-weight: 600;
+    cursor: default;
+  }
+
+  footer {
+    margin-top: auto;
+    padding: 2rem 1rem;
+    text-align: center;
+    font-size: 0.85rem;
+    opacity: 0.9;
+    color: #f9f9f9ff;
+    backdrop-filter: none; /* removed blur */
+    -webkit-backdrop-filter: none;
+  }
+
+  footer a {
+    color: #f9f9f9ff;
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+
+
+<body>
+  <header>
+    <h1>From a biased perspective</h1>
+    <h2 class="subtitle">Quasars, Mergers, and Planet-Forming Discs</h2>
+    <p class="meta">Elia Pizzati · Ph.D. Thesis · 2025</p>
+    <p class="tagline">Welcome to this website. Here you can download each chapter of my thesis.</p>
+  </header>
+
+  <main>
+    <section class="chapters">
+      <!-- Entire thesis -->
+      <article class="card">
+        <h2>Full Thesis</h2>
+        <div class="links">
+          <a href="Full_Thesis.pdf" download>Ph.D. Thesis Elia Pizzati</a>
+        </div>
+      </article>
+
+      <!-- Chapter 1 -->
+      <article class="card">
+        <h2>Chapter 1 — Introduction</h2>
+        <div class="links">
+          <a href="Introduction.pdf" download>Thesis chapter</a>
+        </div>
+      </article>
+
+      <!-- Chapter 2 -->
+      <article class="card">
+        <h2>Chapter 2 — Revisiting the Extreme Clustering of z &#8776; 4 Quasars with Large Volume Cosmological Simulations</h2>
+        <div class="links">
+          <a href="Chapter2.pdf" download>Thesis chapter</a>
+          <a href="https://arxiv.org/pdf/2311.17181.pdf" target="_blank" rel="noopener">Paper</a>
+        </div>
+      </article>
+
+      <!-- Chapter 3 -->
+      <article class="card">
+        <h2>Chapter 3 — A unified model for the clustering of quasars and galaxies at z &#8776; 6</h2>
+        <div class="links">
+          <a href="Chapter3.pdf" download>Thesis chapter</a>
+          <a href="https://arxiv.org/pdf/2403.12140.pdf" target="_blank" rel="noopener">Paper</a>
+        </div>
+      </article>
+
+      <!-- Chapter 4 -->
+      <article class="card">
+        <h2>Chapter 4 — “Little red dots” cannot reside in the same dark matter halos as comparably luminous unobscured quasars</h2>
+        <div class="links">
+          <a href="Chapter4.pdf" download>Thesis chapter</a>
+          <a href="https://arxiv.org/pdf/2409.18208.pdf" target="_blank" rel="noopener">Paper</a>
+        </div>
+      </article>
+
+      <!-- Chapter 5 -->
+      <article class="card">
+        <h2>Chapter 5 — Tracing individual black hole growth histories and quasar lightcurves in an N-body Universe</h2>
+        <div class="links">
+          <a href="Chapter5.pdf" download>Thesis chapter</a>
+          <a href="BAQARO_model_paper.pdf" target="_blank" rel="noopener">Paper draft</a>
+        </div>
+      </article>
+
+      <!-- Chapter 6 -->
+      <article class="card">
+        <h2>Chapter 6 — Towards inference of overlapping gravitational wave signals</h2>
+        <div class="links">
+          <a href="Chapter6.pdf" download>Thesis chapter</a>
+          <a href="https://arxiv.org/pdf/2102.07692.pdf" target="_blank" rel="noopener">Paper</a>
+        </div>
+      </article>
+
+      <!-- Chapter 7 -->
+      <article class="card">
+        <h2>Chapter 7 — Constraining turbulence in protoplanetary discs using the gap contrast: an application to the DSHARP sample</h2>
+        <div class="links">
+          <a href="Chapter7.pdf" download>Thesis chapter</a>
+          <a href="https://arxiv.org/pdf/2307.11150.pdf" target="_blank" rel="noopener">Paper</a>
+        </div>
+      </article>
+
+      <!-- Summaries -->
+      <!-- <article class="card">
+        <h2>Summaries</h2>
+        <div class="links">
+          <a href="summary_eng.pdf" download>ENG</a>
+          <a href="summary_nld.pdf" download>NLD</a>
+          <a href="summary_ita.pdf" download>ITA</a>
+        </div>
+      </article> -->
+
+      <!-- propositions -->
+      <article class="card">
+        <h2>Propositions</h2>
+        <div class="links">
+          <a href="propositions_Pizzati.pdf" download>Propositions Elia Pizzati</a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Elia Pizzati · Background Illustration by Monica Rocco · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>
+  </footer>
+</body>
+
+</html>
