@@ -1,0 +1,136 @@
+# Publication list — single source of truth for publications.html.
+# To add a paper: copy a block, fill the fields. `authors`/`title`/`venue` accept
+# HTML (use <b>Elia Pizzati</b> for your name) and LaTeX (\( ... \)) rendered by MathJax.
+# For preprints set venue: '<i>submitted</i>.' and point url at the arXiv abstract.
+
+first_author:
+  - title: '&ldquo;Little Red Dots&rdquo; cannot reside in the same dark matter halos as comparably luminous unobscured quasars'
+    year: 2025
+    authors: '<b>Elia Pizzati</b>, Joseph F Hennawi, Joop Schaye, Anna-Christina Eilers, Jiamu Huang, Jan-Torge Schindler, Feige Wang'
+    venue: 'Monthly Notices of the Royal Astronomical Society, vol. 539, no. 4, pp. 2910&ndash;2925, 2025.'
+    url: 'https://doi.org/10.1093/mnras/staf660'
+    url_label: 'doi:10.1093/mnras/staf660'
+  - title: 'A unified model for the clustering of quasars and galaxies at \(z\approx6\)'
+    year: 2024
+    authors: '<b>Elia Pizzati</b>, Joseph F Hennawi, Joop Schaye, Matthieu Schaller, Anna-Christina Eilers, et al. (15 authors)'
+    venue: 'Monthly Notices of the Royal Astronomical Society, vol. 534, no. 4, pp. 3155&ndash;3175, 2024.'
+    url: 'https://doi.org/10.1093/mnras/stae2307'
+    url_label: 'doi:10.1093/mnras/stae2307'
+  - title: 'Revisiting the extreme clustering of \(z\approx4\) quasars with large volume cosmological simulations'
+    year: 2024
+    authors: '<b>Elia Pizzati</b>, Joseph F Hennawi, Joop Schaye, Matthieu Schaller'
+    venue: 'Monthly Notices of the Royal Astronomical Society, vol. 528, no. 3, pp. 4466&ndash;4489, 2024.'
+    url: 'https://doi.org/10.1093/mnras/stae329'
+    url_label: 'doi:10.1093/mnras/stae329'
+  - title: 'Constraining turbulence in protoplanetary discs using the gap contrast: an application to the DSHARP sample'
+    year: 2023
+    authors: '<b>Elia Pizzati</b>, Giovanni P Rosotti, Beno&icirc;t Tabone'
+    venue: 'Monthly Notices of the Royal Astronomical Society, vol. 524, no. 2, pp. 3184&ndash;3200, 2023.'
+    url: 'https://doi.org/10.1093/mnras/stad2057'
+    url_label: 'doi:10.1093/mnras/stad2057'
+  - title: '[CII] Haloes in ALPINE galaxies: smoking-gun of galactic outflows?'
+    year: 2023
+    authors: '<b>E Pizzati</b>, A Ferrara, A Pallottini, L Sommovigo, M Kohandel, S Carniani'
+    venue: 'Monthly Notices of the Royal Astronomical Society, vol. 519, no. 3, pp. 4608&ndash;4621, 2023.'
+    url: 'https://doi.org/10.1093/mnras/stac3816'
+    url_label: 'doi:10.1093/mnras/stac3816'
+  - title: 'Toward inference of overlapping gravitational-wave signals'
+    year: 2022
+    authors: '<b>Elia Pizzati</b>, Surabhi Sachdev, Anuradha Gupta, and Bangalore Sathyaprakash'
+    venue: 'Physical Review D, vol. 105, no. 10, 2022.'
+    url: 'https://doi.org/10.1103/PhysRevD.105.104016'
+    url_label: 'doi:10.1103/PhysRevD.105.104016'
+  - title: 'Outflows and extended [CII] haloes in high-redshift galaxies'
+    year: 2020
+    authors: '<b>E Pizzati</b>, A Ferrara, A Pallottini, S Gallerani, L Vallini, D Decataldo, S Fujimoto'
+    venue: 'Monthly Notices of the Royal Astronomical Society, vol. 495, no. 1, pp. 160&ndash;172, 2020.'
+    url: 'https://doi.org/10.1093/mnras/staa1163'
+    url_label: 'doi:10.1093/mnras/staa1163'
+
+second_third:
+  - title: 'The Impact of Cosmic Variance and Satellites on JWST Clustering Measurements at Redshift around 6'
+    year: 2026
+    authors: 'J Huang, <b>E Pizzati</b>, J F Hennawi, J Schaye, M Schaller, B Snyder, Y Kang'
+    venue: '<i>submitted</i>.'
+    url: 'https://arxiv.org/abs/2605.11077'
+    url_label: 'doi:10.48550/arXiv.2605.11077'
+  - title: 'Clustering of \(z\sim6.6\) Quasars and [O III] Emitters Constrains Host Halo Masses and Duty Cycles in 25 ASPIRE Fields'
+    year: 2026
+    authors: 'J Huang, J F Hennawi, <b>E Pizzati</b>, F Wang, J Yang, J B Champagne, et al. (24 authors)'
+    venue: '<i>submitted</i>.'
+    url: 'https://arxiv.org/abs/2602.04974'
+    url_label: 'doi:10.48550/arXiv.2602.04974'
+  - title: 'The luminosity function and clustering of bright quasars in the FLAMINGO cosmological simulations'
+    year: 2026
+    authors: 'B Ding<sup>&dagger;</sup>, <b>E Pizzati</b>, J Schaye, J F Hennawi, W McDonald, M Schaller'
+    venue: 'Monthly Notices of the Royal Astronomical Society, vol. 547, no. 2, 2026.'
+    url: 'https://doi.org/10.1093/mnras/stag308'
+    url_label: 'doi:10.1093/mnras/stag308'
+  - title: 'Homogeneous measurements of proximity zone sizes for 59 quasars in the Epoch of Reionization'
+    year: 2026
+    authors: 'S Onorato, J F Hennawi, <b>E Pizzati</b>, B P Venemans, A-C Eilers'
+    venue: 'Monthly Notices of the Royal Astronomical Society, vol. 547, no. 3, 2026.'
+    url: 'https://doi.org/10.1093/mnras/stag388'
+    url_label: 'doi:10.1093/mnras/stag388'
+  - title: 'EIGER VI. The Correlation Function, Host Halo Mass and Duty Cycle of Luminous Quasars at \(z\approx6\)'
+    year: 2024
+    authors: 'A-C Eilers, R Mackenzie, <b>E Pizzati</b>, J Matthee, J F Hennawi, et al. (16 authors)'
+    venue: 'The Astrophysical Journal, vol. 974, no. 275, 2024.'
+    url: 'https://doi.org/10.3847/1538-4357/ad778b'
+    url_label: 'doi:10.3847/1538-4357/ad778b'
+
+contributing:
+  - title: 'The Lumina Project: The Demographics of Active Galactic Nuclei from Quasars to Little Red Dots at \(z\geq3\)'
+    year: 2026
+    authors: 'X Shen, O Zier, A Smith, R Liu, R Kannan, et al. (incl. <b>E Pizzati</b>; 19 authors)'
+    venue: '<i>submitted</i>.'
+    url: 'https://arxiv.org/abs/2605.24112'
+    url_label: 'doi:10.48550/arXiv.2605.24112'
+  - title: 'MEOW: The increase in the obscured AGN fraction in mid-infrared from \(0\leq z\leq6\) with JWST MIRI'
+    year: 2026
+    authors: 'T-E Bulichi, G C K Leung, A-C Eilers, P G P&eacute;rez-Gonz&aacute;lez, et al. (incl. <b>E Pizzati</b>; 19 authors)'
+    venue: '<i>submitted</i>.'
+    url: 'https://arxiv.org/abs/2603.22393'
+    url_label: 'doi:10.48550/arXiv.2603.22393'
+  - title: 'ASPIRE: The Environments and Dark Matter Halos of Luminous Quasars in the Epoch of Reionization'
+    year: 2026
+    authors: 'F Wang, J B Champagne, J Huang, J Yang, J F Hennawi, X Fan, et al. (incl. <b>E Pizzati</b>; 45 authors)'
+    venue: '<i>submitted</i>.'
+    url: 'https://arxiv.org/abs/2602.04979'
+    url_label: 'doi:10.48550/arXiv.2602.04979'
+  - title: 'A first look at quasar&ndash;galaxy clustering at \(z\simeq7.3\)'
+    year: 2026
+    authors: 'J-T Schindler, J F Hennawi, F B Davies, S E I Bosman, F Wang, J Yang, A-C Eilers, X Fan, K Kakiichi, <b>E Pizzati</b>, R Nanni'
+    venue: 'Astronomy &amp; Astrophysics, vol. 708, A160, 2026.'
+    url: 'https://doi.org/10.1051/0004-6361/202557623'
+    url_label: 'doi:10.1051/0004-6361/202557623'
+  - title: 'A Little Red Dot at \(z=7.3\) within a Large Galaxy Overdensity'
+    year: 2025
+    authors: 'J-T Schindler, J F Hennawi, F B Davies, S E I Bosman, R Endsley, F Wang, J Yang, A J Barth, A-C Eilers, X Fan, K Kakiichi, M Maseda, <b>E Pizzati</b>, R Nanni'
+    venue: 'Nature Astronomy, vol. 9, pp. 1732&ndash;1744, 2025.'
+    url: 'https://doi.org/10.1038/s41550-025-02660-1'
+    url_label: 'doi:10.1038/s41550-025-02660-1'
+  - title: 'A SPectroscopic survey of biased halos In the Reionization Era (ASPIRE): Broad-line AGN at \(z=4\text{--}5\) revealed by JWST/NIRCam WFSS'
+    year: 2024
+    authors: 'X Lin, F Wang, X Fan, Z Cai, et al. (incl. <b>E Pizzati</b>; 36 authors)'
+    venue: 'The Astrophysical Journal, vol. 974, no. 147, 2024.'
+    url: 'https://doi.org/10.3847/1538-4357/ad6565'
+    url_label: 'doi:10.3847/1538-4357/ad6565'
+  - title: 'A new look at the infrared properties of \(z\sim5\) galaxies'
+    year: 2022
+    authors: 'L Sommovigo, A Ferrara, S Carniani, A Pallottini, P Dayal, <b>E Pizzati</b>, et al. (9 authors)'
+    venue: 'Monthly Notices of the Royal Astronomical Society, vol. 517, no. 4, pp. 5930&ndash;5941, 2022.'
+    url: 'https://doi.org/10.1093/mnras/stac2997'
+    url_label: 'doi:10.1093/mnras/stac2997'
+  - title: 'The ALMA REBELS Survey: Average [C II] 158 \(\mu m\) Sizes of Star-forming Galaxies from \(z\approx7\) to \(z\approx4\)'
+    year: 2022
+    authors: 'Y Fudamoto, R Smit, R A A Bowler, P A Oesch, et al. (incl. <b>E Pizzati</b>; 40 authors)'
+    venue: 'The Astrophysical Journal, vol. 934, no. 2, 2022.'
+    url: 'https://doi.org/10.3847/1538-4357/ac7a47'
+    url_label: 'doi:10.3847/1538-4357/ac7a47'
+  - title: 'A survey of high-z galaxies: SERRA simulations'
+    year: 2022
+    authors: 'A Pallottini, A Ferrara, S Gallerani, C Behrens, M Kohandel, et al. (incl. <b>E Pizzati</b>; 13 authors)'
+    venue: 'Monthly Notices of the Royal Astronomical Society, vol. 513, no. 4, pp. 5621&ndash;5641, 2022.'
+    url: 'https://doi.org/10.1093/mnras/stac1281'
+    url_label: 'doi:10.1093/mnras/stac1281'

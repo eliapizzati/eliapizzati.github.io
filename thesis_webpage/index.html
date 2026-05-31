@@ -119,6 +119,13 @@
     border-color: rgba(154, 172, 21, 0.35); /* subtle apple-green accent */
   }
 
+  /* Highlight the primary downloads (full thesis / propositions) */
+  .card.featured {
+    grid-column: 1 / -1;
+    border-color: rgba(154, 172, 21, 0.55);
+    box-shadow: 0 6px 20px rgba(154, 172, 21, 0.18);
+  }
+
   .card h2 {
     font-size: 1.1rem;
     margin-bottom: 0.75rem;
@@ -179,11 +186,29 @@
   footer a:hover {
     text-decoration: underline;
   }
+
+  /* Top bar with link back to the main site */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    background: rgba(20, 23, 26, 0.55);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .topbar a {
+    color: #f9f9f9; text-decoration: none; font-weight: 600; font-size: 0.95rem;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .topbar a:hover { color: var(--secondary); }
 </style>
 </head>
 
 
 <body>
+  <nav class="topbar">
+    <a href="../index.html">&larr; Elia Pizzati &middot; back to main site</a>
+  </nav>
   <header>
     <h1>From a biased perspective</h1>
     <h2 class="subtitle">Quasars, Mergers, and Planet-Forming Discs</h2>
@@ -194,10 +219,11 @@
   <main>
     <section class="chapters">
       <!-- Entire thesis -->
-      <article class="card">
-        <h2>Full Thesis</h2>
+      <article class="card featured">
+        <h2>Full Thesis &mdash; <em>From a biased perspective</em></h2>
         <div class="links">
-          <a href="Full_Thesis.pdf" download>Ph.D. Thesis Elia Pizzati</a>
+          <a href="Full_Thesis.pdf" download>Download the complete Ph.D. thesis (PDF)</a>
+          <a href="propositions_Pizzati.pdf" download>Propositions</a>
         </div>
       </article>
 
@@ -273,13 +299,6 @@
         </div>
       </article> -->
 
-      <!-- propositions -->
-      <article class="card">
-        <h2>Propositions</h2>
-        <div class="links">
-          <a href="propositions_Pizzati.pdf" download>Propositions Elia Pizzati</a>
-        </div>
-      </article>
     </section>
   </main>
 

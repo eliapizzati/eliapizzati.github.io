@@ -12,149 +12,29 @@ description: Publication list of Elia Pizzati — first-author, second/third-aut
 		<a href="https://ui.adsabs.harvard.edu/search/p_=0&q=%20author%3A%22Pizzati%2C%20Elia%22&sort=date%20desc%2C%20bibcode%20desc">ADS bibliography</a>.</p>
 
 	<h2>First-author Publications</h2>
+	<ol class="pub-list">
+		{% for p in site.data.publications.first_author %}
+		<li><span><i>{{ p.title }}</i> ({{ p.year }})</span>; {{ p.authors }},
+			{{ p.venue }} <a href="{{ p.url }}">{{ p.url_label }}</a></li>
+		{% endfor %}
+	</ol>
 
-					<ol class="pub-list">
+	<h2>Second / Third Author</h2>
+	<ol class="pub-list">
+		{% for p in site.data.publications.second_third %}
+		<li><span><i>{{ p.title }}</i> ({{ p.year }})</span>; {{ p.authors }},
+			{{ p.venue }} <a href="{{ p.url }}">{{ p.url_label }}</a></li>
+		{% endfor %}
+	</ol>
 
-						<li style="margin-bottom: 10px">
-							<span> <i>&ldquo;Little Red Dots&rdquo; cannot reside in the same dark matter halos as comparably luminous unobscured quasars</i> (2025)
-							</span>; <b>Elia Pizzati</b>, Joseph F Hennawi, Joop Schaye, Anna-Christina Eilers, Jiamu Huang, Jan-Torge Schindler, Feige Wang,
-							Monthly Notices of the Royal Astronomical Society, vol. 539, no. 4, pp. 2910&ndash;2925, 2025. <a href="https://doi.org/10.1093/mnras/staf660">doi:10.1093/mnras/staf660</a>
-						</li>
+	<p style="font-size: 0.9em;"><sup>&dagger;</sup> Student-led publication (direct supervision).</p>
 
-						<li style="margin-bottom: 10px">
-							<span> <i>A unified model for the clustering of quasars and galaxies at \(z\approx6\)</i> (2024)
-							</span>; <b>Elia Pizzati</b>, Joseph F Hennawi, Joop Schaye, Matthieu Schaller, Anna-Christina Eilers, et al. (15 authors),
-							Monthly Notices of the Royal Astronomical Society, vol. 534, no. 4, pp. 3155&ndash;3175, 2024. <a href="https://doi.org/10.1093/mnras/stae2307">doi:10.1093/mnras/stae2307</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>Revisiting the extreme clustering of \(z\approx4\) quasars with large volume cosmological simulations</i> (2024)
-							</span>; <b>Elia Pizzati</b>, Joseph F Hennawi, Joop Schaye, Matthieu Schaller,
-							Monthly Notices of the Royal Astronomical Society, vol. 528, no. 3, pp. 4466&ndash;4489, 2024. <a href="https://doi.org/10.1093/mnras/stae329">doi:10.1093/mnras/stae329</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>Constraining turbulence in protoplanetary discs using the gap contrast: an application to the DSHARP sample</i> (2023)
-							</span>; <b>Elia Pizzati</b>, Giovanni P Rosotti, Beno&icirc;t Tabone,
-							Monthly Notices of the Royal Astronomical Society, vol. 524, no. 2, pp. 3184&ndash;3200, 2023. <a href="https://doi.org/10.1093/mnras/stad2057">doi:10.1093/mnras/stad2057</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>[CII] Haloes in ALPINE galaxies: smoking-gun of galactic outflows?</i> (2023)
-							</span>; <b>E Pizzati</b>, A Ferrara, A Pallottini, L Sommovigo, M Kohandel, S Carniani,
-							Monthly Notices of the Royal Astronomical Society, vol. 519, no. 3, pp. 4608&ndash;4621, 2023. <a href="https://doi.org/10.1093/mnras/stac3816">doi:10.1093/mnras/stac3816</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>Toward inference of overlapping gravitational-wave signals</i> (2022)
-							</span>; <b>Elia Pizzati</b>, Surabhi Sachdev, Anuradha Gupta, and Bangalore Sathyaprakash,
-							Physical Review D, vol. 105, no. 10, 2022. <a href="https://doi.org/10.1103/PhysRevD.105.104016">doi:10.1103/PhysRevD.105.104016</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>Outflows and extended [CII] haloes in high-redshift galaxies</i> (2020)
-							</span>; <b>E Pizzati</b>, A Ferrara, A Pallottini, S Gallerani, L Vallini, D Decataldo, S Fujimoto,
-							Monthly Notices of the Royal Astronomical Society, vol. 495, no. 1, pp. 160&ndash;172, 2020. <a href="https://doi.org/10.1093/mnras/staa1163">doi:10.1093/mnras/staa1163</a>
-						</li>
-
-					</ol>
-
-					<h2>Second / Third Author</h2>
-
-					<ol class="pub-list">
-
-						<li style="margin-bottom: 10px">
-							<span> <i>The Impact of Cosmic Variance and Satellites on JWST Clustering Measurements at Redshift around 6</i> (2026)
-							</span>; J Huang, <b>E Pizzati</b>, J F Hennawi, J Schaye, M Schaller, B Snyder, Y Kang,
-							<i>submitted</i>. <a href="https://arxiv.org/abs/2605.11077">doi:10.48550/arXiv.2605.11077</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>Clustering of \(z\sim6.6\) Quasars and [O III] Emitters Constrains Host Halo Masses and Duty Cycles in 25 ASPIRE Fields</i> (2026)
-							</span>; J Huang, J F Hennawi, <b>E Pizzati</b>, F Wang, J Yang, J B Champagne, et al. (24 authors),
-							<i>submitted</i>. <a href="https://arxiv.org/abs/2602.04974">doi:10.48550/arXiv.2602.04974</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>The luminosity function and clustering of bright quasars in the FLAMINGO cosmological simulations</i> (2026)
-							</span>; B Ding<sup>&dagger;</sup>, <b>E Pizzati</b>, J Schaye, J F Hennawi, W McDonald, M Schaller,
-							Monthly Notices of the Royal Astronomical Society, vol. 547, no. 2, 2026. <a href="https://doi.org/10.1093/mnras/stag308">doi:10.1093/mnras/stag308</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>Homogeneous measurements of proximity zone sizes for 59 quasars in the Epoch of Reionization</i> (2026)
-							</span>; S Onorato, J F Hennawi, <b>E Pizzati</b>, B P Venemans, A-C Eilers,
-							Monthly Notices of the Royal Astronomical Society, vol. 547, no. 3, 2026. <a href="https://doi.org/10.1093/mnras/stag388">doi:10.1093/mnras/stag388</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>EIGER VI. The Correlation Function, Host Halo Mass and Duty Cycle of Luminous Quasars at \(z\approx6\)</i> (2024)
-							</span>; A-C Eilers, R Mackenzie, <b>E Pizzati</b>, J Matthee, J F Hennawi, et al. (16 authors),
-							The Astrophysical Journal, vol. 974, no. 275, 2024. <a href="https://doi.org/10.3847/1538-4357/ad778b">doi:10.3847/1538-4357/ad778b</a>
-						</li>
-
-					</ol>
-
-					<p style="font-size: 0.9em;"><sup>&dagger;</sup> Student-led publication (direct supervision).</p>
-
-					<h2>Contributing Author</h2>
-
-					<ol class="pub-list">
-
-						<li style="margin-bottom: 10px">
-							<span> <i>The Lumina Project: The Demographics of Active Galactic Nuclei from Quasars to Little Red Dots at \(z\geq3\)</i> (2026)
-							</span>; X Shen, O Zier, A Smith, R Liu, R Kannan, et al. (incl. <b>E Pizzati</b>; 19 authors),
-							<i>submitted</i>. <a href="https://arxiv.org/abs/2605.24112">doi:10.48550/arXiv.2605.24112</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>MEOW: The increase in the obscured AGN fraction in mid-infrared from \(0\leq z\leq6\) with JWST MIRI</i> (2026)
-							</span>; T-E Bulichi, G C K Leung, A-C Eilers, P G P&eacute;rez-Gonz&aacute;lez, et al. (incl. <b>E Pizzati</b>; 19 authors),
-							<i>submitted</i>. <a href="https://arxiv.org/abs/2603.22393">doi:10.48550/arXiv.2603.22393</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>ASPIRE: The Environments and Dark Matter Halos of Luminous Quasars in the Epoch of Reionization</i> (2026)
-							</span>; F Wang, J B Champagne, J Huang, J Yang, J F Hennawi, X Fan, et al. (incl. <b>E Pizzati</b>; 45 authors),
-							<i>submitted</i>. <a href="https://arxiv.org/abs/2602.04979">doi:10.48550/arXiv.2602.04979</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>A first look at quasar&ndash;galaxy clustering at \(z\simeq7.3\)</i> (2026)
-							</span>; J-T Schindler, J F Hennawi, F B Davies, S E I Bosman, F Wang, J Yang, A-C Eilers, X Fan, K Kakiichi, <b>E Pizzati</b>, R Nanni,
-							Astronomy &amp; Astrophysics, vol. 708, A160, 2026. <a href="https://doi.org/10.1051/0004-6361/202557623">doi:10.1051/0004-6361/202557623</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>A Little Red Dot at \(z=7.3\) within a Large Galaxy Overdensity</i> (2025)
-							</span>; J-T Schindler, J F Hennawi, F B Davies, S E I Bosman, R Endsley, F Wang, J Yang, A J Barth, A-C Eilers, X Fan, K Kakiichi, M Maseda, <b>E Pizzati</b>, R Nanni,
-							Nature Astronomy, vol. 9, pp. 1732&ndash;1744, 2025. <a href="https://doi.org/10.1038/s41550-025-02660-1">doi:10.1038/s41550-025-02660-1</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>A SPectroscopic survey of biased halos In the Reionization Era (ASPIRE): Broad-line AGN at \(z=4\text{--}5\) revealed by JWST/NIRCam WFSS</i> (2024)
-							</span>; X Lin, F Wang, X Fan, Z Cai, et al. (incl. <b>E Pizzati</b>; 36 authors),
-							The Astrophysical Journal, vol. 974, no. 147, 2024. <a href="https://doi.org/10.3847/1538-4357/ad6565">doi:10.3847/1538-4357/ad6565</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>A new look at the infrared properties of \(z\sim5\) galaxies</i> (2022)
-							</span>; L Sommovigo, A Ferrara, S Carniani, A Pallottini, P Dayal, <b>E Pizzati</b>, et al. (9 authors),
-							Monthly Notices of the Royal Astronomical Society, vol. 517, no. 4, pp. 5930&ndash;5941, 2022. <a href="https://doi.org/10.1093/mnras/stac2997">doi:10.1093/mnras/stac2997</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>The ALMA REBELS Survey: Average [C II] 158 \(\mu m\) Sizes of Star-forming Galaxies from \(z\approx7\) to \(z\approx4\)</i> (2022)
-							</span>; Y Fudamoto, R Smit, R A A Bowler, P A Oesch, et al. (incl. <b>E Pizzati</b>; 40 authors),
-							The Astrophysical Journal, vol. 934, no. 2, 2022. <a href="https://doi.org/10.3847/1538-4357/ac7a47">doi:10.3847/1538-4357/ac7a47</a>
-						</li>
-
-						<li style="margin-bottom: 10px">
-							<span> <i>A survey of high-z galaxies: SERRA simulations</i> (2022)
-							</span>; A Pallottini, A Ferrara, S Gallerani, C Behrens, M Kohandel, et al. (incl. <b>E Pizzati</b>; 13 authors),
-							Monthly Notices of the Royal Astronomical Society, vol. 513, no. 4, pp. 5621&ndash;5641, 2022. <a href="https://doi.org/10.1093/mnras/stac1281">doi:10.1093/mnras/stac1281</a>
-						</li>
-
-					</ol>
+	<h2>Contributing Author</h2>
+	<ol class="pub-list">
+		{% for p in site.data.publications.contributing %}
+		<li><span><i>{{ p.title }}</i> ({{ p.year }})</span>; {{ p.authors }},
+			{{ p.venue }} <a href="{{ p.url }}">{{ p.url_label }}</a></li>
+		{% endfor %}
+	</ol>
 
 </div>

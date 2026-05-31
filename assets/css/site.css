@@ -72,12 +72,59 @@ nav.site a.link.active::after {
   height: 2px; width: 100%; background: var(--primary-bright); border-radius: 2px;
 }
 
-/* ---------- Hero (home) ---------- */
+/* ---------- Hero (home): generative deep-space / cosmic-web backdrop ---------- */
 header.hero {
-  position: relative; text-align: center; color: #fff;
-  padding: 6rem 1.5rem 7rem;
-  background: linear-gradient(135deg, rgba(29, 28, 88, 0.55), rgba(42, 63, 14, 0.55)),
-              url("../../images/banner3.jpg") center center / cover no-repeat;
+  position: relative; text-align: center; color: #fff; overflow: hidden;
+  padding: 6.5rem 1.5rem 7.5rem;
+  background-color: #080b14;
+  background-image:
+    /* nebula glows (apple-green + violet) */
+    radial-gradient(ellipse 55% 50% at 28% 32%, rgba(154, 172, 21, 0.22), transparent 70%),
+    radial-gradient(ellipse 48% 42% at 78% 26%, rgba(110, 80, 175, 0.24), transparent 70%),
+    radial-gradient(ellipse 60% 55% at 60% 90%, rgba(40, 90, 120, 0.20), transparent 70%),
+    /* base deep-space gradient */
+    linear-gradient(135deg, #070a13 0%, #0a0f0b 100%);
+}
+/* Two tiled star layers drifting slowly for depth */
+header.hero::before,
+header.hero::after {
+  content: ""; position: absolute; inset: -50% -50% -50% -50%; z-index: 0;
+  pointer-events: none;
+}
+header.hero::before {
+  background-image:
+    radial-gradient(1px 1px at 40px 60px, #ffffff, transparent),
+    radial-gradient(1px 1px at 130px 20px, #e8f0ff, transparent),
+    radial-gradient(1px 1px at 90px 150px, #ffffff, transparent),
+    radial-gradient(1px 1px at 200px 110px, #d8e6ff, transparent),
+    radial-gradient(1.5px 1.5px at 170px 50px, #ffffff, transparent);
+  background-size: 240px 240px;
+  background-repeat: repeat;
+  opacity: 0.7;
+  animation: starDrift 120s linear infinite;
+}
+header.hero::after {
+  background-image:
+    radial-gradient(2px 2px at 60px 120px, #ffffff, transparent),
+    radial-gradient(1.5px 1.5px at 220px 200px, #cfe0ff, transparent),
+    radial-gradient(2px 2px at 300px 80px, #ffffff, transparent);
+  background-size: 380px 380px;
+  background-repeat: repeat;
+  opacity: 0.55;
+  animation: starDrift 200s linear infinite reverse;
+}
+/* cosmic-web filament overlay (subtle, behind the text) */
+header.hero .cosmic-web {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0.6; pointer-events: none; z-index: 0;
+}
+header.hero h1, header.hero p, header.hero .scroll { position: relative; z-index: 1; }
+@keyframes starDrift {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(-240px, -120px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  header.hero::before, header.hero::after { animation: none; }
 }
 header.hero h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700; letter-spacing: 0.5px; }
 header.hero p.role { margin-top: 0.6rem; font-size: clamp(1.05rem, 2.4vw, 1.5rem); font-weight: 500; opacity: 0.97; }
@@ -171,11 +218,15 @@ footer.site .socials { flex-direction: row; gap: 1rem; font-size: 1.3rem; margin
 footer.site .copyright { max-width: 1040px; margin: 1.8rem auto 0; padding-top: 1.2rem; border-top: 1px solid rgba(255, 255, 255, 0.12); font-size: 0.82rem; opacity: 0.8; }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 700px) {
+@media (max-width: 900px) {
+  nav.site { gap: 0.6rem; }
+  nav.site ul { gap: 1rem; }
+}
+@media (max-width: 640px) {
   .intro { flex-direction: column; text-align: center; }
   .about-grid { grid-template-columns: 1fr; }
   .about-grid .photo { max-width: 260px; margin: 0 auto; }
   .research-figure { float: none; width: 100%; max-width: 100%; margin: 0 0 1rem; }
-  nav.site .brand { display: none; }
-  nav.site { justify-content: center; }
+  nav.site { flex-direction: column; gap: 0.5rem; padding: 0.75rem 1rem; }
+  nav.site ul { gap: 0.7rem 1.1rem; justify-content: center; font-size: 0.9rem; }
 }

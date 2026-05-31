@@ -30,6 +30,7 @@
 
 		{% if page.hero == "large" %}
 		<header class="hero">
+			<img class="cosmic-web" src="assets/cosmic-web.svg" alt="" aria-hidden="true" />
 			<h1>{{ page.heading | default: site.title }}</h1>
 			{% if page.role %}<p class="role">{{ page.role }}</p>{% endif %}
 			<a class="scroll" href="#main"><i class="fas fa-chevron-down"></i></a>
