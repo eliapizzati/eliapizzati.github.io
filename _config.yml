@@ -1,0 +1,23 @@
+title: Elia Pizzati
+description: >-
+  Elia Pizzati — NHFP Einstein Fellow at the Center for Astrophysics |
+  Harvard & Smithsonian. Research on high-redshift quasars, supermassive
+  black holes, galaxy formation, and cosmology.
+url: https://eliapizzati.github.io
+author: Elia Pizzati
+email: elia.pizzati@cfa.harvard.edu
+
+# No remote theme — the site uses its own layouts/includes + the HTML5 UP "Arcana" CSS.
+
+# Files that should NOT be copied into the built site.
+exclude:
+  - README.md
+  - README.txt
+  - LICENSE.txt
+  - CLAUDE.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - .idea
+  - two-sidebar.html
+  - "*.iml"

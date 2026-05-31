@@ -1,0 +1,12 @@
+<!-- Nav (shared) — highlight the current page via front-matter `active:` -->
+<nav class="site">
+	<a href="index.html" class="brand">Elia Pizzati</a>
+	<ul>
+		<li><a class="link{% if page.active == "home" %} active{% endif %}" href="index.html">Home</a></li>
+		<li><a class="link{% if page.active == "about" %} active{% endif %}" href="about_me.html">About</a></li>
+		<li><a class="link{% if page.active == "cv" %} active{% endif %}" href="cv.html">CV</a></li>
+		<li><a class="link{% if page.active == "research" %} active{% endif %}" href="research.html">Research</a></li>
+		<li><a class="link{% if page.active == "publications" %} active{% endif %}" href="publications.html">Publications</a></li>
+		<li><a class="link" href="thesis_webpage/">Thesis</a></li>
+	</ul>
+</nav>
