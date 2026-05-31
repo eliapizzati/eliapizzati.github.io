@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Editor
+.idea/
+
+# Jekyll build output
+_site/
+.jekyll-cache/
+.jekyll-metadata
+
+# Local bundler / preview artifacts
+.bundle/
+vendor/
+Gemfile.lock
+_preview/
