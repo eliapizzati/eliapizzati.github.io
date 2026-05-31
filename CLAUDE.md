@@ -13,6 +13,13 @@ Working notes for Claude Code on this repo. Personal academic website for
   optional `mathjax: true`, `hero: large` for home, `heading:` for sub-page header band).
 - Pages: `index.html` (hero + intro card + feature cards), `about_me.html`, `cv.html`
   (web CV + PDF download button), `research.html`, `publications.html`.
+- **Publications are data-driven**: edit `_data/publications.yml` (3 lists: `first_author`,
+  `second_third`, `contributing`; fields title/year/authors/venue/url/url_label, HTML+LaTeX
+  allowed). `publications.html` renders them with a Liquid loop — don't hand-edit the list there.
+- **Home hero** is fully generative (no photo): CSS starfield + nebula in `header.hero`
+  (site.css) plus an SVG filament overlay `assets/cosmic-web.svg` (regenerate with the seeded
+  Python snippet in git history if needed). Respects `prefers-reduced-motion`.
+- `thesis_webpage/index.html` has a sticky "back to main site" bar and a featured full-thesis card.
 - Styling: `assets/css/site.css` — custom design system (Inter font, apple-green theme,
   light/dark via `prefers-color-scheme`, glassmorphism cards). **No more jQuery / Arcana.**
   Font Awesome 5 via `assets/css/fontawesome-all.min.css` (+ `assets/webfonts/`). SVG favicon
@@ -60,7 +67,7 @@ can't run full Jekyll; GitHub Pages Ruby 3.x builds fine) and by checking the li
 ### Future ideas (not started)
 - A "News"/"Press" blurb (MIT News etc.) and/or a Talks/Seminars section from the CV.
 - Convert remaining research figures to WebP; lazy-load images.
-- Move publications into `_data/publications.yml` + a render loop (data-driven list).
+- Optional ADS API auto-fetch script to regenerate `_data/publications.yml`.
 
 ## How to preview locally
 No Jekyll needed: `ruby /tmp/jekyll-verify/render.rb` → `_preview/` (gitignored), then
