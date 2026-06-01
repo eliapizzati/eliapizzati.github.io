@@ -6,480 +6,299 @@ heading: Research
 description: Research by Elia Pizzati on high-redshift quasars, supermassive black holes, galactic outflows, gravitational waves, and protoplanetary discs.
 ---
 
-
 <div class="prose">
 
 	<article>
-											<header>
-												<p style="margin-top: 0px; margin-bottom: 20px;">
-
-												I work primarily at the intersection of theoretical and
-													observational astrophysics, aiming to bridge models with
-													data by interpreting observations within the framework
-													of theoretical predictions.
-												My research incorporates both analytical and numerical methods
-													to tackle a variety of astrophysical topics.
-
-												 </p>
-
-												<p style="margin-top: 10px; margin-bottom: 20px;">
-
-												The main project of my Ph.D. focuses on understanding high-redshift quasars
-													through <a href="#flamingo">large-volume cosmological simulations</a>.
-												I am developing a theoretical framework to interpret observations
-													of quasars and galaxies over cosmic time, addressing fundamental
-													questions such as: <i>Where does
-												quasar activity take place? How do the properties of quasars relate
-												to those of their host halos/galaxies? What is the timescale of quasar
-													activity, and how does it influence the growth of
-													supermassive black holes?</i> </p>
-
-												<p style="margin-top: 10px; margin-bottom: 20px;">
-												In this context, I initially explored the implications of the
-													<a href="#quasar_z4">
-													demographic and clustering properties of quasars</a> before cosmic noon.
-												My focus then shifted to JWST observations, which are rapidly  transforming
-													our understanding of the early Universe.
-													I developed a model to jointly constrain
-													quasar and galaxy properties using <a href="#quasar_z6">JWST clustering
-													measurements</a> and investigated the characteristics of the abundant
-													population of broad-line AGN discovered by JWST,
-													often referred to as <a href="#lrd">"little red dots"</a>.
-<!--												Currently, I am focusing on the role played by quasar obscuration-->
-<!--													across cosmic time, and I am working on extending quasar population models-->
-<!--													to incorporate single quasar lightcurves.-->
-<!--													I am also interested in hydrodynamical cosmological-->
-<!--												simulations, and I am investigating how well simulations can-->
-<!--												reproduce the properties of massive black holes and quasars-->
-<!--												across cosmic time.-->
-												</p>
-
-
-												<p style="margin-top: 10px; margin-bottom: 20px;">
-												I am also deeply interested in the formation and evolution of galaxies.
-													For instance,
-													I have investigated models of
-													<a href="#outflows">galactic outflows</a> in the context
-														of observations of
-													extended [CII] halos in high redshift galaxies.
-												In addition, I have experience in parameter inference for
-												<a href="#grav_waves">gravitational wave signals</a>
-													and have utilized radiative transfer simulations
-													to study the morphology of
-													<a href="#discs">protoplanetary discs</a>.
-
-												</p>
-											</header>
-
-
-											<section id="quasar_z4">
-
-											<header>
-												<h2>Studying the extreme clustering of high-z quasars with large-volume N-body simulations </h2>
-
-											</header>
-
-												<div class="research-figure"><img src="images/slide_intro_model.jpg" alt="" style="width:100%; height:auto;"  /></div>
-
-												<div class="research-text">
-													Quasar clustering measurements are a powerful probe of the physical
-													processes governing the <b>growth of supermassive black
-													holes</b> and their coevolution with host galaxies.
-													Wide-field quasar surveys reveal a dramatic increase in the <b>clustering
-													strength of quasars</b> at the high redshift, with measurements at
-													z~4 that have been challenging to reproduce theoretically,
-													even assuming that quasars are hosted by the most massive
-													dark matter halos inhabiting the early Universe.
-
-													In the first project of my Ph.D., we revisited this decade-long
-													problem using new, <b>large-volume N-body cosmological simulations</b>.
-													We developed a model that successfully reproduces the observed quasar
-													clustering and demographics by leveraging a <b>novel method</b> for
-													computing the halo mass function and halo cross-correlation functions across
-													<b>multiple simulations</b>.
-													Using a conditional luminosity function framework,
-													this model captures the <b>stochastic relationship</b> between
-													quasar luminosity and halo mass and predicts <b>key observables</b>,
-													including the quasar auto-correlation and luminosity functions,
-													host mass function, and duty cycle.
-
-<!--													Applying this model to z~2 and z~4 data, we achieved an-->
-<!--													excellent fit, revealing that the high clustering amplitude at-->
-<!--													z∼4 implies a steep and low-scatter relationship between quasar-->
-<!--													luminosity and halo mass. This finding has significant implications-->
-<!--													for the growth of supermassive black holes-->
-<!--													in the early Universe.-->
-													<i>(Figure from <a href="https://doi.org/10.1093/mnras/stae329" >Pizzati et al. 2024a</a>)</i>
-
 
-												</div>
-											</section>
-
-
-
-											<section id="quasar_z6">
-
-											<header>
-												<h2>A unified model for the clustering of quasars and galaxies at z>6 </h2>
-
-											</header>
-
-												<div class="research-figure"><img src="images/qhmf_z6.png" alt="" style="width:100%; height:auto;"  /></div>
-
-												<div class="research-text">
-
-													Since its launch in late 2021, the James Webb Space Telescope (JWST)
-													has been rapidly advancing our understanding of the high-redshift Universe.
-													Among JWST's instruments, the NIRCam Wide Field Slitless Spectroscopy (WFSS)
-													mode is particularly powerful for spectroscopically identifying high-redshift quasars
-													and galaxies across vast comoving volumes. Using <b>NIRCam/WFSS observations</b>
-													of bright <b>high-z quasar fields</b>, surveys such as EIGER and ASPIRE
-													detected numerous
-													[OIII]-emitting galaxies associated with these quasars,
-													uncovering a diverse range of quasar large-scale environments and
-													measuring for the first time the <b>quasar-galaxy cross-correlation function</b>
-													at z>6.
-													By building upon the empirical quasar population model described above,
-													we have proposed a simple framework to <b>jointly infer the properties
-													of quasars and [OIII] emitting galaxies</b> using the measurements of
-													the clustering and luminosity functions of these populations coming
-													from JWST. We applied the model to observations from the EIGER survey
-													and inferred the
-													luminosity-halo mass relation, the halo host mass function,
-													and the duty cycle/occupation fraction of quasars and galaxies
-													at z~6. The model represents a way to effectively exploit the constraining power offered
-													by JWST observations and will be applied to upcoming data from several JWST surveys.
-<!--													framework. In this context, we made use of a new,-->
-<!--													large-volume N-body simulation with more than-->
-
-<!--													Since its launch at the end of 2021, the James Webb Space Telescope (JWST)-->
-<!--													is rapidly revolutionizing our understanding-->
-<!--													of the high-redshift Universe. One of the most powerful JWST instrument-->
-<!--													for studying the early Universe is the NIRCam Wide Field Slitless Spectroscopy mode,-->
-<!--													which allows for the-->
-<!--													spectroscopic identification of high-redshift quasars and galaxies-->
-<!--													over large comoving volumes. Exploiting NIRCam/WFSS observations-->
-<!--													of several bright high-z quasars fields, the EIGER survey has identified-->
-<!--													many [OIII]-emitting galaxies that are physically associated-->
-<!--													with the targeted quasars, revealing a variety of large-scale-->
-<!--													enviroments around the quasars, included one of the most spectacular-->
-<!--													overdensities revealed in the Epoch of Reionization. By putting together-->
-<!--													different quasar fields, in <i>Eilers et al. 2024</i> we have measured-->
-<!--													for the first time the quasar-galaxy cross-correlation function at z~6,-->
-<!--													together with the galaxy auto-correlation function at the same redshift.-->
-<!--													These measurements hold the key to understanding the properties of quasars-->
-<!--													and galaxies at high redshift and their relation with the host dark matter halos.-->
-<!--													However, the interpretation of these data is not straightforward, and-->
-<!--													requires the development of a theoretical framework that can simultaneously-->
-<!--													reproduce the observed properties of quasars and galaxies at z~6.-->
-<!--													By building upon the empirical quasar population model described above-->
-<!--													(see <i>Pizzati et al. 2024a</i>), we have worked on developing such-->
-<!--													framework. In this context, we made use of a new,-->
-<!--													large-volume N-body simulation with more than-->
-<!--													a trillion particles, FLAMINGO-10k, that is able to model quasars and galaxies-->
-<!--													simultaneously. We successfully reproduced observations-->
-<!--													of z~6 quasars and galaxies (i.e., their clustering properties and-->
-<!--													luminosity functions), and used them to infer key quantities such as their-->
-<!--													luminosity-halo mass relation, the mass function of their host halos,-->
-<!--													and their duty cycle/occupation fraction. By focusing on the inferred-->
-<!--													properties of quasars, we presented for the first time a homogeneous analysis of-->
-<!--													their evolution up to z>6. The picture that emerges reveals-->
-<!--													a strong evolution of the host halo mass and duty cycle of quasars-->
-<!--														at z~2-6, and calls for new investigations of the role of-->
-<!--													quasar activity across cosmic time-->
-													<i>(Figure from <a href="https://doi.org/10.1093/mnras/stae2307">Pizzati et al. 2024b</a>)</i>
-												</div>
-											</section>
-
-
-											<section id="lrd">
-
-											<header>
-												<h2>The enigmatic properties of the JWST Little Red Dots population </h2>
-
-											</header>
-
-												<div class="research-figure"><img src="images/mock_lrds_cropped.png" alt="" style="width:100%; height:auto;"  /></div>
-
-												<div class="research-text">
-
-													The dramatic leap in sensitivity brought by JWST has also led to wildly
-													unexpected discoveries, such as the presence of an abundant population
-													of <b>broad-line high-z AGN</b> candidates appearing
-													as "little red dots" (LRDs) in JWST imaging.
-													When correcting for obscuration effects, these LRDs have surprisingly
-													<b>large bolometric luminosities</b>, comparable to the ones of the
-													UV-selected quasars whose properties have been studied for decades.
-													This is incredibly surprising, since UV-luminous quasars are selected
-													from wide-field 1400 deg\(^2\) deep imaging surveys, whereas JWST AGN
-													are identified in surveys of not more than ~300-600 arcmin\(^2\).
-													Such a massive difference indicates that these AGN are <b>far more abundant</b>
-													than comparably luminous UV-unobscured quasars, implying that our understanding
-													of <b>SMBH growth</b> and
-													quasar/AGN activity in the early Universe needs to be thoroughly revised.
-													By comparing the properties of JWST AGN/LRDs to the ones of UV-selected quasars,
-													we have concluded that <b>LRDs outnumber quasars</b> by a large factor that
-													rapidly evolves with redshift. Interestingly, this suggests that
-													the large population of LRDs cannot be accommodated in the same
-													halos where unobscured quasars live. Hence, LRDs may
-													represent a <b>different evolutionary phase</b> of early SMBHs. This
-													hypothesis will be ultimately tested by constraining the clustering
-													of LRDs, for which we have developed a successful <b>mock analysis</b> based on
-													a quasar population model.
-													<i>(Figure from  <a href="https://arxiv.org/abs/2409.18208">Pizzati et al. 2024c</a>)</i>
-
-												</div>
-											</section>
-
-
-
-											<section id="flamingo">
-
-											<header>
-												<h2>Massive black holes and quasars in the FLAMINGO cosmological simulation </h2>
-
-											</header>
-
-												<div class="research-figure"><img src="images/flamingo_resized.png" alt="" style="width:100%; height:auto;"  /></div>
-
-												<div class="research-text">
-													<b>Cosmological hydrodynamical simulations</b> follow the non-linear
-													evolution of structures in the Universe by modeling a large
-													variety of processes that are important to the physics of galaxies,
-													stars, and black holes. In the last decade, these simulations have
-													become capable of reproducing a large number of observed galaxy
-													properties. As a consequence, they have started to play a key role
-													in shaping our understanding of the <b>formation and evolution of
-													galaxies in the Universe</b>, as well as the relation between galaxies
-													and the supermassive black holes (SMBHs) that are harbored at their
-													center. While much effort has been devoted to the study of the
-													connection between SMBHs and their hosting galaxies in terms of
-													gas fueling and AGN feedback, only few studies have focused on
-													the <b>global properties of SMBHs</b> and their evolution over cosmic
-													time. Specifically, SMBHs are visible at cosmological distances
-													when they turn into <b>bright quasars</b>. Quasars are, however, extremely
-													rare objects, hence their statistical properties can only be studied
-													theoretically when large simulated volumes are available.
-													In a project that I am co-supervising, we use the cosmological simulations from
-													the <b>FLAMINGO suite</b> (which are the largest ever run) to
-													reproduce two basic observational probes of quasar activity:
-													the <b>quasar luminosity function</b> and the <b>quasar autocorrelation
-													function</b>. We study how well FLAMINGO can match observational
-													constraints on these quantities at different redshifts. We also
-													investigate which black holes contribute to the bright quasar
-													population, and split their relative contribution in terms of
-													different properties. Thanks to the state-of-the-art
-													capabilities of FLAMINGO, for the first time we can test
-													the ability of large-volume hydrodynamical
-													simulations to capture the evolution of massive black holes and
-													quasar activity across cosmic time.
-<!--													Finally,-->
-<!--													we discuss the redshift evolution of other relevant quantities-->
-<!--													such as the black hole mass function, the Eddington ratio-->
-<!--													distribution function, and the stellar/halo mass-black hole-->
-<!--													mass scaling relation -->
-													<i>(Figure from <a href="https://doi:10.1093/mnras/stad2419"> Schaye et al. 2023</a>)</i>.
-
-
-												</div>
-											</section>
-
-
-											<section id="outflows" style="display: block;">
-												<header>
-
-												<h2>Modeling outflows and [CII] halos in high-redshift galaxies </h2>
-												</header>
-
-												<div class="research-figure"><img src="images/m82.jpg" alt="" style="width:100%; height:auto;"  /></div>
-
-												<div class="research-text">
-
-													Investigating the complex environments of galaxies during the Epoch of Reionization
-													is one of the most pressing research goals of modern astrophysics.
-													In this context, the advent of telescopes such as ALMA and NOEMA have opened a new
-													window on the primordial Universe, allowing us to shed light on
-													the obscured star formation and ISM line emission at rest-frame FIR
-													wavelengths up to z~7.
-<!--													Combining the-->
-<!--													information coming from the dust continuum emission, as well as from some relevant-->
-<!--													FIR emission lines such as [CII], [O III], and CO from various rotational-->
-<!--													levels, we are rapidly improving our understanding of the small-scale,-->
-<!--													internal properties and assembly history of galaxies in the EoR.-->
-
-													One of the most compelling findings made by ALMA is that a significant
-													fraction of z>4 galaxies is surrounded by <b>extended (10-15 kpc)
-													[C II]-emitting haloes</b> that are not predicted by even the most
-													advanced zoom-in simulations.
-<!--													This discovery poses a series of thorny theoretical questions,-->
-<!--													involving their formation mechanisms, evolution, and impact on the-->
-<!--													enshrouded galaxies as well as on the external regions where-->
-<!--													the intergalactic medium (IGM) resides.-->
-
-													As part of my Master Thesis, I worked with Andrea Ferrara, Andrea Pallottini,
-													and the cosmology group at SNS on finding a plausible
-													mechanism to explain the formation of these halos. We focused on the
-													hypothesis that these halos result from the remnants of past –
-													or ongoing – <b>outflow activity</b>. We explored this idea by using a semi-analytical model for
-													an outflow that undergoes <b>catastrophic cooling</b> in the inner region of the halo. By computing
-													the abundance of singly ionized Carbon and simulating the resulting [C II] emission, we
-													compared our model with data from, e.g., the ALMA ALPINE program,
-													and we conclude that outflows represent a <b>promising answer</b> to explain the origin of the
-													observed [C II] halos.  Our model
-													 points to the presence of extended [CII] emission at high redshifts
-													as a tangible sign of <b>star-formation-driven feedback mechanisms</b>
-													being already in place well into the Epoch of Reionization.
-													<i>(Figure from NASA; see also my <a href="https://github.com/eliapizzati/master_thesis/blob/main/Master_Thesis.pdf">
-														Master Thesis</a>)</i>
-
-
-												</div>
-
-											</section>
-
-
-											<section id="discs" style="display: block;">
-												<header>
-
-												<h2>Turbulence and morphology of protoplanetary discs </h2>
-												</header>
-
-												<div class="research-figure"><img src="images/disk_paper.jpg" alt="" style="width:100%; height:auto;"  /></div>
-
-												<div class="research-text">
-
-
-													Constraining the strength of <b>gas turbulence</b> in protoplanetary discs is crucial
-													for understanding the physics of gas accretion and planet formation.
-													A promising method to gauge the level of gas turbulence in discs is to measure the <b>vertical
-													scale height</b> of the dust component - which is expected to be coupled to the gas component
-													through gas-dust coupling. This has become possible in the last few years
-													thanks to the very <b>high-resolution observations</b> provided by the ALMA telescope.
-													These observations uncovered a large amount of features in the 2d images
-													of protoplanetary discs, including <b>dark gaps and emission rings</b>.
-													As shown by <i>Pinte et al. 2016</i>,
-													it is possible to exploit these features to uncover the <b>3-d morphology of discs</b>.
-													The idea is simple: due to <b>projection effects</b>, a gap in a disc emission
-													profiles will be partly filled by the emission coming from the
-													neighbouring regions. This effect is stronger along the minor axis
-													of the disc, whereas the major axis is only marginally affected. Hence,
-													 one can compare the <b>gap contrast</b> along the major and
-													minor axes to infer the amount of "filling" that has taken place.
-													The extent of this gap filling is directly dependent on the vertical structure of the
-													disc.
-<!--													Hence, a measurement of the gap contrast-->
-<!--													along the major and minor axes can be used to infer the vertical scale-->
-<!--													height of the disc, and to indirectly gauge the amount of gas turbulence in discs.-->
-
-													In collaboration with Giovanni Rosotti and Benoit Tabone,
-													we applied this method to high-resolution <b>DSHARP observations</b>.
-													We built a radiative transfer model to reproduce the
-													observed gap constrast for different values of the dust scale heights.
-													and found that the scale heights that yield a better agreement with data are
-													generally small, implying
-													<b>low levels of gas turbulence in discs</b>. This represents an important
-													step towards understanding the physical processes that govern the
-													formation of planets in discs.
-<!--													We also investigated the properties of the sources-->
-<!--													for which our method yields no significant constraints on the disc-->
-<!--													vertical structure, and concluded-->
-<!--													that this is because these discs have either a low inclination or gaps-->
-<!--													that are not deep enough. -->
-<!--													Based on our analysis, we provided an empirical-->
-<!--													criterion to assess whether a given disc is suitable to measure the-->
-<!--													vertical scale height-->
-													<i>(Figure from <a href="https://doi.org/10.1093/mnras/stad2057" >Pizzati et al. 2023</a>)</i>.
-
-												</div>
-
-											</section>
-
-
-
-											<section id="grav_waves">
-
-												<header>
-
-												<h2>Overlapping gravitational waves signals in the next generation of detectors </h2>
-												</header>
-
-												<div class="research-figure"><img src="images/overlap_gw.jpg" alt="" style="width:100%; height:auto;"  /></div>
-
-												<div class="research-text">
-
-													With the first direct detection of gravitational waves in 2015,
-													the era of <b>gravitational-wave astronomy</b> has begun. This first decade
-													of observations has already provided a wealth of information about
-													compact binary mergers of neutron stars and black holes. The future
-													of this research field looks even brighter, with the <b>next generation of detectors</b>
-													such as the Cosmic Explorer and the Einstein Telescope expected to
-													observe hundreds of thousands of binary coalescence events each year.
-													With huge leaps in sensitivity, however, new challenges arise.
-													One of the most pressing issues for the next generation of detectors
-													is that signals from coalescing binaries will be so frequent that
-													they will start to <b>overlap in the time domain</b>.
-													When two signals overlap, the standard data-analysis pipelines
-													used to detect and infer the properties of these signals
-													are not guaranteed to work. In particular, multiple signals overlapping
-													in the time/frequency domain may result in biases in the final parameter estimates.
-<!--													overlapping signals,-->
-<!--													While the detection-->
-<!--													pipelines have been shown to work well even in the presence of-->
-<!--													overlapping signals, the parameter inference algorithms used to-->
-<!--													estimate the properties of these signals represent a more compelling-->
-<!--													problem, as overlap of multiple signals in the time/frequency-->
-<!--													domains may result in biases in the final parameter estimates.-->
-													In a work done with Bangalore Sathyaprakash, Surabhi
-													Sachdev, and Anuradha Gupta,
-													we quantified the biases arising by using
-													 current parameter inference pipelines to constrain the
-													parameters of a signal
-													in the presence of multiple overlapping ones. We showed that, by setting
-													a prior
-													on the coalescence time,
-													it is possible to correctly infer the properties of
-													multiple overlapping signals even
-													with the current data-analysis infrastructure, provided that the
-													coalescence times of the signals in the detector frame
-													are more than ~1-2 seconds apart.
-<!--													This implies that for the vast-->
-<!--													majority of the signals that will be detected by future detectors,-->
-<!--													our current framework for parameter inference will work just fine.-->
-													Signals whose coalescence epochs lie
-													within ~0.5 seconds of each other, however, suffer from significant
-													biases, requiring future developments of new strategies and algorithms.
-													<i>(Figure from <a href="https://doi.org/10.1103/PhysRevD.105.104016" >Pizzati et al. 2022</a>)</i>
-
-												</div>
-
-
-											</section>
-
-
-
-<!--											<span class="image featured"><img src="images/banner3.jpg" alt="" /></span>-->
-
-<!--											<p>Phasellus quam turpis, feugiat sit amet ornare in, hendrerit in lectus.-->
-<!--											Praesent semper mod quis eget mi. Etiam eu ante risus. Aliquam erat volutpat.-->
-<!--											Aliquam luctus et mattis lectus sit amet pulvinar. Nam turpis nisi-->
-<!--											consequat etiam lorem ipsum dolor sit amet nullam.</p>-->
-
-<!--											<h3>And Yet Another Subheading</h3>-->
-<!--											<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ac quam risus, at tempus-->
-<!--											justo. Sed dictum rutrum massa eu volutpat. Quisque vitae hendrerit sem. Pellentesque lorem felis,-->
-<!--											ultricies a bibendum id, bibendum sit amet nisl. Mauris et lorem quam. Maecenas rutrum imperdiet-->
-<!--											vulputate. Nulla quis nibh ipsum, sed egestas justo. Morbi ut ante mattis orci convallis tempor.-->
-<!--											Etiam a lacus a lacus pharetra porttitor quis accumsan odio. Sed vel euismod nisi. Etiam convallis-->
-<!--											rhoncus dui quis euismod. Maecenas lorem tellus, congue et condimentum ac, ullamcorper non sapien.-->
-<!--											Donec sagittis massa et leo semper a scelerisque metus faucibus. Morbi congue mattis mi.-->
-<!--											Phasellus sed nisl vitae risus tristique volutpat. Cras rutrum commodo luctus.</p>-->
-
-<!--											<p>Phasellus odio risus, faucibus et viverra vitae, eleifend ac purus. Praesent mattis, enim-->
-<!--											quis hendrerit porttitor, sapien tortor viverra magna, sit amet rhoncus nisl lacus nec arcu.-->
-<!--											Suspendisse laoreet metus ut metus imperdiet interdum aliquam justo tincidunt. Mauris dolor urna,-->
-<!--											fringilla vel malesuada ac, dignissim eu mi. Praesent mollis massa ac nulla pretium pretium.-->
-<!--											Maecenas tortor mauris, consectetur pellentesque dapibus eget, tincidunt vitae arcu.-->
-<!--											Vestibulum purus augue, tincidunt sit amet iaculis id, porta eu purus.</p>-->
-										</article>
+		<p class="lead">
+			I work at the intersection of theoretical and observational astrophysics, bridging models
+			with data by interpreting observations within the framework of theoretical predictions,
+			using both analytical and numerical methods.
+		</p>
+
+		<p>
+			The central thread of my research is understanding <b>high-redshift quasars</b> and the
+			<b>formation and growth of supermassive black holes</b> across cosmic time. I combine
+			<a href="#clustering">large-volume cosmological simulations and empirical population models</a>
+			with <a href="#jwst_clustering">clustering measurements from JWST</a> and wide-field surveys
+			&mdash; addressing questions such as: <i>Where
+			does quasar activity take place? How do the properties of quasars relate to those of their host
+			halos and galaxies? What is the timescale of quasar activity, and how does it shape the growth of
+			supermassive black holes?</i> Within this theme I have studied
+			<a href="#simulations">massive black holes in hydrodynamical simulations</a> and the enigmatic
+			JWST population of <a href="#lrd">&ldquo;little red dots&rdquo;</a>.
+		</p>
+
+		<p>
+			I am also interested in the broader physics of galaxy formation and have worked on several
+			other topics, including models of <a href="#outflows">galactic outflows</a> and extended [CII]
+			halos, the morphology of <a href="#discs">protoplanetary discs</a>, and parameter inference for
+			<a href="#grav_waves">gravitational-wave signals</a>.
+		</p>
+
+		<h2 class="research-group">High-redshift quasars and supermassive black holes</h2>
+
+		<section id="clustering">
+			<header>
+				<h2>Quasar clustering and population models from z&#8776;4 to z&#8776;6</h2>
+			</header>
+
+			<div class="research-figure"><img src="images/slide_intro_model.jpg" alt="Schematic of the quasar population model" /></div>
+
+			<div class="research-text">
+				Quasar clustering measurements are a powerful probe of the physical processes governing the
+				<b>growth of supermassive black holes</b> and their coevolution with host galaxies. Wide-field
+				surveys reveal a dramatic increase in the <b>clustering strength of quasars</b> at high redshift,
+				with measurements at \(z\approx4\) that have been challenging to reproduce theoretically &mdash;
+				even assuming quasars are hosted by the most massive dark matter halos in the early Universe.
+
+				In the first project of my Ph.D., we revisited this decade-long problem using new,
+				<b>large-volume N-body cosmological simulations</b>. We developed a model that reproduces the
+				observed quasar clustering and demographics through a <b>novel method</b> for computing the halo
+				mass function and halo cross-correlation functions across <b>multiple simulations</b>. Using a
+				conditional luminosity function framework, the model captures the <b>stochastic relationship</b>
+				between quasar luminosity and halo mass and predicts key observables &mdash; the quasar
+				auto-correlation and luminosity functions, host mass function, and duty cycle.
+
+				I then extended this framework to the highest redshifts probed by JWST. Using
+				<b>NIRCam/WFSS observations</b> from surveys such as EIGER and ASPIRE &mdash; which detected
+				numerous [OIII]-emitting galaxies around bright high-z quasars and measured the
+				<b>quasar&ndash;galaxy cross-correlation function</b> for the first time at \(z>6\) &mdash; we
+				proposed a framework to <b>jointly infer the properties of quasars and [OIII]-emitting
+				galaxies</b> from their clustering and luminosity functions. Applied to EIGER data, it constrains
+				the luminosity&ndash;halo mass relation, the host halo mass function, and the duty
+				cycle/occupation fraction of quasars and galaxies at \(z\approx6\), and will be applied to
+				upcoming JWST surveys.
+			</div>
+
+			<div class="relevant-pubs">
+				<h4>Relevant publications</h4>
+				<ul>
+					<li><a href="https://doi.org/10.1093/mnras/stae329">Pizzati et al. 2024a</a> &mdash;
+						<i>Revisiting the extreme clustering of \(z\approx4\) quasars with large volume cosmological simulations</i></li>
+					<li><a href="https://doi.org/10.1093/mnras/stae2307">Pizzati et al. 2024b</a> &mdash;
+						<i>A unified model for the clustering of quasars and galaxies at \(z\approx6\)</i></li>
+				</ul>
+			</div>
+		</section>
+
+		<section id="jwst_clustering">
+			<header>
+				<h2>JWST clustering measurements of quasars and their environments</h2>
+			</header>
+
+			<div class="research-figure"><img src="images/qhmf_z6.png" alt="Quasar host halo mass function at z~6" /></div>
+
+			<div class="research-text">
+				JWST's <b>NIRCam Wide Field Slitless Spectroscopy (WFSS)</b> mode has, for the first time,
+				enabled spectroscopic <b>clustering measurements</b> of quasars and galaxies deep into the Epoch
+				of Reionization. Surveys such as <b>EIGER</b> and <b>ASPIRE</b> target bright high-z quasar fields
+				and detect the [OIII]-emitting galaxies around them, revealing a wide range of large-scale
+				environments &mdash; from sparse fields to spectacular overdensities.
+
+				I have contributed to several of these measurement campaigns, which deliver the
+				<b>quasar&ndash;galaxy cross-correlation function</b>, the galaxy auto-correlation function, and
+				constraints on <b>host halo masses and duty cycles</b> at \(z\approx6\). Interpreting these data
+				with population models (see above) is key to understanding where early quasars live and how they
+				grow. Robust inference also requires careful treatment of systematics such as <b>cosmic
+				variance</b> and the contribution of <b>satellites</b> in the small volumes probed by JWST.
+			</div>
+
+			<div class="relevant-pubs">
+				<h4>Relevant publications</h4>
+				<ul>
+					<li><a href="https://doi.org/10.3847/1538-4357/ad778b">Eilers et al. 2024</a> &mdash;
+						<i>EIGER VI. The Correlation Function, Host Halo Mass and Duty Cycle of Luminous Quasars at \(z\approx6\)</i></li>
+					<li><a href="https://arxiv.org/abs/2602.04974">Huang et al. 2026a</a> &mdash;
+						<i>Clustering of \(z\sim6.6\) Quasars and [O III] Emitters Constrains Host Halo Masses and Duty Cycles in 25 ASPIRE Fields</i></li>
+					<li><a href="https://arxiv.org/abs/2605.11077">Huang et al. 2026b</a> &mdash;
+						<i>The Impact of Cosmic Variance and Satellites on JWST Clustering Measurements at Redshift around 6</i></li>
+				</ul>
+			</div>
+		</section>
+
+		<section id="simulations">
+			<header>
+				<h2>Massive black holes and quasars in cosmological hydrodynamical simulations</h2>
+			</header>
+
+			<div class="research-figure">
+				<img src="images/flamingo_resized.png" alt="Large-volume cosmological hydrodynamical simulation" />
+				<span class="fig-credit">Image: Schaye et al. 2023</span>
+			</div>
+
+			<div class="research-text">
+				<b>Cosmological hydrodynamical simulations</b> follow the non-linear evolution of cosmic
+				structure by modeling the many processes important to the physics of galaxies, stars, and black
+				holes, and have become capable of reproducing a wide range of observed galaxy properties. Yet,
+				while much effort has gone into the connection between SMBHs and their host galaxies through gas
+				fueling and AGN feedback, only a few studies have focused on the <b>global properties of
+				SMBHs</b> and their evolution over cosmic time. SMBHs are visible at cosmological distances when
+				they shine as <b>bright quasars</b> &mdash; rare objects whose statistical properties can only be
+				captured theoretically with large simulated volumes.
+
+				In a project I co-supervise, we use <b>state-of-the-art, large-volume cosmological
+				hydrodynamical simulations</b> &mdash; among the largest ever run &mdash; to reproduce two basic
+				probes of quasar activity: the <b>quasar luminosity function</b> and the <b>quasar
+				auto-correlation function</b>. We study how well these simulations match observational
+				constraints across redshift, and investigate which black holes contribute to the bright quasar
+				population. For the first time, this lets us test the ability of large-volume hydrodynamical
+				simulations to capture the evolution of massive black holes and quasar activity across cosmic
+				time.
+			</div>
+
+			<div class="relevant-pubs">
+				<h4>Relevant publications</h4>
+				<ul>
+					<li><a href="https://doi.org/10.1093/mnras/stag308">Ding et al. 2026</a> &mdash;
+						<i>The luminosity function and clustering of bright quasars in cosmological simulations</i></li>
+				</ul>
+			</div>
+		</section>
+
+		<section id="lrd">
+			<header>
+				<h2>The enigmatic properties of the JWST little red dots</h2>
+			</header>
+
+			<div class="research-figure"><img src="images/mock_lrds_cropped.png" alt="Mock little red dots analysis" /></div>
+
+			<div class="research-text">
+				The dramatic leap in sensitivity brought by JWST has led to unexpected discoveries, such as an
+				abundant population of <b>broad-line high-z AGN</b> appearing as &ldquo;little red dots&rdquo;
+				(LRDs) in JWST imaging. When corrected for obscuration, these LRDs have surprisingly
+				<b>large bolometric luminosities</b>, comparable to UV-selected quasars studied for decades.
+				This is remarkable: UV-luminous quasars are selected from wide-field \(1400\,\mathrm{deg}^2\)
+				surveys, whereas JWST AGN are found in fields of no more than \(\sim300\text{--}600\,
+				\mathrm{arcmin}^2\) &mdash; implying these AGN are <b>far more abundant</b> than comparably
+				luminous unobscured quasars, and that our picture of <b>SMBH growth</b> in the early Universe
+				needs revision.
+
+				By comparing JWST AGN/LRDs to UV-selected quasars, we found that <b>LRDs outnumber quasars</b>
+				by a large, rapidly redshift-evolving factor. This suggests the LRD population cannot be
+				accommodated in the same halos as unobscured quasars, and that LRDs may represent a
+				<b>different evolutionary phase</b> of early SMBHs &mdash; a hypothesis to be tested by
+				constraining LRD clustering, for which we developed a successful <b>mock analysis</b> based on a
+				quasar population model.
+			</div>
+
+			<div class="relevant-pubs">
+				<h4>Relevant publications</h4>
+				<ul>
+					<li><a href="https://doi.org/10.1093/mnras/staf660">Pizzati et al. 2025</a> &mdash;
+						<i>&ldquo;Little Red Dots&rdquo; cannot reside in the same dark matter halos as comparably luminous unobscured quasars</i></li>
+				</ul>
+			</div>
+		</section>
+
+		<h2 class="research-group">Other research topics</h2>
+
+		<section id="outflows">
+			<header>
+				<h2>Modeling outflows and [CII] halos in high-redshift galaxies</h2>
+			</header>
+
+			<div class="research-figure">
+				<img src="images/m82.jpg" alt="Galactic outflow (M82)" />
+				<span class="fig-credit">Image: NASA</span>
+			</div>
+
+			<div class="research-text">
+				Investigating the environments of galaxies during the Epoch of Reionization is a pressing goal
+				of modern astrophysics. Telescopes such as ALMA and NOEMA have opened a new window on the
+				primordial Universe, revealing obscured star formation and ISM line emission at rest-frame FIR
+				wavelengths up to \(z\sim7\). One of ALMA's most compelling findings is that a significant
+				fraction of \(z>4\) galaxies is surrounded by <b>extended (10&ndash;15 kpc) [C II]-emitting
+				haloes</b> not predicted even by advanced zoom-in simulations.
+
+				As part of my Master's thesis, I worked with Andrea Ferrara, Andrea Pallottini, and the
+				cosmology group at SNS on a plausible formation mechanism, focusing on the hypothesis that these
+				halos are remnants of past or ongoing <b>outflow activity</b>. Using a semi-analytical model for
+				an outflow undergoing <b>catastrophic cooling</b> in the inner halo, we computed the abundance of
+				singly ionized carbon and the resulting [C II] emission, and compared with data from the ALMA
+				ALPINE program. We concluded that outflows are a <b>promising explanation</b> for the observed
+				[C II] halos, pointing to <b>star-formation-driven feedback</b> already in place well into the
+				Epoch of Reionization.
+			</div>
+
+			<div class="relevant-pubs">
+				<h4>Relevant publications</h4>
+				<ul>
+					<li><a href="https://doi.org/10.1093/mnras/staa1163">Pizzati et al. 2020</a> &mdash;
+						<i>Outflows and extended [CII] haloes in high-redshift galaxies</i></li>
+					<li><a href="https://doi.org/10.1093/mnras/stac3816">Pizzati et al. 2023</a> &mdash;
+						<i>[CII] Haloes in ALPINE galaxies: smoking-gun of galactic outflows?</i></li>
+				</ul>
+			</div>
+		</section>
+
+		<section id="discs">
+			<header>
+				<h2>Turbulence and morphology of protoplanetary discs</h2>
+			</header>
+
+			<div class="research-figure"><img src="images/disk_paper.jpg" alt="Protoplanetary disc model" /></div>
+
+			<div class="research-text">
+				Constraining the strength of <b>gas turbulence</b> in protoplanetary discs is crucial for
+				understanding gas accretion and planet formation. A promising probe is the <b>vertical scale
+				height</b> of the dust, which is coupled to the gas &mdash; now measurable thanks to the very
+				<b>high-resolution observations</b> of ALMA, which reveal <b>dark gaps and emission rings</b> in
+				disc images. As shown by <i>Pinte et al. 2016</i>, these features can be exploited to recover the
+				<b>3-D morphology of discs</b>: due to <b>projection effects</b>, a gap is partly filled by
+				emission from neighbouring regions &mdash; more so along the minor axis than the major axis &mdash;
+				so the <b>gap contrast</b> between the two axes traces the disc's vertical structure.
+
+				With Giovanni Rosotti and Beno&icirc;t Tabone, we applied this method to high-resolution
+				<b>DSHARP observations</b>, building a radiative transfer model to reproduce the observed gap
+				contrast for different dust scale heights. The best-fitting scale heights are generally small,
+				implying <b>low levels of gas turbulence</b> &mdash; an important step toward understanding the
+				physics that governs planet formation.
+			</div>
+
+			<div class="relevant-pubs">
+				<h4>Relevant publications</h4>
+				<ul>
+					<li><a href="https://doi.org/10.1093/mnras/stad2057">Pizzati et al. 2023</a> &mdash;
+						<i>Constraining turbulence in protoplanetary discs using the gap contrast: an application to the DSHARP sample</i></li>
+				</ul>
+			</div>
+		</section>
+
+		<section id="grav_waves">
+			<header>
+				<h2>Overlapping gravitational-wave signals in next-generation detectors</h2>
+			</header>
+
+			<div class="research-figure"><img src="images/overlap_gw.jpg" alt="Overlapping gravitational-wave signals" /></div>
+
+			<div class="research-text">
+				With the first direct detection of gravitational waves in 2015, the era of
+				<b>gravitational-wave astronomy</b> began, already delivering a wealth of information about
+				compact binary mergers of neutron stars and black holes. The <b>next generation of detectors</b>
+				&mdash; Cosmic Explorer and the Einstein Telescope &mdash; is expected to observe hundreds of
+				thousands of binary coalescences per year. With these leaps in sensitivity come new challenges:
+				signals will be so frequent that they begin to <b>overlap in the time domain</b>, where standard
+				data-analysis pipelines are not guaranteed to work and may yield <b>biased parameter
+				estimates</b>.
+
+				With Bangalore Sathyaprakash, Surabhi Sachdev, and Anuradha Gupta, we quantified the biases that
+				arise when current inference pipelines are used in the presence of multiple overlapping signals.
+				We showed that, by setting a prior on the coalescence time, the properties of overlapping signals
+				can be recovered correctly with existing infrastructure &mdash; provided the coalescence times
+				are more than \(\sim1\text{--}2\) seconds apart. Signals within \(\sim0.5\) seconds of each
+				other, however, suffer significant biases, motivating new strategies and algorithms.
+			</div>
+
+			<div class="relevant-pubs">
+				<h4>Relevant publications</h4>
+				<ul>
+					<li><a href="https://doi.org/10.1103/PhysRevD.105.104016">Pizzati et al. 2022</a> &mdash;
+						<i>Toward inference of overlapping gravitational-wave signals</i></li>
+				</ul>
+			</div>
+		</section>
+
+	</article>
 
 </div>

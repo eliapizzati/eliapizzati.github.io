@@ -72,16 +72,60 @@ nav.site a.link.active::after {
   height: 2px; width: 100%; background: var(--primary-bright); border-radius: 2px;
 }
 
-/* ---------- Hero (home): thesis cover illustration ---------- */
+/* ---------- Hero (home): generative deep-space / cosmic-web backdrop ---------- */
 header.hero {
   position: relative; text-align: center; color: #fff; overflow: hidden;
   padding: 6.5rem 1.5rem 7.5rem;
-  background:
-    /* dark overlay keeps the white text readable over the illustration */
-    linear-gradient(rgba(8, 11, 20, 0.42), rgba(10, 14, 22, 0.62)),
-    url("../../images/cover_hero.jpg") center center / cover no-repeat;
+  background-color: #080b14;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover, auto, auto, auto, auto;
+  background-image:
+    /* cosmic-web filaments (inline SVG data-URI, CSS-only) */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 620' preserveAspectRatio='xMidYMid slice'%3E%3Cg stroke='%23aebfe0' stroke-width='0.7' stroke-opacity='0.13'%3E%3Cline x1='874' y1='412' x2='772' y2='373'/%3E%3Cline x1='757' y1='232' x2='772' y2='373'/%3E%3Cline x1='1130' y1='215' x2='1020' y2='355'/%3E%3Cline x1='113' y1='155' x2='137' y2='181'/%3E%3Cline x1='982' y1='379' x2='998' y2='470'/%3E%3Cline x1='1003' y1='370' x2='1020' y2='355'/%3E%3Cline x1='762' y1='35' x2='757' y2='232'/%3E%3Cline x1='274' y1='313' x2='219' y2='443'/%3E%3Cline x1='955' y1='425' x2='982' y2='379'/%3E%3Cline x1='959' y1='24' x2='837' y2='47'/%3E%3Cline x1='955' y1='425' x2='956' y2='443'/%3E%3Cline x1='772' y1='373' x2='666' y2='417'/%3E%3Cline x1='1020' y1='355' x2='1168' y2='391'/%3E%3Cline x1='762' y1='35' x2='837' y2='47'/%3E%3Cline x1='339' y1='149' x2='284' y2='188'/%3E%3Cline x1='128' y1='76' x2='137' y2='181'/%3E%3Cline x1='774' y1='336' x2='642' y2='584'/%3E%3Cline x1='982' y1='379' x2='1020' y2='355'/%3E%3Cline x1='339' y1='149' x2='286' y2='39'/%3E%3Cline x1='51' y1='135' x2='137' y2='181'/%3E%3Cline x1='956' y1='443' x2='998' y2='470'/%3E%3Cline x1='642' y1='584' x2='666' y2='417'/%3E%3Cline x1='1055' y1='70' x2='959' y2='24'/%3E%3Cline x1='774' y1='336' x2='666' y2='417'/%3E%3Cline x1='1055' y1='70' x2='1130' y2='215'/%3E%3Cline x1='1003' y1='370' x2='982' y2='379'/%3E%3Cline x1='509' y1='37' x2='415' y2='110'/%3E%3Cline x1='284' y1='188' x2='286' y2='39'/%3E%3Cline x1='1130' y1='215' x2='1168' y2='391'/%3E%3Cline x1='274' y1='313' x2='284' y2='188'/%3E%3Cline x1='1003' y1='370' x2='1168' y2='391'/%3E%3Cline x1='874' y1='412' x2='774' y2='336'/%3E%3Cline x1='955' y1='425' x2='1003' y2='370'/%3E%3Cline x1='339' y1='149' x2='415' y2='110'/%3E%3Cline x1='276' y1='362' x2='459' y2='340'/%3E%3Cline x1='874' y1='412' x2='955' y2='425'/%3E%3Cline x1='276' y1='362' x2='330' y2='563'/%3E%3Cline x1='276' y1='362' x2='210' y2='240'/%3E%3Cline x1='956' y1='443' x2='982' y2='379'/%3E%3Cline x1='955' y1='425' x2='998' y2='470'/%3E%3Cline x1='51' y1='135' x2='128' y2='76'/%3E%3Cline x1='415' y1='110' x2='449' y2='142'/%3E%3Cline x1='128' y1='76' x2='113' y2='155'/%3E%3Cline x1='330' y1='563' x2='219' y2='443'/%3E%3Cline x1='642' y1='584' x2='772' y2='373'/%3E%3Cline x1='774' y1='336' x2='757' y2='232'/%3E%3Cline x1='51' y1='135' x2='113' y2='155'/%3E%3Cline x1='774' y1='336' x2='772' y2='373'/%3E%3Cline x1='837' y1='47' x2='757' y2='232'/%3E%3Cline x1='284' y1='188' x2='210' y2='240'/%3E%3Cline x1='274' y1='313' x2='276' y2='362'/%3E%3Cline x1='1055' y1='70' x2='837' y2='47'/%3E%3Cline x1='762' y1='35' x2='959' y2='24'/%3E%3Cline x1='274' y1='313' x2='459' y2='340'/%3E%3Cline x1='509' y1='37' x2='449' y2='142'/%3E%3Cline x1='339' y1='149' x2='509' y2='37'/%3E%3Cline x1='137' y1='181' x2='210' y2='240'/%3E%3Cline x1='274' y1='313' x2='330' y2='563'/%3E%3Cline x1='459' y1='340' x2='449' y2='142'/%3E%3Cline x1='274' y1='313' x2='210' y2='240'/%3E%3Cline x1='276' y1='362' x2='219' y2='443'/%3E%3Cline x1='955' y1='425' x2='1020' y2='355'/%3E%3Cline x1='874' y1='412' x2='956' y2='443'/%3E%3Cline x1='339' y1='149' x2='449' y2='142'/%3E%3Cline x1='415' y1='110' x2='286' y2='39'/%3E%3C/g%3E%3Cg%3E%3Ccircle cx='762' cy='35' r='2.5' fill='%23b6c83a' fill-opacity='0.5'/%3E%3Ccircle cx='339' cy='149' r='1.8' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='874' cy='412' r='1.7' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='1055' cy='70' r='2.9' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='509' cy='37' r='2.8' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='274' cy='313' r='2.5' fill='%23b6c83a' fill-opacity='0.5'/%3E%3Ccircle cx='51' cy='135' r='2.4' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='774' cy='336' r='2.0' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='276' cy='362' r='2.9' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='959' cy='24' r='2.1' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='955' cy='425' r='2.4' fill='%23b6c83a' fill-opacity='0.5'/%3E%3Ccircle cx='415' cy='110' r='1.8' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='1130' cy='215' r='2.3' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='128' cy='76' r='1.8' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='1003' cy='370' r='2.3' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='956' cy='443' r='3.4' fill='%23b6c83a' fill-opacity='0.5'/%3E%3Ccircle cx='642' cy='584' r='2.0' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='459' cy='340' r='1.8' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='982' cy='379' r='3.0' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='1020' cy='355' r='2.2' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='837' cy='47' r='2.1' fill='%23b6c83a' fill-opacity='0.5'/%3E%3Ccircle cx='284' cy='188' r='1.5' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='113' cy='155' r='1.6' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='137' cy='181' r='2.4' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='757' cy='232' r='2.7' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='449' cy='142' r='2.7' fill='%23b6c83a' fill-opacity='0.5'/%3E%3Ccircle cx='330' cy='563' r='1.5' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='772' cy='373' r='2.0' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='219' cy='443' r='3.0' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='210' cy='240' r='2.2' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='1168' cy='391' r='3.6' fill='%23b6c83a' fill-opacity='0.5'/%3E%3Ccircle cx='666' cy='417' r='2.8' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='998' cy='470' r='1.4' fill='%23dce8ff' fill-opacity='0.45'/%3E%3Ccircle cx='286' cy='39' r='2.6' fill='%23dce8ff' fill-opacity='0.45'/%3E%3C/g%3E%3C/svg%3E"),
+    /* nebula glows (apple-green + violet) */
+    radial-gradient(ellipse 55% 50% at 28% 32%, rgba(154, 172, 21, 0.22), transparent 70%),
+    radial-gradient(ellipse 48% 42% at 78% 26%, rgba(110, 80, 175, 0.24), transparent 70%),
+    radial-gradient(ellipse 60% 55% at 60% 90%, rgba(40, 90, 120, 0.20), transparent 70%),
+    /* base deep-space gradient */
+    linear-gradient(135deg, #070a13 0%, #0a0f0b 100%);
+}
+/* Two tiled star layers drifting slowly for depth */
+header.hero::before,
+header.hero::after {
+  content: ""; position: absolute; inset: -50% -50% -50% -50%; z-index: 0;
+  pointer-events: none;
+}
+header.hero::before {
+  background-image:
+    radial-gradient(1px 1px at 40px 60px, #ffffff, transparent),
+    radial-gradient(1px 1px at 130px 20px, #e8f0ff, transparent),
+    radial-gradient(1px 1px at 90px 150px, #ffffff, transparent),
+    radial-gradient(1px 1px at 200px 110px, #d8e6ff, transparent),
+    radial-gradient(1.5px 1.5px at 170px 50px, #ffffff, transparent);
+  background-size: 240px 240px;
+  background-repeat: repeat;
+  opacity: 0.7;
+  animation: starDrift 120s linear infinite;
+}
+header.hero::after {
+  background-image:
+    radial-gradient(2px 2px at 60px 120px, #ffffff, transparent),
+    radial-gradient(1.5px 1.5px at 220px 200px, #cfe0ff, transparent),
+    radial-gradient(2px 2px at 300px 80px, #ffffff, transparent);
+  background-size: 380px 380px;
+  background-repeat: repeat;
+  opacity: 0.55;
+  animation: starDrift 200s linear infinite reverse;
 }
 header.hero h1, header.hero p, header.hero .scroll { position: relative; z-index: 1; }
+@keyframes starDrift {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(-240px, -120px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  header.hero::before, header.hero::after { animation: none; }
+}
 header.hero h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700; letter-spacing: 0.5px; }
 header.hero p.role { margin-top: 0.6rem; font-size: clamp(1.05rem, 2.4vw, 1.5rem); font-weight: 500; opacity: 0.97; }
 header.hero .scroll { display: inline-block; margin-top: 1.8rem; color: #fff; font-size: 1.5rem; opacity: 0.9; }
@@ -147,6 +191,13 @@ main { width: 100%; max-width: 1040px; margin: 0 auto; padding: 0 1.25rem; flex:
 }
 .btn:hover { background: #6f7d10; text-decoration: none; transform: translateY(-1px); }
 
+/* Research group dividers */
+.prose h2.research-group {
+  font-size: 1.55rem; margin: 2.8rem 0 1.3rem; padding-bottom: 0.45rem;
+  border-bottom: 2px solid var(--primary); color: var(--text);
+}
+.prose h2.research-group:first-of-type { margin-top: 1.5rem; }
+
 /* Research sections as cards */
 .prose section[id] {
   background: var(--card-bg); border: 1px solid var(--border); border-radius: 1rem;
@@ -163,6 +214,16 @@ main { width: 100%; max-width: 1040px; margin: 0 auto; padding: 0 1.25rem; flex:
 /* Publication list */
 .pub-list { list-style: decimal; margin-left: 1.4rem; }
 .pub-list li { margin-bottom: 0.9rem; }
+
+/* Per-section "relevant publications" block */
+.relevant-pubs { clear: both; margin-top: 1.2rem; padding-top: 0.8rem; border-top: 1px solid var(--border); }
+.relevant-pubs h4 {
+  font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--primary); margin-bottom: 0.5rem;
+}
+.relevant-pubs ul { margin: 0 0 0 1.2rem; font-size: 0.92rem; }
+.relevant-pubs li { margin-bottom: 0.4rem; }
+.fig-credit { display: block; font-size: 0.78rem; color: var(--muted); margin-top: 0.35rem; font-style: italic; }
 
 /* ---------- Footer ---------- */
 footer.site { background: var(--footer-bg); color: var(--footer-text); padding: 2.5rem 1.5rem; flex-shrink: 0; }
