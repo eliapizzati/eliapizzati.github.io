@@ -16,9 +16,10 @@ Working notes for Claude Code on this repo. Personal academic website for
 - **Publications are data-driven**: edit `_data/publications.yml` (3 lists: `first_author`,
   `second_third`, `contributing`; fields title/year/authors/venue/url/url_label, HTML+LaTeX
   allowed). `publications.html` renders them with a Liquid loop — don't hand-edit the list there.
-- **Home hero** is fully generative (no photo): CSS starfield + nebula in `header.hero`
-  (site.css) plus an SVG filament overlay `assets/cosmic-web.svg` (regenerate with the seeded
-  Python snippet in git history if needed). Respects `prefers-reduced-motion`.
+- **Home hero** uses the thesis cover illustration `images/cover_hero.jpg` (compressed copy of
+  `thesis_webpage/cover_image.jpg`, by Monica Rocco) with a dark gradient overlay for text
+  contrast (`header.hero` in site.css). A previous generative starfield + `cosmic-web.svg`
+  overlay lives in git history if you ever want to switch back.
 - `thesis_webpage/index.html` has a sticky "back to main site" bar and a featured full-thesis card.
 - Styling: `assets/css/site.css` — custom design system (Inter font, apple-green theme,
   light/dark via `prefers-color-scheme`, glassmorphism cards). **No more jQuery / Arcana.**
