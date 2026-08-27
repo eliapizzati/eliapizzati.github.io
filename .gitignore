@@ -14,3 +14,5 @@ _site/
 vendor/
 Gemfile.lock
 _preview/
+_preview/
+__pycache__/

@@ -1,0 +1,22 @@
+# Single source of truth for every BAQARO link on the site.
+# Leave a value empty ("") and the page renders it as "in preparation"
+# instead of a dead link. Fill these in one place when they exist.
+
+version:   "1.0"
+code_url:  "https://github.com/eliapizzati/baqaro"
+docs_url:  "https://github.com/eliapizzati/baqaro/tree/main/docs"
+data_url:  ""            # DOI landing page for the data release
+data_doi:  ""            # e.g. 10.5281/zenodo.XXXXXXX
+paper_url: ""            # arXiv abstract page
+paper_ads: ""            # ADS bibcode link
+
+# Adopted best fit, quoted from the release provenance.
+# NB single quotes: YAML processes backslash escapes inside DOUBLE quotes,
+#     which would eat the LaTeX. Single-quoted scalars pass through as typed.
+params:
+  - { sym: '\eta_0', val: '-1.2355', desc: 'mean log Eddington ratio at zero cold specific accretion rate' }
+  - { sym: '\eta_{\rm evol}', val: '+0.8327', desc: 'dependence of that mean on the cold specific accretion rate' }
+  - { sym: '\sigma_0', val: '+0.5075', desc: 'scatter of the Eddington-ratio distribution [dex]' }
+  - { sym: '\log \tau', val: '+5.8947', desc: 'accretion coherence time [log yr]' }
+  - { sym: '\log f_{\rm seed}', val: '-6.4694', desc: 'seed black hole to halo mass ratio [log]' }
+  - { sym: '\sigma_{\rm seed}', val: '+0.5056', desc: 'scatter on the seed mass ratio [dex]' }
