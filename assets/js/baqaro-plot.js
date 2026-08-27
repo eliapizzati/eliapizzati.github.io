@@ -27,7 +27,13 @@ function css(name, fallback) {
  * that either touches the floor or rises again. Returns an inclusive
  * `[i0, i1]`, or null if nothing is trustworthy.
  */
-export function trustedSpan(vals, floor, { margin = 0.15, riseTol = 0.02 } = {}) {
+// The forward-model tooling treats log10(phi) < -9.5 as an empty bin
+// (data_model_comparison/switcher.py: physical_floor). Use the same number
+// here rather than inventing a second convention: with the emulators' floor
+// of -10 that is a margin of 0.5.
+export const FLOOR_MARGIN = 0.5;
+
+export function trustedSpan(vals, floor, { margin = FLOOR_MARGIN, riseTol = 0.02 } = {}) {
 	const n = vals.length;
 	if (!n) return null;
 	const limit = floor + margin;
@@ -174,13 +180,44 @@ export function drawPanel(canvas, spec) {
 		g.setLineDash([]); g.globalAlpha = 1;
 	});
 
-	// --- points ---
+	// --- points: asymmetric error bars, upper limits as arrows ---
 	for (const p of spec.points || []) {
-		g.fillStyle = p.colour || muted;
+		const col = p.colour || muted;
+		const r = p.size ?? 3.2;
+		g.fillStyle = col; g.strokeStyle = col;
+		g.globalAlpha = p.alpha ?? 1;
+		g.lineWidth = 1.2;
 		for (let j = 0; j < p.x.length; j++) {
 			if (!isFinite(p.y[j])) continue;
-			g.beginPath(); g.arc(X(p.x[j]), Y(p.y[j]), 3, 0, 2 * Math.PI); g.fill();
+			const px = X(p.x[j]), py = Y(p.y[j]);
+			const isLimit = p.limit && p.limit[j];
+			const eu = p.err_up ? p.err_up[j] : 0;
+			const ed = p.err_down ? p.err_down[j] : eu;
+
+			if (isLimit) {
+				// published upper limit: value plus a downward arrow, never a
+				// symmetric bar -- these carry an unbounded lower error
+				const tip = Y(p.y[j] - 0.55);
+				g.beginPath(); g.moveTo(px, py); g.lineTo(px, tip); g.stroke();
+				g.beginPath();
+				g.moveTo(px, tip); g.lineTo(px - 4, tip - 6); g.lineTo(px + 4, tip - 6);
+				g.closePath(); g.fill();
+				g.beginPath(); g.arc(px, py, r, 0, 2 * Math.PI); g.stroke();
+				continue;
+			}
+			if (eu > 0 || ed > 0) {
+				const y0 = Y(p.y[j] - ed), y1 = Y(p.y[j] + eu);
+				g.beginPath(); g.moveTo(px, y0); g.lineTo(px, y1); g.stroke();
+				g.beginPath(); g.moveTo(px - 3, y0); g.lineTo(px + 3, y0);
+				g.moveTo(px - 3, y1); g.lineTo(px + 3, y1); g.stroke();
+			}
+			g.beginPath();
+			if (p.square) g.rect(px - r, py - r, 2 * r, 2 * r);
+			else g.arc(px, py, r, 0, 2 * Math.PI);
+			g.fill();
+			if (p.square) { g.save(); g.strokeStyle = ink; g.lineWidth = 1; g.stroke(); g.restore(); }
 		}
+		g.globalAlpha = 1;
 	}
 	g.restore();
 

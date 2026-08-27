@@ -38,9 +38,9 @@ const RELEVANT = {
 
 const EMULATED = {
 	qlf:   { title: "Quasar luminosity function",
-	         x: "log₁₀ L_bol  [erg s⁻¹]", y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -10, yMax: -4 },
+	         x: "log₁₀ L_bol  [erg s⁻¹]", y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -10, yMax: -2.5 },
 	bhmf:  { title: "Black hole mass function",
-	         x: "log₁₀ M_BH  [M☉]", y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -10, yMax: -2 },
+	         x: "log₁₀ M_BH  [M☉]", y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -11, yMax: -2 },
 	cerdf: { title: "Conditional Eddington-ratio distribution",
 	         x: "log₁₀ η  (accretion ratio)", y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -10, yMax: -5 },
 	qhmf:  { title: "Quasar host halo mass function",
@@ -48,8 +48,8 @@ const EMULATED = {
 };
 
 const NOTES = {
-	qlf: "How many quasars there are at each luminosity. This is the primary constraint on the fit.",
-	bhmf: "The mass function of ALL black holes, not just the active ones — most of the population is dark.",
+	qlf: "How many quasars there are at each luminosity — the primary constraint on the fit. Squares are the binned points the likelihood evaluates; faint circles are the individual survey measurements behind them.",
+	bhmf: "The mass function of ALL black holes, not just the active ones — most of the population is dark. The measurements are of ACTIVE black holes only, so they are a lower bound on this curve, not a target.",
 	cerdf: "How fast black holes accrete at fixed luminosity. The model's known weak spot: this distribution comes out 1.5–2× too broad.",
 	qhmf: "Which halos host the quasars. Together with clustering, this is what pins the seeding.",
 	accretion: "The whole accretion prescription: a straight line with constant scatter. η₀ sets the height, η_evol the slope, σ₀ the width. Points are where the real population sits, from the released run — the line is not fitted to them, it IS them.",
@@ -57,12 +57,15 @@ const NOTES = {
 	variability: "One accretion sub-step is one coherence time: the rate is redrawn every τ and held constant in between. Short τ averages away and grows black holes smoothly; long τ makes growth a few rare bursts — which is what the fit prefers.",
 };
 
-const DEFAULT_Z = [0, 2, 4, 6];
+// Chosen so every default curve has measurements against it: the z = 0 slice
+// has none, because the uniqueness guard gives the z = 0.2 data to z = 0.261.
+const DEFAULT_Z = [0.261, 2.0, 4.0, 6.0];
 const Z_AXIS = [7.315, 6.708, 6.145, 5.377, 5.024, 4.532, 3.937, 3.534,
 	3.0, 2.5, 2.0, 1.5, 1.0, 0.741, 0.5, 0.261, 0.0];
 
 const state = {
-	shared: null, emus: {}, fiducialCache: {}, population: null,
+	shared: null, emus: {}, fiducialCache: {}, population: null, obs: null,
+	showObs: true,
 	panel: "qlf", theta: FIDUCIAL.slice(), zPicked: null, iThreshold: 0,
 };
 
@@ -100,11 +103,41 @@ function emulatedSpec(emu) {
 		});
 	});
 
-	return {
+	const spec = {
 		xs, xLabel: cfg.x, yLabel: cfg.y,
 		xMin: xs[0], xMax: xs[xs.length - 1], yMin: cfg.yMin, yMax: cfg.yMax,
-		curves, title: cfg.title,
+		curves, points: [], title: cfg.title,
 	};
+
+	// The measurements.
+	//
+	// Keyed by EMULATOR SLICE INDEX, not by redshift: which dataset constrains
+	// which slice is decided by the likelihood (nearest within 0.4, plus a
+	// uniqueness guard so one dataset cannot bind to two slices), and that
+	// binding is computed once by scripts/export_web_obsdata.py rather than
+	// re-derived here where it could drift out of agreement with the fit.
+	//
+	// Two kinds, kept visually distinct because they are not interchangeable:
+	// SQUARES are the binned values the likelihood evaluates; faint circles are
+	// the individual survey measurements behind them, context only.
+	const obs = state.obs && state.obs[emu.name];
+	if (obs) {
+		state.zPicked.forEach((iz, k) => {
+			const entry = obs[String(iz)];
+			if (!entry) return;                       // this slice is not constrained
+			const colour = TOL[k % TOL.length];
+			if (entry.raw) {
+				spec.points.push({ x: entry.raw.x, y: entry.raw.y, colour, alpha: 0.22, size: 2.2 });
+			}
+			spec.points.push({
+				x: entry.fitted.x, y: entry.fitted.y,
+				err_up: entry.fitted.err_up, err_down: entry.fitted.err_down,
+				limit: entry.fitted.limit,
+				colour, square: true, size: 3.4,
+			});
+		});
+	}
+	return spec;
 }
 
 function accretionSpec() {
@@ -212,10 +245,13 @@ export async function initExplorer(root) {
 		statusEl.textContent = `Could not load the emulator: ${err.message}`;
 		return;
 	}
-	// optional: the released population percentiles, for the accretion panel
+	// optional extras: the panels degrade gracefully if either is missing
 	try {
 		state.population = await (await fetch(`${BASE}/population_ssar.json`)).json();
-	} catch { /* the panel simply omits the points */ }
+	} catch { /* the accretion panel simply omits the points */ }
+	try {
+		state.obs = await (await fetch(`${BASE}/obs_data.json`)).json();
+	} catch { /* the predicted panels simply omit the measurements */ }
 
 	const rows = [];
 	state.shared.paramNames.forEach((name, i) => {
