@@ -160,18 +160,30 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 	<h2 class="research-group" id="explorer">Explore the model</h2>
 
 	<p>
-		The emulators are small enough to run <b>in your browser</b>. Drag a slider and
-		the prediction is recomputed from the released Gaussian-process emulator &mdash;
-		no server, no simulation, a few milliseconds. The dashed lines are the best-fit
-		model, so you can see what each parameter actually does.
+		Six numbers control the whole model. Drag one and everything below is recomputed
+		in your browser &mdash; no server, no simulation, a few milliseconds. The dashed
+		lines are always the best fit, so you can see what you changed.
+	</p>
+	<p>
+		The first row of panels is what the model <b>predicts</b>, computed from the
+		released Gaussian-process emulators. The second row is how it <b>works</b>: the
+		accretion, seeding and variability prescriptions in closed form. If a prediction
+		moves and you want to know why, the answer is in the second row.
 	</p>
 
 	<div class="explorer" id="baqaro-explorer">
 		<div class="explorer-tabs">
-			<button type="button" data-quantity="qlf" class="on">Luminosity function</button>
-			<button type="button" data-quantity="bhmf">BH mass function</button>
-			<button type="button" data-quantity="cerdf">Eddington ratios</button>
-			<button type="button" data-quantity="qhmf">Host halo masses</button>
+			<span class="tabgroup">What it predicts</span>
+			<button type="button" data-panel="qlf" class="on">Luminosity function</button>
+			<button type="button" data-panel="bhmf">BH mass function</button>
+			<button type="button" data-panel="cerdf">Eddington ratios</button>
+			<button type="button" data-panel="qhmf">Host halos</button>
+		</div>
+		<div class="explorer-tabs second">
+			<span class="tabgroup">How it works</span>
+			<button type="button" data-panel="accretion">Accretion</button>
+			<button type="button" data-panel="seeding">Seeding</button>
+			<button type="button" data-panel="variability">Variability</button>
 		</div>
 
 		<div class="explorer-body">
@@ -183,7 +195,8 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 				<canvas width="640" height="430" aria-label="Model prediction plot"></canvas>
 				<p class="explorer-status" data-role="status"></p>
 				<p class="explorer-warning" data-role="warning" hidden></p>
-				<div class="zrow">
+				<p class="explorer-note panel-note" data-role="note"></p>
+				<div class="zrow" data-role="redshift-wrap">
 					<span>redshift</span>
 					<div data-role="redshifts"></div>
 				</div>

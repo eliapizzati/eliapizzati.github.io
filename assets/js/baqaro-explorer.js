@@ -1,175 +1,184 @@
 /**
- * Interactive BAQARO explorer: six sliders, four statistics, no server.
+ * Interactive BAQARO explorer.
  *
- * Every curve is computed in the browser from the released Gaussian-process
- * emulators (see baqaro-emulator.js). A dashed ghost of the best-fit model
- * stays on the plot so a slider's effect is visible rather than remembered.
+ * Two families of panel, driven by the same six sliders:
+ *
+ *   FITTED STATISTICS  -- run the released Gaussian-process emulators in the
+ *                         browser and show what the model predicts.
+ *   MODEL INGREDIENTS  -- the accretion, seeding and variability prescriptions
+ *                         in closed form, so you can see WHY the statistics
+ *                         move the way they do.
+ *
+ * A dashed ghost of the best fit is kept on every panel: a slider's effect is
+ * only legible next to what it changed from.
  */
 
 import { loadShared, loadQuantity, predict, outOfBounds } from "./baqaro-emulator.js";
+import { drawPanel, trustedSpan, TOL } from "./baqaro-plot.js";
+import { erdfRelation, seedRelation, lightcurve, runningMean } from "./baqaro-physics.js";
 
 const BASE = "assets/emulator";
-
-/** Paul Tol's 'bright' qualitative scheme -- the same colours as the paper. */
-const TOL = ["#4477AA", "#EE6677", "#228833", "#CCBB44", "#66CCEE", "#AA3377", "#000000"];
-
 const FIDUCIAL = [-1.235476, 0.832736, 0.507524, 5.894683, -6.469369, 0.505643];
 
 const LABELS = {
-	log_eta_mean_0:    "η₀  mean log Eddington ratio",
-	log_eta_mean_evol: "η_evol  dependence on halo accretion",
-	std_0:             "σ₀  Eddington-ratio scatter [dex]",
-	logtcoherence:     "log τ  accretion coherence time [log yr]",
-	logfseed:          "log f_seed  seed mass fraction",
-	sigmaseed:         "σ_seed  scatter on seed mass [dex]",
+	log_eta_mean_0:    "η₀ · mean log Eddington ratio",
+	log_eta_mean_evol: "η_evol · dependence on halo growth",
+	std_0:             "σ₀ · Eddington-ratio scatter [dex]",
+	logtcoherence:     "log τ · coherence time [log yr]",
+	logfseed:          "log f_seed · seed mass fraction",
+	sigmaseed:         "σ_seed · scatter on seed mass [dex]",
 };
 
-const AXES = {
-	qlf:   { x: "log₁₀ L_bol  [erg s⁻¹]", y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -11, yMax: -4 },
-	bhmf:  { x: "log₁₀ M_BH  [M☉]",             y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -11, yMax: -1 },
-	cerdf: { x: "log₁₀ η  (accretion ratio)",   y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -11, yMax: -4 },
-	qhmf:  { x: "log₁₀ M_halo  [M☉]",           y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -11, yMax: -4 },
+/** Which sliders actually do anything on each panel. The rest are dimmed. */
+const RELEVANT = {
+	qlf: [0, 1, 2, 3, 4, 5], bhmf: [0, 1, 2, 3, 4, 5],
+	cerdf: [0, 1, 2, 3, 4, 5], qhmf: [0, 1, 2, 3, 4, 5],
+	accretion: [0, 1, 2], seeding: [4, 5], variability: [0, 1, 2, 3],
 };
 
-const TITLES = {
-	qlf: "Quasar luminosity function",
-	bhmf: "Black hole mass function",
-	cerdf: "Conditional Eddington-ratio distribution",
-	qhmf: "Quasar host halo mass function",
+const EMULATED = {
+	qlf:   { title: "Quasar luminosity function",
+	         x: "log₁₀ L_bol  [erg s⁻¹]", y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -10, yMax: -4 },
+	bhmf:  { title: "Black hole mass function",
+	         x: "log₁₀ M_BH  [M☉]", y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -10, yMax: -2 },
+	cerdf: { title: "Conditional Eddington-ratio distribution",
+	         x: "log₁₀ η  (accretion ratio)", y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -10, yMax: -5 },
+	qhmf:  { title: "Quasar host halo mass function",
+	         x: "log₁₀ M_halo  [M☉]", y: "log₁₀ Φ  [Mpc⁻³ dex⁻¹]", yMin: -10, yMax: -5 },
 };
 
-/** Redshifts offered as curves, chosen to span the range without crowding. */
+const NOTES = {
+	qlf: "How many quasars there are at each luminosity. This is the primary constraint on the fit.",
+	bhmf: "The mass function of ALL black holes, not just the active ones — most of the population is dark.",
+	cerdf: "How fast black holes accrete at fixed luminosity. The model's known weak spot: this distribution comes out 1.5–2× too broad.",
+	qhmf: "Which halos host the quasars. Together with clustering, this is what pins the seeding.",
+	accretion: "The whole accretion prescription: a straight line with constant scatter. η₀ sets the height, η_evol the slope, σ₀ the width. Points are where the real population sits, from the released run — the line is not fitted to them, it IS them.",
+	seeding: "Seeds are a fixed fraction of halo mass with lognormal scatter. Both parameters are pure offsets, which is why the luminosity function alone constrains them so weakly.",
+	variability: "One accretion sub-step is one coherence time: the rate is redrawn every τ and held constant in between. Short τ averages away and grows black holes smoothly; long τ makes growth a few rare bursts — which is what the fit prefers.",
+};
+
 const DEFAULT_Z = [0, 2, 4, 6];
+const Z_AXIS = [7.315, 6.708, 6.145, 5.377, 5.024, 4.532, 3.937, 3.534,
+	3.0, 2.5, 2.0, 1.5, 1.0, 0.741, 0.5, 0.261, 0.0];
 
 const state = {
-	shared: null,
-	emus: {},          // quantity -> loaded emulator
-	quantity: "qlf",
-	theta: FIDUCIAL.slice(),
-	zPicked: null,     // indices into the redshift axis
-	iThreshold: 0,
-	fiducialCache: {},
+	shared: null, emus: {}, fiducialCache: {}, population: null,
+	panel: "qlf", theta: FIDUCIAL.slice(), zPicked: null, iThreshold: 0,
 };
 
+const linspace = (a, b, n) =>
+	Float64Array.from({ length: n }, (_, i) => a + ((b - a) * i) / (n - 1));
+
 // ---------------------------------------------------------------------------
-// plotting
+// panels
 // ---------------------------------------------------------------------------
 
-function css(name, fallback) {
-	const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-	return v || fallback;
-}
-
-function drawPlot(canvas, emu, curves, ghosts) {
-	const dpr = window.devicePixelRatio || 1;
-	const cssW = canvas.clientWidth, cssH = canvas.clientHeight;
-	canvas.width = Math.round(cssW * dpr);
-	canvas.height = Math.round(cssH * dpr);
-	const g = canvas.getContext("2d");
-	g.setTransform(dpr, 0, 0, dpr, 0, 0);
-	g.clearRect(0, 0, cssW, cssH);
-
-	const ink = css("--text", "#1b1b1b");
-	const muted = css("--muted", "#5b6157");
-	const grid = css("--border", "rgba(0,0,0,0.08)");
-
-	const pad = { l: 62, r: 14, t: 16, b: 44 };
-	const W = cssW - pad.l - pad.r, H = cssH - pad.t - pad.b;
-	if (W <= 20 || H <= 20) return;
-
+function emulatedSpec(emu) {
+	const cfg = EMULATED[emu.name];
 	const xs = emu.axes.log_bins;
-	const ax = AXES[emu.name];
-	const xMin = xs[0], xMax = xs[xs.length - 1];
-	const yMin = ax.yMin, yMax = ax.yMax;
-	const X = (v) => pad.l + ((v - xMin) / (xMax - xMin)) * W;
-	const Y = (v) => pad.t + (1 - (v - yMin) / (yMax - yMin)) * H;
-
-	// --- grid + axes ---
-	g.strokeStyle = grid; g.lineWidth = 1; g.font = "12px Inter, sans-serif";
-	g.fillStyle = muted; g.textAlign = "center"; g.textBaseline = "top";
-	const xStep = (xMax - xMin) > 6 ? 1 : 0.5;
-	for (let v = Math.ceil(xMin / xStep) * xStep; v <= xMax; v += xStep) {
-		g.beginPath(); g.moveTo(X(v), pad.t); g.lineTo(X(v), pad.t + H); g.stroke();
-		g.fillText(Number(v.toFixed(1)), X(v), pad.t + H + 7);
-	}
-	g.textAlign = "right"; g.textBaseline = "middle";
-	for (let v = Math.ceil(yMin); v <= yMax; v += 2) {
-		g.beginPath(); g.moveTo(pad.l, Y(v)); g.lineTo(pad.l + W, Y(v)); g.stroke();
-		g.fillText(v, pad.l - 8, Y(v));
-	}
-	g.strokeStyle = muted; g.lineWidth = 1.2;
-	g.strokeRect(pad.l, pad.t, W, H);
-
-	// --- axis labels ---
-	g.fillStyle = ink; g.font = "13px Inter, sans-serif";
-	g.textAlign = "center"; g.textBaseline = "bottom";
-	g.fillText(ax.x, pad.l + W / 2, cssH - 4);
-	g.save();
-	g.translate(14, pad.t + H / 2); g.rotate(-Math.PI / 2);
-	g.textBaseline = "top"; g.fillText(ax.y, 0, 0);
-	g.restore();
-
-	const clipAndStroke = (vals, colour, dashed) => {
-		g.save();
-		g.beginPath(); g.rect(pad.l, pad.t, W, H); g.clip();
-		g.strokeStyle = colour;
-		g.lineWidth = dashed ? 1.4 : 2.2;
-		g.setLineDash(dashed ? [5, 4] : []);
-		g.globalAlpha = dashed ? 0.55 : 1;
-		g.beginPath();
-		let started = false;
-		for (let j = 0; j < xs.length; j++) {
-			const v = vals[j];
-			if (!isFinite(v) || v <= yMin + 0.02) { started = false; continue; }
-			const px = X(xs[j]), py = Y(v);
-			started ? g.lineTo(px, py) : g.moveTo(px, py);
-			started = true;
-		}
-		g.stroke();
-		g.restore();
-	};
-
-	ghosts.forEach((c, i) => clipAndStroke(c.vals, TOL[i % TOL.length], true));
-	curves.forEach((c, i) => clipAndStroke(c.vals, TOL[i % TOL.length], false));
-
-	// --- legend ---
-	g.setLineDash([]); g.globalAlpha = 1;
-	g.font = "12px Inter, sans-serif"; g.textAlign = "left"; g.textBaseline = "middle";
-	let ly = pad.t + 12;
-	curves.forEach((c, i) => {
-		g.strokeStyle = TOL[i % TOL.length]; g.lineWidth = 2.2;
-		g.beginPath(); g.moveTo(pad.l + W - 96, ly); g.lineTo(pad.l + W - 72, ly); g.stroke();
-		g.fillStyle = ink; g.fillText(c.label, pad.l + W - 66, ly);
-		ly += 17;
-	});
-	if (ghosts.length) {
-		g.strokeStyle = muted; g.lineWidth = 1.4; g.setLineDash([5, 4]); g.globalAlpha = 0.7;
-		g.beginPath(); g.moveTo(pad.l + W - 96, ly); g.lineTo(pad.l + W - 72, ly); g.stroke();
-		g.setLineDash([]); g.globalAlpha = 1;
-		g.fillStyle = muted; g.fillText("best fit", pad.l + W - 66, ly);
-	}
-}
-
-// ---------------------------------------------------------------------------
-// slicing a flat prediction into per-redshift curves
-// ---------------------------------------------------------------------------
-
-function sliceCurves(emu, flat) {
-	const shape = emu.outputShape;
-	const nBin = shape[shape.length - 1];
-	const zs = emu.axes.redshift;
+	const shape = emu.outputShape, nBin = shape[shape.length - 1];
 	const threeD = shape.length === 3;
 	const nThr = threeD ? shape[1] : 1;
-	return state.zPicked.map((iz) => {
-		const base = threeD
-			? (iz * nThr + state.iThreshold) * nBin
-			: iz * nBin;
-		return { label: `z = ${zs[iz].toFixed(1)}`, vals: flat.subarray(base, base + nBin) };
+
+	const slice = (flat, iz) => {
+		const base = threeD ? (iz * nThr + state.iThreshold) * nBin : iz * nBin;
+		return flat.subarray(base, base + nBin);
+	};
+	const flat = predict(emu, state.theta);
+	const fid = state.fiducialCache[emu.name];
+
+	const curves = [];
+	state.zPicked.forEach((iz, k) => {
+		const y = slice(fid, iz);
+		curves.push({ y, span: trustedSpan(y, emu.floorValue), colour: TOL[k % TOL.length], dashed: true });
 	});
+	state.zPicked.forEach((iz, k) => {
+		const y = slice(flat, iz);
+		curves.push({
+			y, span: trustedSpan(y, emu.floorValue), colour: TOL[k % TOL.length],
+			label: `z = ${emu.axes.redshift[iz].toFixed(1)}`,
+		});
+	});
+
+	return {
+		xs, xLabel: cfg.x, yLabel: cfg.y,
+		xMin: xs[0], xMax: xs[xs.length - 1], yMin: cfg.yMin, yMax: cfg.yMax,
+		curves, title: cfg.title,
+	};
 }
 
-// ---------------------------------------------------------------------------
-// wiring
+function accretionSpec() {
+	const xs = linspace(-3.2, 1.6, 200);
+	const cur = erdfRelation(state.theta, xs);
+	const fid = erdfRelation(FIDUCIAL, xs);
+	const spec = {
+		xs, xLabel: "log₁₀ sSAR_cold   (how fast the halo is growing)",
+		yLabel: "log₁₀ η   (Eddington ratio)",
+		xMin: -3.2, xMax: 1.6, yMin: -5, yMax: 1.5,
+		bands: [
+			{ lo: cur.lo2, hi: cur.hi2, colour: TOL[0], alpha: 0.10 },
+			{ lo: cur.lo1, hi: cur.hi1, colour: TOL[0], alpha: 0.18 },
+		],
+		curves: [
+			{ y: fid.mu, colour: TOL[0], dashed: true },
+			{ y: cur.mu, colour: TOL[0], label: "mean log η" },
+		],
+		points: [], legendLeft: true, title: "Accretion rate vs halo growth",
+	};
+
+	// where the real population sits, from the released run
+	const pop = state.population;
+	if (pop) {
+		const px = [], py = [];
+		pop.redshift.forEach((z, i) => {
+			const med = pop.accreting[i][3];              // p50 of log sSAR_cold
+			if (med == null) return;
+			px.push(med);
+			py.push(state.theta[0] + state.theta[1] * med);
+		});
+		spec.points.push({ x: px, y: py, colour: TOL[1] });
+		spec.curves.push({ x: [px[0]], y: [py[0]], colour: TOL[1], label: "population median, z = 0 → 8" });
+	}
+	return spec;
+}
+
+function seedingSpec() {
+	const xs = linspace(9.5, 14.5, 120);
+	const cur = seedRelation(state.theta, xs);
+	const fid = seedRelation(FIDUCIAL, xs);
+	return {
+		xs, xLabel: "log₁₀ M_halo  [M☉]", yLabel: "log₁₀ M_seed  [M☉]",
+		xMin: 9.5, xMax: 14.5, yMin: 1, yMax: 9,
+		bands: [
+			{ lo: cur.lo2, hi: cur.hi2, colour: TOL[2], alpha: 0.10 },
+			{ lo: cur.lo1, hi: cur.hi1, colour: TOL[2], alpha: 0.18 },
+		],
+		curves: [
+			{ y: fid.med, colour: TOL[2], dashed: true },
+			{ y: cur.med, colour: TOL[2], label: "median seed mass" },
+		],
+		legendLeft: true, title: "Seeding: black hole mass at birth",
+	};
+}
+
+function variabilitySpec() {
+	const W = 200;
+	const cur = lightcurve(state.theta, { windowMyr: W });
+	const fid = lightcurve(FIDUCIAL, { windowMyr: W });
+	const mean = runningMean(state.theta, { windowMyr: W });
+	return {
+		xs: cur.t, xLabel: "time  [Myr]", yLabel: "log₁₀ η   (Eddington ratio)",
+		xMin: 0, xMax: W, yMin: -4, yMax: 2,
+		curves: [
+			{ x: fid.t, y: fid.y, colour: TOL[5], dashed: true },
+			{ x: cur.t, y: cur.y, colour: TOL[5], label: `τ = ${cur.tauMyr.toPrecision(2)} Myr` },
+			{ x: cur.t, y: mean, colour: TOL[3], label: "running mean" },
+		],
+		legendLeft: true,
+		title: `Accretion history — ${cur.nBlocks < 1 ? "less than one" : Math.round(cur.nBlocks)} independent draw${Math.round(cur.nBlocks) === 1 ? "" : "s"} in 200 Myr`,
+	};
+}
+
 // ---------------------------------------------------------------------------
 
 async function ensureQuantity(name, statusEl) {
@@ -183,15 +192,18 @@ async function ensureQuantity(name, statusEl) {
 }
 
 export async function initExplorer(root) {
-	const canvas = root.querySelector("canvas");
-	const statusEl = root.querySelector("[data-role=status]");
-	const warnEl = root.querySelector("[data-role=warning]");
-	const timingEl = root.querySelector("[data-role=timing]");
-	const slidersEl = root.querySelector("[data-role=sliders]");
-	const zEl = root.querySelector("[data-role=redshifts]");
-	const thrWrap = root.querySelector("[data-role=threshold-wrap]");
-	const thrEl = root.querySelector("[data-role=threshold]");
-	const titleEl = root.querySelector("[data-role=title]");
+	const q = (sel) => root.querySelector(sel);
+	const canvas = q("canvas");
+	const statusEl = q("[data-role=status]");
+	const warnEl = q("[data-role=warning]");
+	const timingEl = q("[data-role=timing]");
+	const slidersEl = q("[data-role=sliders]");
+	const zWrap = q("[data-role=redshift-wrap]");
+	const zEl = q("[data-role=redshifts]");
+	const thrWrap = q("[data-role=threshold-wrap]");
+	const thrEl = q("[data-role=threshold]");
+	const titleEl = q("[data-role=title]");
+	const noteEl = q("[data-role=note]");
 
 	try {
 		statusEl.textContent = "loading the emulator…";
@@ -200,9 +212,12 @@ export async function initExplorer(root) {
 		statusEl.textContent = `Could not load the emulator: ${err.message}`;
 		return;
 	}
+	// optional: the released population percentiles, for the accretion panel
+	try {
+		state.population = await (await fetch(`${BASE}/population_ssar.json`)).json();
+	} catch { /* the panel simply omits the points */ }
 
-	// --- sliders ---
-	const readouts = [];
+	const rows = [];
 	state.shared.paramNames.forEach((name, i) => {
 		const [lo, hi] = state.shared.paramRanges[i];
 		const row = document.createElement("div");
@@ -213,7 +228,7 @@ export async function initExplorer(root) {
 			<output for="p${i}">${FIDUCIAL[i].toFixed(3)}</output>`;
 		slidersEl.appendChild(row);
 		const input = row.querySelector("input"), out = row.querySelector("output");
-		readouts.push({ input, out });
+		rows.push({ row, input, out });
 		input.addEventListener("input", () => {
 			state.theta[i] = parseFloat(input.value);
 			out.textContent = state.theta[i].toFixed(3);
@@ -221,12 +236,9 @@ export async function initExplorer(root) {
 		});
 	});
 
-	// --- redshift checkboxes ---
-	const zs = [7.315, 6.708, 6.145, 5.377, 5.024, 4.532, 3.937, 3.534,
-		3.0, 2.5, 2.0, 1.5, 1.0, 0.741, 0.5, 0.261, 0.0];
 	state.zPicked = DEFAULT_Z.map((z) =>
-		zs.reduce((best, v, k) => (Math.abs(v - z) < Math.abs(zs[best] - z) ? k : best), 0));
-	zs.forEach((z, k) => {
+		Z_AXIS.reduce((best, v, k) => (Math.abs(v - z) < Math.abs(Z_AXIS[best] - z) ? k : best), 0));
+	Z_AXIS.forEach((z, k) => {
 		const b = document.createElement("button");
 		b.type = "button";
 		b.className = "zchip" + (state.zPicked.includes(k) ? " on" : "");
@@ -234,8 +246,8 @@ export async function initExplorer(root) {
 		b.addEventListener("click", () => {
 			const at = state.zPicked.indexOf(k);
 			if (at >= 0) { if (state.zPicked.length > 1) state.zPicked.splice(at, 1); }
-			else if (state.zPicked.length < TOL.length) state.zPicked.push(k);
-			state.zPicked.sort((a, b2) => a - b2);
+			else if (state.zPicked.length < 6) state.zPicked.push(k);
+			state.zPicked.sort((a, c) => a - c);
 			zEl.querySelectorAll(".zchip").forEach((el, idx) =>
 				el.classList.toggle("on", state.zPicked.includes(idx)));
 			schedule();
@@ -243,18 +255,16 @@ export async function initExplorer(root) {
 		zEl.appendChild(b);
 	});
 
-	// --- statistic tabs ---
-	root.querySelectorAll("[data-quantity]").forEach((btn) => {
+	root.querySelectorAll("[data-panel]").forEach((btn) => {
 		btn.addEventListener("click", async () => {
-			root.querySelectorAll("[data-quantity]").forEach((b) => b.classList.remove("on"));
+			root.querySelectorAll("[data-panel]").forEach((b) => b.classList.remove("on"));
 			btn.classList.add("on");
-			state.quantity = btn.dataset.quantity;
-			await ensureQuantity(state.quantity, statusEl);
+			state.panel = btn.dataset.panel;
+			if (EMULATED[state.panel]) await ensureQuantity(state.panel, statusEl);
 			render();
 		});
 	});
 
-	// --- threshold selector (only the 3-D statistics have one) ---
 	thrEl.addEventListener("input", () => {
 		state.iThreshold = parseInt(thrEl.value, 10);
 		thrEl.nextElementSibling.textContent =
@@ -262,9 +272,9 @@ export async function initExplorer(root) {
 		render();
 	});
 
-	root.querySelector("[data-role=reset]").addEventListener("click", () => {
+	q("[data-role=reset]").addEventListener("click", () => {
 		state.theta = FIDUCIAL.slice();
-		readouts.forEach(({ input, out }, i) => {
+		rows.forEach(({ input, out }, i) => {
 			input.value = FIDUCIAL[i];
 			out.textContent = FIDUCIAL[i].toFixed(3);
 		});
@@ -279,30 +289,39 @@ export async function initExplorer(root) {
 	}
 
 	function render() {
-		const emu = state.emus[state.quantity];
-		if (!emu) return;
-		titleEl.textContent = TITLES[emu.name] || emu.name;
-		thrWrap.hidden = emu.outputShape.length !== 3;
+		const isEmu = Boolean(EMULATED[state.panel]);
+		const emu = state.emus[state.panel];
+		if (isEmu && !emu) return;
+
+		zWrap.hidden = !isEmu;
+		thrWrap.hidden = !isEmu || emu.outputShape.length !== 3;
+
+		// dim the sliders this panel does not respond to
+		const live = RELEVANT[state.panel] || [];
+		rows.forEach(({ row }, i) => row.classList.toggle("muted", !live.includes(i)));
 
 		const t0 = performance.now();
-		const flat = predict(emu, state.theta);
-		const dt = performance.now() - t0;
-		timingEl.textContent = `${dt.toFixed(1)} ms`;
+		const spec = isEmu ? emulatedSpec(emu)
+			: state.panel === "accretion" ? accretionSpec()
+			: state.panel === "seeding" ? seedingSpec()
+			: variabilitySpec();
+		drawPanel(canvas, spec);
+		timingEl.textContent = `${(performance.now() - t0).toFixed(1)} ms`;
 
-		const bad = outOfBounds(state.shared, state.theta);
+		titleEl.textContent = spec.title;
+		noteEl.textContent = NOTES[state.panel] || "";
+
+		const bad = outOfBounds(state.shared, state.theta)
+			.filter((i) => live.includes(i));
 		warnEl.hidden = bad.length === 0;
 		if (bad.length) {
 			warnEl.textContent =
 				"Outside the training box — the emulator is extrapolating here and is not calibrated.";
 		}
-
-		drawPlot(canvas, emu, sliceCurves(emu, flat),
-			sliceCurves(emu, state.fiducialCache[emu.name]));
 	}
 
 	await ensureQuantity("qlf", statusEl);
 	render();
 	window.addEventListener("resize", schedule);
-	// the canvas colours come from CSS custom properties, so a theme flip needs a redraw
 	window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", schedule);
 }

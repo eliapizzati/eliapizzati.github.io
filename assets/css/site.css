@@ -277,9 +277,17 @@ table.params td:last-child { color: var(--muted); }
   background: var(--card-bg); border: 1px solid var(--border); border-radius: 1rem;
   box-shadow: var(--shadow-sm); overflow: hidden; margin: 1.4rem 0 2.4rem;
 }
-.explorer-tabs { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
+.explorer-tabs {
+  display: flex; flex-wrap: wrap; align-items: center;
+  border-bottom: 1px solid var(--border); gap: 0.15rem; padding-left: 0.9rem;
+}
+.explorer-tabs.second { background: rgba(154, 172, 21, 0.05); }
+.explorer-tabs .tabgroup {
+  font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.7px;
+  color: var(--muted); font-weight: 700; margin-right: 0.5rem; white-space: nowrap;
+}
 .explorer-tabs button {
-  flex: 1 1 auto; padding: 0.7rem 0.9rem; border: 0; background: none; cursor: pointer;
+  flex: 0 1 auto; padding: 0.7rem 0.9rem; border: 0; background: none; cursor: pointer;
   font: 600 0.88rem/1.2 "Inter", sans-serif; color: var(--muted);
   border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s;
 }
@@ -325,6 +333,9 @@ table.params td:last-child { color: var(--muted); }
   color: var(--text); font-variant-numeric: tabular-nums; margin-top: -0.15rem;
 }
 .explorer-controls .btn.reset { width: 100%; text-align: center; padding: 0.55rem 1rem; font-size: 0.88rem; }
+.panel-note { margin: 0.55rem 0 0; font-size: 0.83rem; line-height: 1.55; }
+.slider-row.muted { opacity: 0.38; }
+.slider-row.muted input[type=range] { filter: grayscale(1); }
 .explorer-note { font-size: 0.76rem; color: var(--muted); margin: 0.7rem 0 0; line-height: 1.5; }
 
 @media (max-width: 860px) {
