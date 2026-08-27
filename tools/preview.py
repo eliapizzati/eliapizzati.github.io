@@ -307,19 +307,38 @@ def render(template: str, ctx: dict, includes: pathlib.Path) -> str:
 # ---------------------------------------------------------------------------
 
 def build() -> int:
+    """Render the site into ``_preview``.
+
+    Guarded by a lock: the watcher and a hand-run build must not interleave.
+    """
+    import fcntl
+    lock = ROOT / ".preview.lock"
+    with open(lock, "w") as fh:
+        fcntl.flock(fh, fcntl.LOCK_EX)
+        return _build()
+
+
+def _build() -> int:
     config = parse_yaml((ROOT / "_config.yml").read_text())
     data = {p.stem: parse_yaml(p.read_text())
             for p in (ROOT / "_data").glob("*.yml")} if (ROOT / "_data").is_dir() else {}
     site = {**config, "data": data, "time": _datetime.datetime.now().isoformat()}
 
-    if OUT.exists():
-        shutil.rmtree(OUT)
-    OUT.mkdir()
+    OUT.mkdir(exist_ok=True)
+    written: set[pathlib.Path] = set()
 
     for d in ASSET_DIRS:
         src = ROOT / d
-        if src.is_dir():
-            shutil.copytree(src, OUT / d)
+        if not src.is_dir():
+            continue
+        for f in src.rglob("*"):
+            if not f.is_file():
+                continue
+            dst = OUT / f.relative_to(ROOT)
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            if not dst.exists() or dst.stat().st_mtime < f.stat().st_mtime:
+                shutil.copy2(f, dst)
+            written.add(dst)
 
     pages = sorted(p for p in ROOT.glob("*.html"))
     failed = 0
@@ -327,6 +346,7 @@ def build() -> int:
         fm, body = split_front_matter(page.read_text())
         if not fm.get("layout"):
             shutil.copy(page, OUT / page.name)
+            written.add(OUT / page.name)
             print(f"  copy    {page.name}")
             continue
         ctx = {"site": site, "page": {**fm, "url": "/" + page.name}}
@@ -339,7 +359,17 @@ def build() -> int:
             failed += 1
             continue
         (OUT / page.name).write_text(out)
+        written.add(OUT / page.name)
         print(f"  render  {page.name}  ({len(out) // 1024} KB)")
+
+    # remove only what this build did not produce; never wipe the tree first.
+    # Deleting up-front raced the watcher against a manual run and left the
+    # served directory containing nothing but assets/ -- a 404 on every page.
+    for f in sorted(OUT.rglob("*"), key=lambda q: -len(q.parts)):
+        if f.is_file() and f not in written:
+            f.unlink()
+        elif f.is_dir() and not any(f.iterdir()):
+            f.rmdir()
 
     print(f"\n{len(pages) - failed}/{len(pages)} pages -> {OUT}")
     if failed:

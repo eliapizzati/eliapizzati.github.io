@@ -16,3 +16,4 @@ Gemfile.lock
 _preview/
 _preview/
 __pycache__/
+.preview.lock
