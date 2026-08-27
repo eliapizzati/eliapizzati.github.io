@@ -16,6 +16,7 @@
 import { loadShared, loadQuantity, predict, outOfBounds } from "./baqaro-emulator.js";
 import { drawPanel, trustedSpan, TOL } from "./baqaro-plot.js";
 import { erdfRelation, seedRelation, lightcurve, runningMean } from "./baqaro-physics.js";
+import { loadClustering, clusteringCurve } from "./baqaro-clustering.js";
 
 const BASE = "assets/emulator";
 const FIDUCIAL = [-1.235476, 0.832736, 0.507524, 5.894683, -6.469369, 0.505643];
@@ -33,6 +34,7 @@ const LABELS = {
 const RELEVANT = {
 	qlf: [0, 1, 2, 3, 4, 5], bhmf: [0, 1, 2, 3, 4, 5],
 	cerdf: [0, 1, 2, 3, 4, 5], qhmf: [0, 1, 2, 3, 4, 5],
+	clustering: [0, 1, 2, 3, 4, 5],
 	accretion: [0, 1, 2], seeding: [4, 5], variability: [0, 1, 2, 3],
 };
 
@@ -52,6 +54,7 @@ const NOTES = {
 	bhmf: "The mass function of ALL black holes, not just the active ones — most of the population is dark. The measurements are of ACTIVE black holes only, so they are a lower bound on this curve, not a target.",
 	cerdf: "How fast black holes accrete at fixed luminosity. The model's known weak spot: this distribution comes out 1.5–2× too broad.",
 	qhmf: "Which halos host the quasars. Together with clustering, this is what pins the seeding.",
+	clustering: "How strongly quasars cluster — the third dataset in the fit, and the one that pins the coherence time. Computed the full way: the host halo mass function is pushed through the simulation's halo-halo correlation triangle and projected along the line of sight, exactly as the likelihood does it. At z = 6.1 it is the quasar–galaxy CROSS-correlation measured by EIGER, not an auto-correlation.",
 	accretion: "The whole accretion prescription: a straight line with constant scatter. η₀ sets the height, η_evol the slope, σ₀ the width. Points are where the real population sits, from the released run — the line is not fitted to them, it IS them.",
 	seeding: "Seeds are a fixed fraction of halo mass with lognormal scatter. Both parameters are pure offsets, which is why the luminosity function alone constrains them so weakly.",
 	variability: "One accretion sub-step is one coherence time: the rate is redrawn every τ and held constant in between. Short τ averages away and grows black holes smoothly; long τ makes growth a few rare bursts — which is what the fit prefers.",
@@ -65,6 +68,7 @@ const Z_AXIS = [7.315, 6.708, 6.145, 5.377, 5.024, 4.532, 3.937, 3.534,
 
 const state = {
 	shared: null, emus: {}, fiducialCache: {}, population: null, obs: null,
+	clustering: null, clusterZ: "4.0",
 	showObs: true,
 	panel: "qlf", theta: FIDUCIAL.slice(), zPicked: null, iThreshold: 0,
 };
@@ -138,6 +142,46 @@ function emulatedSpec(emu) {
 		});
 	}
 	return spec;
+}
+
+function clusteringSpec() {
+	const clu = state.clustering;
+	const panel = clu && clu.panels[state.clusterZ];
+	const emu = state.emus.qhmf;
+	if (!panel || !emu) return null;
+
+	const [, nThr, nM] = emu.outputShape;
+	const cut = (theta) => {
+		const flat = theta === FIDUCIAL
+			? state.fiducialCache.qhmf : predict(emu, theta);
+		const base = (panel.z_emulator_index * nThr + clu.threshold_index) * nM;
+		return Array.from(flat.subarray(base, base + nM));
+	};
+
+	const wp = clusteringCurve(panel, emu.axes.log_bins, cut(state.theta));
+	const wpFid = clusteringCurve(panel, emu.axes.log_bins, cut(FIDUCIAL));
+	const obs = panel.obs;
+	const kind = panel.kind === "cross" ? "cross-correlation" : "auto-correlation";
+
+	const finite = [...wp, ...wpFid, ...obs.y].filter((v) => v > 0);
+	const yMax = Math.pow(10, Math.ceil(Math.log10(Math.max(...finite))));
+	const yMin = Math.max(Math.pow(10, Math.floor(Math.log10(Math.min(...finite)))), yMax * 1e-5);
+
+	return {
+		xs: panel.rpbins, logX: true, logY: true,
+		xLabel: "r_p  [Mpc/h]", yLabel: "w_p(r_p) / r_p",
+		xMin: Math.min(panel.rpbins[0], obs.x[0]) * 0.8,
+		xMax: Math.max(panel.rpbins[panel.rpbins.length - 1], obs.x[obs.x.length - 1]) * 1.2,
+		yMin, yMax,
+		curves: [
+			{ y: wpFid, colour: TOL[1], dashed: true },
+			{ y: wp, colour: TOL[1], label: `z = ${panel.z}, ${kind}` },
+		],
+		points: [{ x: obs.x, y: obs.y, err_up: obs.err, err_down: obs.err,
+			colour: TOL[1], square: true, size: 3.4 }],
+		legendLeft: true,
+		title: `Quasar clustering at z = ${panel.z} — ${obs.label}`,
+	};
 }
 
 function accretionSpec() {
@@ -274,9 +318,27 @@ export async function initExplorer(root) {
 
 	state.zPicked = DEFAULT_Z.map((z) =>
 		Z_AXIS.reduce((best, v, k) => (Math.abs(v - z) < Math.abs(Z_AXIS[best] - z) ? k : best), 0));
+	// one chip per clustering panel -- a different, single-select set
+	["2.5", "4.0", "6.1"].forEach((key) => {
+		const b = document.createElement("button");
+		b.type = "button";
+		b.dataset.zkind = "clust";
+		b.hidden = true;
+		b.className = "zchip" + (key === state.clusterZ ? " on" : "");
+		b.textContent = key;
+		b.addEventListener("click", () => {
+			state.clusterZ = key;
+			zEl.querySelectorAll("[data-zkind=clust]").forEach((el) =>
+				el.classList.toggle("on", el.textContent === key));
+			render();
+		});
+		zEl.appendChild(b);
+	});
+
 	Z_AXIS.forEach((z, k) => {
 		const b = document.createElement("button");
 		b.type = "button";
+		b.dataset.zkind = "emul";
 		b.className = "zchip" + (state.zPicked.includes(k) ? " on" : "");
 		b.textContent = z.toFixed(1);
 		b.addEventListener("click", () => {
@@ -297,6 +359,19 @@ export async function initExplorer(root) {
 			btn.classList.add("on");
 			state.panel = btn.dataset.panel;
 			if (EMULATED[state.panel]) await ensureQuantity(state.panel, statusEl);
+			if (state.panel === "clustering") {
+				await ensureQuantity("qhmf", statusEl);
+				if (!state.clustering) {
+					statusEl.textContent = "loading the clustering triangles (3 MB)…";
+					try {
+						state.clustering = await loadClustering(BASE);
+						statusEl.textContent = "";
+					} catch (err) {
+						statusEl.textContent = `Could not load the clustering inputs: ${err.message}`;
+						return;
+					}
+				}
+			}
 			render();
 		});
 	});
@@ -329,8 +404,12 @@ export async function initExplorer(root) {
 		const emu = state.emus[state.panel];
 		if (isEmu && !emu) return;
 
-		zWrap.hidden = !isEmu;
+		const isClustering = state.panel === "clustering";
+		zWrap.hidden = !isEmu && !isClustering;
 		thrWrap.hidden = !isEmu || emu.outputShape.length !== 3;
+		zEl.classList.toggle("cluster-mode", isClustering);
+		zEl.querySelectorAll("[data-zkind=emul]").forEach((el) => { el.hidden = isClustering; });
+		zEl.querySelectorAll("[data-zkind=clust]").forEach((el) => { el.hidden = !isClustering; });
 
 		// dim the sliders this panel does not respond to
 		const live = RELEVANT[state.panel] || [];
@@ -338,9 +417,11 @@ export async function initExplorer(root) {
 
 		const t0 = performance.now();
 		const spec = isEmu ? emulatedSpec(emu)
+			: state.panel === "clustering" ? clusteringSpec()
 			: state.panel === "accretion" ? accretionSpec()
 			: state.panel === "seeding" ? seedingSpec()
 			: variabilitySpec();
+		if (!spec) return;
 		drawPanel(canvas, spec);
 		timingEl.textContent = `${(performance.now() - t0).toFixed(1)} ms`;
 

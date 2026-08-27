@@ -103,9 +103,12 @@ export function drawPanel(canvas, spec) {
 	const W = cssW - pad.l - pad.r, H = cssH - pad.t - pad.b;
 	if (W <= 20 || H <= 20) return;
 
-	const { xMin, xMax, yMin, yMax } = spec;
-	const X = (v) => pad.l + ((v - xMin) / (xMax - xMin)) * W;
-	const Y = (v) => pad.t + (1 - (v - yMin) / (yMax - yMin)) * H;
+	const { xMin, xMax, yMin, yMax, logX, logY } = spec;
+	const fx = logX ? Math.log10 : (v) => v;
+	const fy = logY ? Math.log10 : (v) => v;
+	const x0 = fx(xMin), x1 = fx(xMax), y0 = fy(yMin), y1 = fy(yMax);
+	const X = (v) => pad.l + ((fx(v) - x0) / (x1 - x0)) * W;
+	const Y = (v) => pad.t + (1 - (fy(v) - y0) / (y1 - y0)) * H;
 	const xsOf = (c) => c.x || spec.xs;
 
 	// --- grid ---
@@ -115,19 +118,36 @@ export function drawPanel(canvas, spec) {
 		return [1, 2, 2.5, 5, 10].map((m) => m * mag)
 			.reduce((a, b) => (Math.abs(b - raw) < Math.abs(a - raw) ? b : a));
 	};
+	/** Decade ticks for a log axis, labelled 10^n (or plainly near unity). */
+	const decades = (lo, hi) => {
+		const out = [];
+		for (let e = Math.ceil(Math.log10(lo)); e <= Math.log10(hi) + 1e-9; e++) {
+			out.push({ v: Math.pow(10, e),
+				label: e >= 0 && e <= 3 ? String(Math.pow(10, e)) : `1e${e}` });
+		}
+		return out;
+	};
 	g.strokeStyle = grid; g.lineWidth = 1;
 	g.font = "12px Inter, sans-serif"; g.fillStyle = muted;
 	g.textAlign = "center"; g.textBaseline = "top";
-	const xStep = niceStep(xMax - xMin);
-	for (let v = Math.ceil(xMin / xStep) * xStep; v <= xMax + 1e-9; v += xStep) {
-		g.beginPath(); g.moveTo(X(v), pad.t); g.lineTo(X(v), pad.t + H); g.stroke();
-		g.fillText(Number(v.toPrecision(4)), X(v), pad.t + H + 7);
+	const xTicks = logX ? decades(xMin, xMax)
+		: (() => { const st = niceStep(xMax - xMin), o = [];
+			for (let v = Math.ceil(xMin / st) * st; v <= xMax + 1e-9; v += st)
+				o.push({ v, label: String(Number(v.toPrecision(4))) });
+			return o; })();
+	for (const t of xTicks) {
+		g.beginPath(); g.moveTo(X(t.v), pad.t); g.lineTo(X(t.v), pad.t + H); g.stroke();
+		g.fillText(t.label, X(t.v), pad.t + H + 7);
 	}
 	g.textAlign = "right"; g.textBaseline = "middle";
-	const yStep = niceStep(yMax - yMin);
-	for (let v = Math.ceil(yMin / yStep) * yStep; v <= yMax + 1e-9; v += yStep) {
-		g.beginPath(); g.moveTo(pad.l, Y(v)); g.lineTo(pad.l + W, Y(v)); g.stroke();
-		g.fillText(Number(v.toPrecision(4)), pad.l - 8, Y(v));
+	const yTicks = logY ? decades(yMin, yMax)
+		: (() => { const st = niceStep(yMax - yMin), o = [];
+			for (let v = Math.ceil(yMin / st) * st; v <= yMax + 1e-9; v += st)
+				o.push({ v, label: String(Number(v.toPrecision(4))) });
+			return o; })();
+	for (const t of yTicks) {
+		g.beginPath(); g.moveTo(pad.l, Y(t.v)); g.lineTo(pad.l + W, Y(t.v)); g.stroke();
+		g.fillText(t.label, pad.l - 8, Y(t.v));
 	}
 
 	g.save();
@@ -172,7 +192,7 @@ export function drawPanel(canvas, spec) {
 		let started = false;
 		for (let j = a; j <= b; j++) {
 			const v = c.y[j];
-			if (!isFinite(v)) { started = false; continue; }
+			if (!isFinite(v) || (logY && v <= 0)) { started = false; continue; }
 			started ? g.lineTo(X(xs[j]), Y(v)) : g.moveTo(X(xs[j]), Y(v));
 			started = true;
 		}
@@ -188,7 +208,7 @@ export function drawPanel(canvas, spec) {
 		g.globalAlpha = p.alpha ?? 1;
 		g.lineWidth = 1.2;
 		for (let j = 0; j < p.x.length; j++) {
-			if (!isFinite(p.y[j])) continue;
+			if (!isFinite(p.y[j]) || (logY && p.y[j] <= 0)) continue;
 			const px = X(p.x[j]), py = Y(p.y[j]);
 			const isLimit = p.limit && p.limit[j];
 			const eu = p.err_up ? p.err_up[j] : 0;
