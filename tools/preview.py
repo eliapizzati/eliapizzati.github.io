@@ -306,7 +306,7 @@ def render(template: str, ctx: dict, includes: pathlib.Path) -> str:
 
 # ---------------------------------------------------------------------------
 
-def main() -> int:
+def build() -> int:
     config = parse_yaml((ROOT / "_config.yml").read_text())
     data = {p.stem: parse_yaml(p.read_text())
             for p in (ROOT / "_data").glob("*.yml")} if (ROOT / "_data").is_dir() else {}
@@ -346,6 +346,39 @@ def main() -> int:
         return 1
     print("serve with:  cd _preview && python3 -m http.server")
     return 0
+
+
+def _fingerprint() -> tuple:
+    """mtimes of everything a build reads, so --watch can spot a change."""
+    watched = []
+    for pat in ("*.html", "_layouts/*.html", "_includes/*.html", "_data/*.yml",
+                "_config.yml", "assets/css/*.css", "assets/js/*.js"):
+        watched += list(ROOT.glob(pat))
+    return tuple(sorted((str(p), p.stat().st_mtime) for p in watched))
+
+
+def main() -> int:
+    watch = "--watch" in sys.argv
+    rc = build()
+    if not watch:
+        return rc
+
+    import time
+    print("\nwatching for changes -- Ctrl-C to stop")
+    last = _fingerprint()
+    while True:
+        time.sleep(0.7)
+        try:
+            now = _fingerprint()
+        except OSError:
+            continue                      # a file mid-write; try again
+        if now != last:
+            last = now
+            print("\n--- change detected, rebuilding ---")
+            try:
+                build()
+            except Exception as exc:      # keep watching through a bad edit
+                print(f"  BUILD FAILED: {exc}")
 
 
 if __name__ == "__main__":

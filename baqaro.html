@@ -157,6 +157,58 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 		<a href="{{ site.data.baqaro.docs_url }}/limitations.md">limitations</a> page.
 	</p>
 
+	<h2 class="research-group" id="explorer">Explore the model</h2>
+
+	<p>
+		The emulators are small enough to run <b>in your browser</b>. Drag a slider and
+		the prediction is recomputed from the released Gaussian-process emulator &mdash;
+		no server, no simulation, a few milliseconds. The dashed lines are the best-fit
+		model, so you can see what each parameter actually does.
+	</p>
+
+	<div class="explorer" id="baqaro-explorer">
+		<div class="explorer-tabs">
+			<button type="button" data-quantity="qlf" class="on">Luminosity function</button>
+			<button type="button" data-quantity="bhmf">BH mass function</button>
+			<button type="button" data-quantity="cerdf">Eddington ratios</button>
+			<button type="button" data-quantity="qhmf">Host halo masses</button>
+		</div>
+
+		<div class="explorer-body">
+			<div class="explorer-plot">
+				<div class="explorer-head">
+					<strong data-role="title">Quasar luminosity function</strong>
+					<span class="timing" data-role="timing"></span>
+				</div>
+				<canvas width="640" height="430" aria-label="Model prediction plot"></canvas>
+				<p class="explorer-status" data-role="status"></p>
+				<p class="explorer-warning" data-role="warning" hidden></p>
+				<div class="zrow">
+					<span>redshift</span>
+					<div data-role="redshifts"></div>
+				</div>
+				<div class="zrow" data-role="threshold-wrap" hidden>
+					<span>threshold</span>
+					<input type="range" data-role="threshold" min="0" max="20" step="1" value="0">
+					<span class="thr-readout">L &gt; 10^45.5 erg/s</span>
+				</div>
+			</div>
+
+			<div class="explorer-controls">
+				<div data-role="sliders"></div>
+				<button type="button" class="btn reset" data-role="reset">Reset to best fit</button>
+				<p class="explorer-note">
+					Sliders span the emulator&rsquo;s training box. Outside it the Gaussian
+					process extrapolates and should not be trusted.
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<noscript>
+		<p><i>The explorer needs JavaScript. The figures above show the best-fit model.</i></p>
+	</noscript>
+
 	<h2 class="research-group">The six parameters</h2>
 
 	<p>
@@ -238,3 +290,8 @@ y = predict(emu, [-1.2355, 0.8327, 0.5075, 5.8947, -6.4694, 0.5056])
 	</p>
 
 </div>
+
+<script type="module">
+	import { initExplorer } from "./assets/js/baqaro-explorer.js";
+	initExplorer(document.getElementById("baqaro-explorer"));
+</script>
