@@ -60,11 +60,7 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 				Summary statistics, portable emulators, MCMC chains, and a catalogue of
 				<b>360 million quasars</b> across 41 redshifts.
 			</p>
-			{% if site.data.baqaro.data_url %}
-			<a class="cta" href="{{ site.data.baqaro.data_url }}">Download &rarr;</a>
-			{% else %}
-			<a class="cta" href="#release">What is in it &rarr;</a>
-			{% endif %}
+			<a class="cta" href="data.html">What is in it &rarr;</a>
 		</article>
 	</div>
 
@@ -274,8 +270,9 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 	</section>
 
 	<p>
-		Predicting a luminosity function from the released emulator takes about ten
-		lines and no modelling code:
+		Full contents, loading snippets and the caveats are on the
+		<a href="data.html">data release page</a>. Predicting a luminosity function
+		takes about ten lines and no modelling code:
 	</p>
 
 <pre><code>from predict import load, predict
