@@ -21,14 +21,35 @@ import { loadClustering, clusteringCurve } from "./baqaro-clustering.js";
 const BASE = "assets/emulator";
 const FIDUCIAL = [-1.235476, 0.832736, 0.507524, 5.894683, -6.469369, 0.505643];
 
+// Paper notation, not the code's internal names. Readers arrive from the
+// paper, and a slider called "std_0" is not findable in Table 1.
 const LABELS = {
-	log_eta_mean_0:    "η₀ · mean log Eddington ratio",
-	log_eta_mean_evol: "η_evol · dependence on halo growth",
-	std_0:             "σ₀ · Eddington-ratio scatter [dex]",
-	logtcoherence:     "log τ · coherence time [log yr]",
-	logfseed:          "log f_seed · seed mass fraction",
-	sigmaseed:         "σ_seed · scatter on seed mass [dex]",
+	log_eta_mean_0:    "log η_av,0 · mean accretion rate at sṀ = 1 Gyr⁻¹",
+	log_eta_mean_evol: "η_av,slope · how that mean tracks the cold-gas supply",
+	std_0:             "σ_acc · scatter in accretion rate [dex]",
+	logtcoherence:     "log τ_coherence · coherence time of accretion [log yr]",
+	logfseed:          "log M_seed · seed mass at the pivot halo mass [log M☉]",
+	sigmaseed:         "σ_seed · scatter in seed mass [dex]",
 };
+
+/**
+ * Display transforms between the code's parameters and the paper's.
+ *
+ * The seeding parameter is the same relation written two ways. The code stores
+ * f_seed, the ratio M_BH/M_halo at seeding; the paper quotes M_seed, the seed
+ * mass at the pivot halo mass 10^10.5 M_sun, because that is a mass a reader
+ * can hold in their head. They differ by exactly the pivot:
+ *
+ *     log10 M_seed = log10 f_seed + 10.5
+ *
+ * Verified against the paper's Table 1 at both ends: the fiducial -6.4694 maps
+ * to 4.03, and the prior [-7.5, -3.5] maps to [3.0, 7.0].
+ */
+const SEED_PIVOT_DEX = 10.5;
+const DISPLAY = {
+	logfseed: { to: (v) => v + SEED_PIVOT_DEX, from: (v) => v - SEED_PIVOT_DEX },
+};
+const toDisplay = (name, v) => (DISPLAY[name] ? DISPLAY[name].to(v) : v);
 
 /** Which sliders actually do anything on each panel. The rest are dimmed. */
 const RELEVANT = {
@@ -55,9 +76,9 @@ const NOTES = {
 	cerdf: "How fast black holes accrete at fixed luminosity. The model's known weak spot: this distribution comes out 1.5–2× too broad.",
 	qhmf: "Which halos host the quasars. Together with clustering, this is what pins the seeding.",
 	clustering: "How strongly quasars cluster — the third dataset in the fit, and the one that pins the coherence time. Computed the full way: the host halo mass function is pushed through the simulation's halo-halo correlation triangle and projected along the line of sight, exactly as the likelihood does it. At z = 6.1 it is the quasar–galaxy CROSS-correlation measured by EIGER, not an auto-correlation.",
-	accretion: "The whole accretion prescription: a straight line with constant scatter. η₀ sets the height, η_evol the slope, σ₀ the width. Points are where the real population sits, from the released run — the line is not fitted to them, it IS them.",
-	seeding: "Seeds are a fixed fraction of halo mass with lognormal scatter. Both parameters are pure offsets, which is why the luminosity function alone constrains them so weakly.",
-	variability: "One accretion sub-step is one coherence time: the rate is redrawn every τ and held constant in between. Short τ averages away and grows black holes smoothly; long τ makes growth a few rare bursts — which is what the fit prefers.",
+	accretion: "The whole accretion prescription: log η_acc is drawn from a lognormal whose mean is a power law in the host's cold-gas supply, with scatter independent of it. η_av,0 sets the height, η_av,slope the slope, σ_acc the width. Points are where the real population sits, from the released run — the line is not fitted to them, it IS the same prescription.",
+	seeding: "A black hole is seeded in each halo as it enters the merger tree, with a mass scaling linearly with the host halo mass and lognormal scatter. M_seed is quoted at the pivot halo mass 10^10.5 M☉ — the median mass of a halo at first appearance. This is an empirical anchor marking where a growth track starts, NOT a physical seed mass.",
+	variability: "The accretion rate is held fixed for one coherence time and then redrawn — a piecewise-constant process, the simplest history consistent with the one-point distribution. Short τ averages away and grows black holes smoothly; long τ leaves growth to a few rare bursts. The fit lands at τ ≈ 0.8 Myr, and this is where the rare billion-solar-mass black holes come from.",
 };
 
 // Chosen so every default curve has measurements against it: the z = 0 slice
@@ -224,7 +245,7 @@ function seedingSpec() {
 	const cur = seedRelation(state.theta, xs);
 	const fid = seedRelation(FIDUCIAL, xs);
 	return {
-		xs, xLabel: "log₁₀ M_halo  [M☉]", yLabel: "log₁₀ M_seed  [M☉]",
+		xs, xLabel: "log₁₀ M_halo  [M☉]", yLabel: "log₁₀ M_BH at seeding  [M☉]",
 		xMin: 9.5, xMax: 14.5, yMin: 1, yMax: 9,
 		bands: [
 			{ lo: cur.lo2, hi: cur.hi2, colour: TOL[2], alpha: 0.10 },
@@ -300,18 +321,19 @@ export async function initExplorer(root) {
 	const rows = [];
 	state.shared.paramNames.forEach((name, i) => {
 		const [lo, hi] = state.shared.paramRanges[i];
+		const show = (v) => toDisplay(name, v).toFixed(3);
 		const row = document.createElement("div");
 		row.className = "slider-row";
 		row.innerHTML = `
 			<label for="p${i}">${LABELS[name] || name}</label>
 			<input type="range" id="p${i}" min="${lo}" max="${hi}" step="${(hi - lo) / 400}" value="${FIDUCIAL[i]}">
-			<output for="p${i}">${FIDUCIAL[i].toFixed(3)}</output>`;
+			<output for="p${i}">${show(FIDUCIAL[i])}</output>`;
 		slidersEl.appendChild(row);
 		const input = row.querySelector("input"), out = row.querySelector("output");
-		rows.push({ row, input, out });
+		rows.push({ row, input, out, show });
 		input.addEventListener("input", () => {
 			state.theta[i] = parseFloat(input.value);
-			out.textContent = state.theta[i].toFixed(3);
+			out.textContent = show(state.theta[i]);
 			schedule();
 		});
 	});
@@ -385,9 +407,9 @@ export async function initExplorer(root) {
 
 	q("[data-role=reset]").addEventListener("click", () => {
 		state.theta = FIDUCIAL.slice();
-		rows.forEach(({ input, out }, i) => {
+		rows.forEach(({ input, out, show }, i) => {
 			input.value = FIDUCIAL[i];
-			out.textContent = FIDUCIAL[i].toFixed(3);
+			out.textContent = show(FIDUCIAL[i]);
 		});
 		render();
 	});

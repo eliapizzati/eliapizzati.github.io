@@ -12,21 +12,32 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 <div class="prose">
 
 	<p class="lead">
-		BAQARO is a model for how supermassive black holes grow and light up as quasars.
-		It attaches a black hole to every dark matter halo in a 2800 Mpc box, grows it
-		through stochastic accretion tied to the halo's own assembly history, and follows
-		the whole population from the first seeds down to the present day &mdash; about
-		a billion black holes, each with its own growth history and light curve.
+		<b>B</b>lack hole <b>A</b>ccretion and <b>Q</b>uasar <b>A</b>ctivity in a
+		<b>R</b>ealistic <b>O</b>bservational framework &mdash; a semi-empirical model
+		for how supermassive black holes grow and light up as quasars, from cosmic dawn
+		to the present day.
 	</p>
 
 	<p>
-		The model runs on merger trees from the
-		<a href="https://flamingo.strw.leidenuniv.nl/">FLAMINGO</a> dark-matter-only
-		simulation, and its six free parameters are fit jointly to three observables: the
-		bolometric <b>quasar luminosity function</b>, the <b>conditional Eddington ratio
-		distribution</b> at fixed luminosity, and <b>quasar clustering</b>. Everything on
-		this page &mdash; the code, the fitted posteriors, and a per-object quasar
-		catalogue &mdash; is public.
+		BAQARO is built on the subhalo merger trees of the
+		<a href="https://flamingo.strw.leidenuniv.nl/">FLAMINGO-10k</a> dark-matter-only
+		simulation &mdash; a trillion particles in a 2.8 Gpc box, large enough to contain
+		the rare, massive haloes that host the brightest quasars. A black hole is seeded
+		in each halo as it enters the tree, and grows through accretion tied to its
+		host&rsquo;s cold-gas supply. Six free parameters are fit jointly to the
+		<b>bolometric quasar luminosity function</b>, <b>quasar clustering</b>, and the
+		<b>conditional Eddington-ratio distribution</b> at fixed luminosity, over
+		\(0 \lesssim z \lesssim 7\).
+	</p>
+
+	<p>
+		The defining choice is that accretion is treated as <b>intrinsically
+		stochastic</b>: rather than smooth, deterministic growth tracks, black holes
+		accrete in fluctuating episodes set by a coherence timescale and an overall
+		scatter. That is not a detail. It is what lets rare billion-solar-mass black
+		holes emerge as <i>outliers</i> of the accretion-rate distribution while the bulk
+		of the population grows far more steadily &mdash; and the same fluctuations that
+		build those masses also set the quasar lightcurve you would observe.
 	</p>
 
 	<div class="cards">
@@ -34,8 +45,8 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 			<div class="icon"><i class="fas fa-file-lines"></i></div>
 			<h3>The paper</h3>
 			<p>
-				<i>Tracing individual black hole growth histories and quasar lightcurves
-				in an N-body Universe</i> &mdash; Pizzati, Hennawi, Schaye et al.
+				<i>{{ site.data.baqaro.paper_title }}</i><br>
+				{{ site.data.baqaro.paper_authors }} &mdash; {{ site.data.baqaro.paper_journal }}.
 			</p>
 			{% if site.data.baqaro.paper_url %}
 			<a class="cta" href="{{ site.data.baqaro.paper_url }}">Read it &rarr;</a>
@@ -142,15 +153,36 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 		</figure>
 	</div>
 
+	<h2 class="research-group">What comes out of it</h2>
+
+	<p>Four results, in the paper&rsquo;s own order:</p>
+
+	<ul>
+		<li><b>Black hole accretion tracks the cold gas assembling in haloes</b>, with no
+			explicit dependence on cosmic time. The redshift evolution emerges from the
+			haloes themselves &mdash; which is also why the model reproduces AGN
+			<i>downsizing</i> without being asked to.</li>
+		<li><b>Black holes assemble their mass rapidly at high redshift through stochastic
+			episodes of super-Eddington accretion.</b> Reaching \(10^9\,M_\odot\) by
+			\(z\approx6\) does not require sustained Eddington-limited growth; it
+			requires a lucky sequence of bursts.</li>
+		<li><b>Those bursts must be radiatively inefficient and last of order 1 Myr.</b>
+			A constant radiative efficiency would make the same bursts shine far above the
+			Eddington limit, over-producing super-Eddington quasars that are not observed.
+			The coherence timescale leaves its imprint on lightcurves, proximity zones and
+			clustering alike.</li>
+		<li><b>Mergers are always subdominant</b> to accretion &mdash; but grow in
+			importance at \(z \lesssim 1\), particularly for the most massive black
+			holes, where cold-gas accretion has shut down and dry mergers are all that is
+			left.</li>
+	</ul>
+
 	<p>
-		Two results are worth pulling out. The predicted \(M_{\rm BH}\)&ndash;\(M_{\rm
-		halo}\) relation stays <b>approximately constant with redshift</b>, with scatter
-		below about 0.3 dex &mdash; but with an extended tail towards high black hole
-		mass, and it is that tail which produces the luminous quasars we actually see.
-		And the model is honest about where it fails: the faint end of the luminosity
-		function, the mean of the Eddington-ratio distribution, and quasar clustering at
-		\(z\approx4\) all show residual discrepancies. These are documented rather than
-		buried &mdash; see the
+		The model is also explicit about where it does not match. The faint end of the
+		luminosity function, the Eddington ratios at \(z \gtrsim 3\), and quasar
+		clustering at \(z\approx4\) all show residual tensions &mdash; each of which
+		may reflect observational systematics as much as a model failure. They are
+		documented rather than buried, on the
 		<a href="{{ site.data.baqaro.docs_url }}/limitations.md">limitations</a> page.
 	</p>
 
@@ -229,18 +261,26 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 
 	<table class="params">
 		<thead>
-			<tr><th>Parameter</th><th>Value</th><th>Meaning</th></tr>
+			<tr><th>Parameter</th><th>Best fit</th><th>Prior</th><th>Meaning</th></tr>
 		</thead>
 		<tbody>
 			{% for p in site.data.baqaro.params %}
 			<tr>
 				<td>\({{ p.sym }}\)</td>
 				<td class="num">{{ p.val }}</td>
+				<td class="num">{{ p.prior }}</td>
 				<td>{{ p.desc }}</td>
 			</tr>
 			{% endfor %}
 		</tbody>
 	</table>
+	<p>
+		Two of these carry most of the physics. \(\sigma_{\rm acc}\) and
+		\(\tau_{\rm coherence}\) together set how far an individual black hole can
+		wander from the average growth track &mdash; and it is that wandering, not the
+		average, that produces the billion-solar-mass black holes powering the
+		brightest \(z\approx6\) quasars.
+	</p>
 
 	<h2 class="research-group" id="release">The data release</h2>
 

@@ -7,33 +7,20 @@ code_url:  "https://github.com/eliapizzati/baqaro"
 docs_url:  "https://github.com/eliapizzati/baqaro/tree/main/docs"
 data_url:  ""            # DOI landing page for the data release
 data_doi:  ""            # e.g. 10.5281/zenodo.XXXXXXX
-paper_url: ""            # arXiv abstract page
+paper_url: ""            # arXiv abstract page — fill on submission
+paper_title: "BAQARO: Tracing Stochastic Black Hole Growth Histories and Quasar Lightcurves in a Cosmological Context"
+paper_authors: "Elia Pizzati, Joseph F. Hennawi & Joop Schaye"
+paper_journal: "MNRAS, submitted"
 paper_ads: ""            # ADS bibcode link
 
-# Adopted best fit, quoted from the release provenance.
-# NB single quotes: YAML processes backslash escapes inside DOUBLE quotes,
-#     which would eat the LaTeX. Single-quoted scalars pass through as typed.
+# The six free parameters, in the PAPER's notation and with its Table 1 values.
+# NB the code stores the seeding parameter as f_seed = M_BH/M_halo at seeding;
+#    the paper quotes M_seed at the pivot halo mass. log M_seed = log f_seed + 10.5.
+# NB single quotes: double-quoted YAML eats the backslashes in the LaTeX.
 params:
-  - { sym: '\eta_0', val: '-1.2355', desc: 'mean log Eddington ratio at zero cold specific accretion rate' }
-  - { sym: '\eta_{\rm evol}', val: '+0.8327', desc: 'dependence of that mean on the cold specific accretion rate' }
-  - { sym: '\sigma_0', val: '+0.5075', desc: 'scatter of the Eddington-ratio distribution [dex]' }
-  - { sym: '\log \tau', val: '+5.8947', desc: 'accretion coherence time [log yr]' }
-  - { sym: '\log f_{\rm seed}', val: '-6.4694', desc: 'seed black hole to halo mass ratio [log]' }
-  - { sym: '\sigma_{\rm seed}', val: '+0.5056', desc: 'scatter on the seed mass ratio [dex]' }
-
-# Contents of the release, for data.html. Sizes are the built bundle.
-release:
-  total: '12 GB'
-  items:
-    - { dir: '00_statistics', size: '360 kB', name: 'Summary statistics',
-        what: 'The four emulated quantities on the model grids at 41 redshifts, plus the mean and seven percentiles of the Eddington ratio, accretion ratio and host accretion rate for three nested populations.' }
-    - { dir: '01_emulator', size: '8 MB', name: 'Portable emulators',
-        what: 'One Gaussian-process emulator per statistic, as plain HDF5 arrays, with a reference implementation that needs only numpy and h5py. No pickles, so they outlive any library version.' }
-    - { dir: '02_posterior', size: '333 MB', name: 'MCMC chains',
-        what: 'Four likelihood combinations, 100,000 steps by 50 walkers, readable with emcee.' }
-    - { dir: '03_catalogue', size: '7.6 GB', name: 'Quasar catalogue',
-        what: '41 snapshot files, 360 million objects. Per object: black hole mass, bolometric luminosity, host halo mass, Eddington ratio, accretion ratio, host specific accretion rate, statistical weight and a track id.' }
-    - { dir: '04_histories', size: '3.5 GB', name: 'Individual histories',
-        what: 'Finely time-sampled growth tracks and light curves for selected black holes, with their merger trees. The one thing the snapshot catalogue cannot give you.' }
-    - { dir: '05_examples', size: '52 kB', name: 'Worked examples',
-        what: 'The scripts that produce every figure in the release. Run them to reproduce the plots, then edit them.' }
+  - { sym: '\log_{10}(M_{\rm seed}/{\rm M_\odot})', val: '4.03', prior: '[3.0, 7.0]', desc: 'seed mass at the pivot halo mass 10^10.5 M_sun' }
+  - { sym: '\sigma_{\rm seed}', val: '0.51', prior: '[0.2, 1.5]', desc: 'scatter in the seed mass at fixed halo mass [dex]' }
+  - { sym: '\log_{10}\eta_{\rm av,0}', val: '-1.24', prior: '[-2.5, -0.5]', desc: 'average accretion rate at a cold-gas supply of 1/Gyr' }
+  - { sym: '\eta_{\rm av,slope}', val: '0.83', prior: '[0.2, 2.0]', desc: 'how that average tracks the cold-gas supply' }
+  - { sym: '\sigma_{\rm acc}', val: '0.51', prior: '[0.2, 1.0]', desc: 'scatter in the accretion rate [dex]' }
+  - { sym: '\log_{10}(\tau_{\rm coherence}/{\rm yr})', val: '5.90', prior: '[3.5, 7.3]', desc: 'coherence timescale of accretion' }
