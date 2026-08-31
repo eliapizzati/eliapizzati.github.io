@@ -1,19 +1,19 @@
 ---
 layout: default
 active: baqaro
-mathjax: true
 og_image: images/baqaro/social_card.jpg
 heading: BAQARO
+logo: images/baqaro/logo_mask.webp
 subheading: A black hole and quasar population model in an N-body Universe
 title: BAQARO
-description: BAQARO — an empirical model for supermassive black hole growth and quasar activity, built on FLAMINGO merger trees. Code, data release, and interactive emulator.
+description: BAQARO, an empirical model for supermassive black hole growth and quasar activity, built on FLAMINGO merger trees. Code, data products, and an interactive emulator.
 ---
 
 <div class="prose">
 
 	<p class="lead">
 		<b>B</b>lack hole <b>A</b>ccretion and <b>Q</b>uasar <b>A</b>ctivity in a
-		<b>R</b>ealistic <b>O</b>bservational framework &mdash; a semi-empirical model
+		<b>R</b>ealistic <b>O</b>bservational framework: a semi-empirical model
 		for how supermassive black holes grow and light up as quasars, from cosmic dawn
 		to the present day.
 	</p>
@@ -21,13 +21,13 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 	<p>
 		BAQARO is built on the subhalo merger trees of the
 		<a href="https://flamingo.strw.leidenuniv.nl/">FLAMINGO-10k</a> dark-matter-only
-		simulation &mdash; a trillion particles in a 2.8 Gpc box, large enough to contain
+		simulation, a trillion particles in a 2.8 Gpc box, large enough to contain
 		the rare, massive haloes that host the brightest quasars. A black hole is seeded
 		in each halo as it enters the tree, and grows through accretion tied to its
 		host&rsquo;s cold-gas supply. Six free parameters are fit jointly to the
 		<b>bolometric quasar luminosity function</b>, <b>quasar clustering</b>, and the
 		<b>conditional Eddington-ratio distribution</b> at fixed luminosity, over
-		\(0 \lesssim z \lesssim 7\).
+		0&nbsp;&#8818;&nbsp;<i>z</i>&nbsp;&#8818;&nbsp;7.
 	</p>
 
 	<p>
@@ -36,27 +36,38 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 		accrete in fluctuating episodes set by a coherence timescale and an overall
 		scatter. That is not a detail. It is what lets rare billion-solar-mass black
 		holes emerge as <i>outliers</i> of the accretion-rate distribution while the bulk
-		of the population grows far more steadily &mdash; and the same fluctuations that
-		build those masses also set the quasar lightcurve you would observe.
+		of the population grows far more steadily. Those same fluctuations set the
+		quasar lightcurve, so one timescale governs both how a black hole grows and
+		how long it shines, leaving its imprint on <b>lightcurves</b>, on the
+		<b>proximity zones</b> a quasar carves into the intergalactic medium, and on
+		<b>quasar clustering</b>.
+	</p>
+
+	<p>
+		<b>Mergers</b> are followed alongside accretion, on the simulation's own trees.
+		They stay subdominant, mattering most at <i>z</i>&nbsp;&#8818;&nbsp;1 for the
+		heaviest black holes once cold gas has run out. Tracking them also produces a
+		catalogue of coalescing black hole binaries, connecting the model directly to
+		the <b>gravitational-wave</b> channel.
 	</p>
 
 	<div class="cards">
 		<article class="card">
-			<div class="icon"><i class="fas fa-file-lines"></i></div>
+			<div class="icon"><svg class="icon" aria-hidden="true"><use href="#i-file-lines"/></svg></div>
 			<h3>The paper</h3>
 			<p>
 				<i>{{ site.data.baqaro.paper_title }}</i><br>
-				{{ site.data.baqaro.paper_authors }} &mdash; {{ site.data.baqaro.paper_journal }}.
+				{{ site.data.baqaro.paper_authors }}. {{ site.data.baqaro.paper_journal }}.
 			</p>
 			{% if site.data.baqaro.paper_url %}
 			<a class="cta" href="{{ site.data.baqaro.paper_url }}">Read it &rarr;</a>
 			{% else %}
-			<a class="cta" href="publications.html">In preparation &rarr;</a>
+			<a class="cta" href="publications.html">Submitted to MNRAS &rarr;</a>
 			{% endif %}
 		</article>
 
 		<article class="card">
-			<div class="icon"><i class="fab fa-github"></i></div>
+			<div class="icon"><svg class="icon" aria-hidden="true"><use href="#i-github"/></svg></div>
 			<h3>The code</h3>
 			<p>
 				The full pipeline: forward model, Gaussian-process emulators, likelihoods
@@ -65,15 +76,6 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 			<a class="cta" href="{{ site.data.baqaro.code_url }}">Browse on GitHub &rarr;</a>
 		</article>
 
-		<article class="card">
-			<div class="icon"><i class="fas fa-database"></i></div>
-			<h3>The data release</h3>
-			<p>
-				Summary statistics, portable emulators, MCMC chains, and a catalogue of
-				<b>360 million quasars</b> across 41 redshifts.
-			</p>
-			<a class="cta" href="data.html">What is in it &rarr;</a>
-		</article>
 	</div>
 
 	<h2 class="research-group">How the model works</h2>
@@ -81,139 +83,183 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 	<section id="model">
 		<header><h2>Halos in, quasars out</h2></header>
 
-		<div class="research-figure">
-			<img src="images/baqaro/growth_tracks.webp" alt="Individual black hole mass growth tracks versus redshift" />
-			<span class="fig-credit">Individual growth histories. Each line is one black hole.</span>
-		</div>
+		<figure class="wide-fig">
+			<img src="images/baqaro/model_overview.webp" width="1600" height="617" loading="lazy" decoding="async" alt="Overview of the BAQARO model: FLAMINGO merger trees and stochastic accretion on the left, emulators and likelihoods top right, model outputs bottom right" />
+		</figure>
 
 		<div class="research-text">
-			Every halo is seeded with a black hole whose mass is a fixed fraction of the
-			halo mass, with scatter. From there the black hole accretes at a rate drawn
-			from a lognormal <b>Eddington ratio distribution</b> whose mean tracks the
-			halo's own cold accretion rate &mdash; so black holes grow fastest when their
-			hosts do.
+			What goes in is a subhalo merger tree, and nothing else: no galaxies, no gas
+			physics, no tuning against redshift. What comes out is a black hole in every
+			subhalo, carried forward on timesteps set by the coherence time rather than by
+			the simulation's snapshots, with a mass, an accretion rate and a luminosity
+			at each one, and a lightcurve joining them up. The figure above is the whole thing at a
+			glance: on the <i>left</i>, the FLAMINGO-10k merger trees, the seeding, and
+			the stochastic accretion that sets both the mass growth and the lightcurve;
+			<i>top right</i>, the six parameters, emulated and compared against the
+			luminosity function, quasar clustering and the conditional ERDF;
+			<i>bottom right</i>, what the fitted model then predicts.
 
-			The key ingredient is that accretion is <b>temporally correlated</b>. Rather
-			than redrawing the accretion rate independently at every timestep, the model
-			holds it coherent over a timescale \(\tau\), which is itself one of the six
-			fitted parameters. This matters more than it might sound: the same
-			time-averaged accretion rate produces a very different mass function depending
-			on whether it arrives as a steady trickle or as rare, long-lived bursts. We
-			find that black holes grow mainly through bursts of <b>super-Eddington</b>
-			accretion, and that those bursts have to be long-lived &mdash; making \(\tau\)
-			a decisive parameter in shaping the black hole mass distribution.
+			Between subhalo and quasar sit three ingredients, and six numbers.
+			<b>Seeding</b> sets the mass a black hole is born with, through a seed mass
+			<i>M</i><sub>seed</sub> and its scatter <i>&sigma;</i><sub>seed</sub>.
+			<b>Accretion</b> fixes how fast it then grows. The accretion rate
+			<i>&eta;</i><sub>acc</sub> is drawn from a lognormal whose mean is a power law
+			in the host's specific cold accretion rate sṀ<sub>cold</sub>:
+			<i>&eta;</i><sub>av,0</sub> is that mean at a reference supply of
+			1&nbsp;Gyr<sup>&minus;1</sup>, <i>&eta;</i><sub>av,slope</sub> is the
+			power-law index, and <i>&sigma;</i><sub>acc</sub> is the scatter about it.
+			The <b>coherence time</b> <i>&tau;</i><sub>coherence</sub> fixes how long a single accretion episode
+			lasts before the rate is redrawn. Those six are the entire model, and they
+			are what the fit determines.
 
-			Mergers are tracked along the trees as well, but they turn out to contribute
-			only marginally to black hole growth compared to accretion, even under
-			generous assumptions about merger timescales and remnant survival.
+			The sliders below are there to help visualise how each parameter is defined
+			and what it changes.
 		</div>
 	</section>
 
-	<section id="fit">
-		<header><h2>Fitting a billion black holes to three observables</h2></header>
-
-		<div class="research-figure">
-			<img src="images/baqaro/corner.webp" alt="Posterior distribution of the six model parameters" />
-			<span class="fig-credit">Joint posterior over the six free parameters.</span>
-		</div>
-
+	<div class="tut-row">
+	<section class="tut">
+		<h3><span class="step">1</span> Seeding: the mass a black hole is born with</h3>
 		<div class="research-text">
-			A single forward run of the model produces hundreds of gigabytes and takes
-			hours, which makes direct MCMC hopeless. Instead we train <b>Gaussian-process
-			emulators</b> on a few thousand forward runs, compressing each summary
-			statistic onto a handful of principal components. The emulators reproduce the
-			model's predictions in milliseconds, which turns the inference into a
-			tractable problem.
+			Every subhalo gets a black hole when it first appears in the tree, with a
+			mass a fixed fraction of the subhalo's own and lognormal scatter about it.
+			Subhalos are identified close to the resolution threshold, so the width of
+			the curve is essentially that scatter: <b>log <i>M</i><sub>seed</sub></b>
+			slides it left and right, quoted at a pivot subhalo mass of
+			10<sup>10.5</sup>&nbsp;<i>M</i><sub>&#9737;</sub>, and
+			<b><i>&sigma;</i><sub>seed</sub></b> sets its width.
 
-			The likelihood combines the quasar luminosity function, the conditional
-			Eddington-ratio distribution, and quasar clustering. Chains are released for
-			all four combinations of those datasets, so the constraining power of each can
-			be read off directly rather than taken on trust.
+			This is an <b>empirical</b> prescription. The simulation does not resolve
+			the scales on which seeds actually form, so <i>M</i><sub>seed</sub> is not a
+			physical seed mass but an anchor marking where a growth track starts. The
+			second curve is the mass function at <i>z</i>&nbsp;=&nbsp;0, scaled to the
+			same total number density: the same black holes, 13&nbsp;Gyr later.
+</div>
+		<div class="tut-panel" data-tutorial-panel data-panel="seeding">
+			<canvas height="300"></canvas>
+			<div class="sliders" data-role="sliders"></div>
+			<button type="button" class="reset" data-role="reset">Reset to the best fit</button>
 		</div>
 	</section>
 
-	<h2 class="research-group">What it reproduces</h2>
+	<section class="tut">
+		<h3><span class="step">2</span> Accretion: how fast it grows</h3>
+		<div class="research-text">
+			A black hole accretes at a rate <i>&eta;</i><sub>acc</sub>&nbsp;=&nbsp;Ṁ<sub>BH,acc</sub>/Ṁ<sub>Edd</sub>,
+			drawn from a lognormal whose mean follows the specific cold accretion rate
+			sṀ<sub>cold</sub> of its host, so black holes grow fastest when their
+			hosts do. The cold fraction
+			<i>f</i><sub>cold</sub>(<i>M</i><sub>halo</sub>,&nbsp;<i>z</i>) is taken
+			from <a href="https://doi.org/10.1093/mnras/stx2332">Correa et al.
+			(2018)</a>: in massive haloes the inflow shock-heats to the virial
+			temperature and settles into a hot atmosphere, so less of it ever reaches
+			the centre cold.
 
-	<div class="fig-grid">
-		<figure>
-			<img src="images/baqaro/qlf.webp" alt="Quasar luminosity function against observations" />
-			<figcaption>The bolometric quasar luminosity function against observations, from \(z\approx0\) to \(z\approx7\).</figcaption>
-		</figure>
-		<figure>
-			<img src="images/baqaro/bhmf.webp" alt="Black hole mass function" />
-			<figcaption>The black hole mass function, including the high-mass tail that produces luminous quasars.</figcaption>
-		</figure>
-		<figure>
-			<img src="images/baqaro/cerdf.webp" alt="Conditional Eddington ratio distribution" />
-			<figcaption>The conditional Eddington-ratio distribution at fixed luminosity.</figcaption>
-		</figure>
-		<figure>
-			<img src="images/baqaro/mbh_mhalo.webp" alt="Black hole mass against halo mass" />
-			<figcaption>The \(M_{\rm BH}\)&ndash;\(M_{\rm halo}\) relation, roughly constant with redshift and with tight scatter.</figcaption>
-		</figure>
+			This relation between <i>&eta;</i><sub>acc</sub> and sṀ<sub>cold</sub>
+			is the same at every redshift. What evolves is the supply:
+			sṀ<sub>cold</sub> falls as the universe ages, and the points in the
+			plot below trace its population median from <i>z</i>&nbsp;=&nbsp;8 down to
+			<i>z</i>&nbsp;=&nbsp;0.
+
+			<b>log <i>&eta;</i><sub>av,0</sub></b> raises or lowers the relation,
+			<b><i>&eta;</i><sub>av,slope</sub></b> tilts it, and
+			<b><i>&sigma;</i><sub>acc</sub></b> is its width.
+</div>
+		<div class="tut-panel" data-tutorial-panel data-panel="accretion">
+			<canvas height="300"></canvas>
+			<div class="sliders" data-role="sliders"></div>
+			<button type="button" class="reset" data-role="reset">Reset to the best fit</button>
+		</div>
+	</section>
 	</div>
 
-	<h2 class="research-group">What comes out of it</h2>
+	<section class="tut">
+		<h3><span class="step">3</span> Coherence time: how long each accretion episode lasts</h3>
+		<div class="research-text">
+			The accretion rate is redrawn on the coherence time <i>&tau;</i>, not once
+			per simulation snapshot. Snapshots are tens to hundreds of Myr apart and
+			<i>&tau;</i> is far shorter, so a black hole gets many independent draws
+			between them. The result resembles a real quasar lightcurve: a sequence of
+			coherent bursts. In reality many timescales contribute at once, and the
+			approximation here is to let a single one drive the process. Each flat segment is one
+			draw, its length set by <i>&tau;</i>, its level by
+			<i>&eta;</i><sub>av,0</sub> and <i>&eta;</i><sub>av,slope</sub>, and its
+			scatter by <i>&sigma;</i><sub>acc</sub>.
 
-	<p>Four results, in the paper&rsquo;s own order:</p>
+			<p>
+			Accretion rate and luminosity are not the same thing.
+			<b><i>&eta;</i><sub>acc</sub></b> is the rate;
+			<b><i>&lambda;</i><sub>Edd</sub></b> is the light it produces. Radiative
+			efficiency depends on the rate, so the two separate most in the brightest
+			bursts, which is how the model grows black holes fast without
+			over-producing luminous quasars.
+			</p>
 
-	<ul>
-		<li><b>Black hole accretion tracks the cold gas assembling in haloes</b>, with no
-			explicit dependence on cosmic time. The redshift evolution emerges from the
-			haloes themselves &mdash; which is also why the model reproduces AGN
-			<i>downsizing</i> without being asked to.</li>
-		<li><b>Black holes assemble their mass rapidly at high redshift through stochastic
-			episodes of super-Eddington accretion.</b> Reaching \(10^9\,M_\odot\) by
-			\(z\approx6\) does not require sustained Eddington-limited growth; it
-			requires a lucky sequence of bursts.</li>
-		<li><b>Those bursts must be radiatively inefficient and last of order 1 Myr.</b>
-			A constant radiative efficiency would make the same bursts shine far above the
-			Eddington limit, over-producing super-Eddington quasars that are not observed.
-			The coherence timescale leaves its imprint on lightcurves, proximity zones and
-			clustering alike.</li>
-		<li><b>Mergers are always subdominant</b> to accretion &mdash; but grow in
-			importance at \(z \lesssim 1\), particularly for the most massive black
-			holes, where cold-gas accretion has shut down and dry mergers are all that is
-			left.</li>
-	</ul>
+			<p>
+			The third curve is <i>&eta;</i><sub>acc</sub> averaged from the start up to
+			each moment; the dashed line is what that average tends to over a long
+			enough stretch. <i>&tau;</i> controls how quickly one reaches the other.
+			Short <i>&tau;</i> packs hundreds of draws into the window, so the average
+			settles at once and every black hole grows alike. Long <i>&tau;</i> leaves
+			a handful, so it can sit well above the line for all 100 Myr. That spread
+			is what lets an individual black hole end up far above the average, and it
+			is why <i>&tau;</i> shapes the massive end of the population.
+			</p>
+
+			<p>
+			The lower panel follows the consequences, for a black hole starting at
+			10<sup>8</sup>&nbsp;<i>M</i><sub>&#9737;</sub>. Its mass integrates the
+			accretion rate, so time above the average is banked and never lost: the
+			one that opened with two strong bursts stays ahead. Beside it is the
+			<b>lightcurve</b> the same history produces, which follows the rate
+			directly instead of integrating it, so the bursts that build the mass are
+			also when the object shines as a bright quasar.
+			</p>
+		</div>
+		<div class="tut-panel" data-tutorial-panel data-panel="variability growth">
+			<canvas height="215"></canvas>
+			<canvas height="215"></canvas>
+			<div class="sliders" data-role="sliders"></div>
+			<button type="button" class="reset" data-role="reset">Reset to the best fit</button>
+		</div>
+	</section>
 
 	<p>
-		The model is also explicit about where it does not match. The faint end of the
-		luminosity function, the Eddington ratios at \(z \gtrsim 3\), and quasar
-		clustering at \(z\approx4\) all show residual tensions &mdash; each of which
-		may reflect observational systematics as much as a model failure. They are
-		documented rather than buried, on the
-		<a href="{{ site.data.baqaro.docs_url }}/limitations.md">limitations</a> page.
+		Mergers are tracked along the trees as well, but they turn out to contribute
+		only marginally to black hole growth compared to accretion, even under
+		generous assumptions about merger timescales and remnant survival.
 	</p>
 
-	<h2 class="research-group" id="explorer">Explore the model</h2>
+	<h2 class="research-group" id="explorer">Observable predictions</h2>
 
 	<p>
-		Six numbers control the whole model. Drag one and everything below is recomputed
-		in your browser &mdash; no server, no simulation, a few milliseconds. The dashed
-		lines are always the best fit, so you can see what you changed.
+		The three panels above show the ingredients of the model. The panels below
+		show what those ingredients produce when the model is run over the whole
+		halo catalogue: the summary statistics that the fit is made against. Dashed
+		lines mark the best-fit model throughout.
 	</p>
+
 	<p>
-		The first row of panels is what the model <b>predicts</b>, computed from the
-		released Gaussian-process emulators. The second row is how it <b>works</b>: the
-		accretion, seeding and variability prescriptions in closed form. If a prediction
-		moves and you want to know why, the answer is in the second row.
+		Running the model is expensive: the fiducial run writes <b>780 GB</b> across
+		sixteen nodes, and even a subsampled run takes hours. The summary statistics
+		are therefore emulated with Gaussian processes trained on a few thousand
+		forward runs, which reproduce the model in milliseconds. This is what makes
+		the inference below possible. It is also what powers these sliders: move any
+		of the six parameters and every panel is recomputed in your browser. Held
+		out from the training set, the emulators reproduce the forward model to
+		0.11&nbsp;dex (luminosity function), 0.22&nbsp;dex (Eddington ratios) and
+		0.20&nbsp;dex (host halos) root-mean-square &mdash; smaller than the
+		observational uncertainties they are fitted against.
 	</p>
 
 	<div class="explorer" id="baqaro-explorer">
 		<div class="explorer-tabs">
 			<span class="tabgroup">What it predicts</span>
 			<button type="button" data-panel="qlf" class="on">Luminosity function</button>
-			<button type="button" data-panel="bhmf">BH mass function</button>
 			<button type="button" data-panel="cerdf">Eddington ratios</button>
-			<button type="button" data-panel="qhmf">Host halos</button>
 			<button type="button" data-panel="clustering">Clustering</button>
-		</div>
-		<div class="explorer-tabs second">
-			<span class="tabgroup">How it works</span>
-			<button type="button" data-panel="accretion">Accretion</button>
-			<button type="button" data-panel="seeding">Seeding</button>
-			<button type="button" data-panel="variability">Variability</button>
+			<button type="button" data-panel="bhmf">BH mass function</button>
+			<button type="button" data-panel="qhmf">Host halos</button>
 		</div>
 
 		<div class="explorer-body">
@@ -225,9 +271,8 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 				<canvas width="640" height="430" aria-label="Model prediction plot"></canvas>
 				<p class="explorer-status" data-role="status"></p>
 				<p class="explorer-warning" data-role="warning" hidden></p>
-				<p class="explorer-note panel-note" data-role="note"></p>
 				<div class="zrow" data-role="redshift-wrap">
-					<span>redshift</span>
+					<span>redshift <em>(up to 7)</em></span>
 					<div data-role="redshifts"></div>
 				</div>
 				<div class="zrow" data-role="threshold-wrap" hidden>
@@ -240,10 +285,6 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 			<div class="explorer-controls">
 				<div data-role="sliders"></div>
 				<button type="button" class="btn reset" data-role="reset">Reset to best fit</button>
-				<p class="explorer-note">
-					Sliders span the emulator&rsquo;s training box. Outside it the Gaussian
-					process extrapolates and should not be trusted.
-				</p>
 			</div>
 		</div>
 	</div>
@@ -252,11 +293,30 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 		<p><i>The explorer needs JavaScript. The figures above show the best-fit model.</i></p>
 	</noscript>
 
-	<h2 class="research-group">The six parameters</h2>
+	<h2 class="research-group">Fitting the model</h2>
 
 	<p>
-		The whole model is controlled by six numbers. These are the adopted best-fit
-		values from the joint fit:
+		The model is fitted to three datasets at once: the quasar luminosity
+		function (QLF), the conditional Eddington-ratio distribution (cERDF) and
+		quasar clustering (Corr), the same three quantities shown in the sliders
+		above. The posterior is sampled for every combination of them, so the
+		constraining power of each combination of observables can be assessed.
+	</p>
+
+	<figure class="corner-fig">
+		<img src="images/baqaro/corner.webp" width="1100" height="1089" loading="lazy" decoding="async" alt="Corner plot of the posterior over the six model parameters, for four combinations of the datasets" />
+		<figcaption>
+			Posterior over the six parameters, for each combination of the datasets.
+			The yellow stars mark the fiducial model.
+		</figcaption>
+	</figure>
+
+	<h3>The fiducial model</h3>
+
+	<p>
+		The fiducial model is the best-fit combination from the joint fit to all
+		three (yellow stars in the corner plot). It is what the sliders return to,
+		what the panels above are drawn at, and what every result below comes from.
 	</p>
 
 	<table class="params">
@@ -266,7 +326,7 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 		<tbody>
 			{% for p in site.data.baqaro.params %}
 			<tr>
-				<td>\({{ p.sym }}\)</td>
+				<td>{{ p.sym }}</td>
 				<td class="num">{{ p.val }}</td>
 				<td class="num">{{ p.prior }}</td>
 				<td>{{ p.desc }}</td>
@@ -274,70 +334,82 @@ description: BAQARO — an empirical model for supermassive black hole growth an
 			{% endfor %}
 		</tbody>
 	</table>
-	<p>
-		Two of these carry most of the physics. \(\sigma_{\rm acc}\) and
-		\(\tau_{\rm coherence}\) together set how far an individual black hole can
-		wander from the average growth track &mdash; and it is that wandering, not the
-		average, that produces the billion-solar-mass black holes powering the
-		brightest \(z\approx6\) quasars.
-	</p>
 
-	<h2 class="research-group" id="release">The data release</h2>
-
-	<section id="contents">
-		<header><h2>What you get</h2></header>
-		<div class="research-text">
-			<ul>
-				<li><b>Summary statistics</b> &mdash; the luminosity function, mass
-					function, Eddington-ratio distribution and host halo mass function on
-					the model's own grids, at 41 redshifts.</li>
-				<li><b>Portable emulators</b> &mdash; one per statistic, a couple of
-					megabytes each. Plain arrays in HDF5, with a reference implementation
-					that needs only <code>numpy</code> and <code>h5py</code>. No pickles,
-					so they will still load in ten years.</li>
-				<li><b>MCMC chains</b> &mdash; four likelihood combinations, 100,000 steps
-					by 50 walkers.</li>
-				<li><b>A quasar catalogue</b> &mdash; per-object black hole mass,
-					luminosity, host halo mass, Eddington ratio and accretion rate, for
-					360 million objects across 41 redshifts.</li>
-				<li><b>Individual histories</b> &mdash; finely time-sampled growth tracks
-					and light curves for selected black holes, with their merger trees.</li>
-			</ul>
-			<p style="margin-bottom:0">
-				Every file carries a <code>provenance</code> group recording the exact
-				parameters, code revision and build time that produced it, and the release
-				ships a manifest of SHA-256 checksums.
-			</p>
-		</div>
-	</section>
+	<h2 class="research-group">Results</h2>
 
 	<p>
-		Full contents, loading snippets and the caveats are on the
-		<a href="data.html">data release page</a>. Predicting a luminosity function
-		takes about ten lines and no modelling code:
+		Fitted to the luminosity function, the Eddington-ratio distribution and
+		clustering, the model reproduces all three from <i>z</i>&nbsp;&approx;&nbsp;7 to
+		<i>z</i>&nbsp;&approx;&nbsp;0. It also reproduces quantities it was never fitted
+		to: the local black hole mass function, the local scaling relations, and the cosmic
+		black hole mass and accretion densities. Three conclusions stand out.
 	</p>
 
-<pre><code>from predict import load, predict
+	<ul>
+		<li><b>Growth follows the halos.</b> Accretion tracks the cold gas arriving in
+			halos, with no explicit dependence on cosmic time, so the redshift evolution
+			of quasars, downsizing included, emerges from the halos and the cold gas they
+			supply.</li>
+		<li><b>Massive black holes are early winners of a lottery.</b> A
+			10<sup>9</sup>&nbsp;<i>M</i><sub>&#9737;</sub> black hole at
+			<i>z</i>&nbsp;&approx;&nbsp;6 comes from a lucky sequence of short, radiatively
+			inefficient super-Eddington bursts lasting of order 1&nbsp;Myr, not from
+			sustained Eddington-limited growth. The same coherence time shapes the quasar
+			lightcurves, and leaves its imprint on proximity zones and clustering.</li>
+		<li><b>Mergers are a minor channel.</b> They contribute little to growth except
+			at <i>z</i>&nbsp;&#8818;&nbsp;1 for the most massive black holes, once cold gas
+			has run out. They do, however, contribute to shaping the high-mass tail of
+			the black hole mass function.</li>
+	</ul>
 
-emu = load("emulator_qlf.hdf5")
-y = predict(emu, [-1.2355, 0.8327, 0.5075, 5.8947, -6.4694, 0.5056])
-# y[0] is log10(QLF), shape (n_redshift, n_Lbins); grids are in emu.axes
-</code></pre>
+	<div class="fig-grid">
+		<figure>
+			<img src="images/baqaro/lightcurves.webp" width="1400" height="682" loading="lazy" decoding="async" alt="Predicted quasar lightcurves at high redshift" />
+			<figcaption>Predicted lightcurves of high-redshift quasars. Their shape follows from the coherence time, so duty cycles and lifetimes are predictions rather than inputs.</figcaption>
+		</figure>
+		<figure>
+			<img src="images/baqaro/local_relations.webp" width="1400" height="622" loading="lazy" decoding="async" alt="Local black hole mass function and the black hole mass to stellar mass relation" />
+			<figcaption>The local black hole mass function (<i>left</i>) and the relation between black hole mass and host stellar mass (<i>right</i>), against observations. Neither was fitted.</figcaption>
+		</figure>
+	</div>
+
+	<p>
+		Not everything matches. The model over-produces the faint end of the
+		luminosity function relative to pre-JWST surveys, although JWST may be finding
+		exactly the faint AGN those surveys missed. Its Eddington ratios sit slightly
+		too high at <i>z</i>&nbsp;&approx;&nbsp;5 (where the measured values rest on
+		C&nbsp;IV virial masses) and too low at <i>z</i>&nbsp;&approx;&nbsp;1, where
+		their distribution is also broader than observed, especially for bright
+		sources. And the clustering of <i>z</i>&nbsp;&approx;&nbsp;4 quasars remains
+		somewhat stronger than the model predicts. Each of these may reflect
+		observational systematics as much as a limitation of the model, and will
+		need further work on both the observational and the modelling side.
+	</p>
+
+	<h2 class="research-group" id="release">Data products <span class="soon">coming soon</span></h2>
+
+	<p>
+		Summary statistics on the model's own grids, the portable emulators behind
+		the sliders above, the MCMC chains, and a per-object catalogue of the bright
+		quasars across 41 redshifts. Every file carries a provenance record of the
+		parameters, code revision and build time that produced it. These are released
+		once the paper is accepted, and available on request before then.
+	</p>
 
 	<h2 class="research-group">Citation</h2>
 
 	<p>
-		If you use BAQARO, please cite the model paper. If you use the data release,
+		If you use BAQARO, please cite the model paper. If you use the data products,
 		please cite its DOI as well{% if site.data.baqaro.data_doi %} (<code>{{ site.data.baqaro.data_doi }}</code>){% endif %}.
 	</p>
 
 	<p>
-		<a class="btn" href="{{ site.data.baqaro.code_url }}"><i class="fab fa-github"></i>&nbsp; Code</a>
+		<a class="btn" href="{{ site.data.baqaro.code_url }}"><svg class="icon" aria-hidden="true"><use href="#i-github"/></svg>&nbsp; Code</a>
 		{% if site.data.baqaro.data_url %}
-		<a class="btn" href="{{ site.data.baqaro.data_url }}"><i class="fas fa-database"></i>&nbsp; Data</a>
+		<a class="btn" href="{{ site.data.baqaro.data_url }}"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg>&nbsp; Data</a>
 		{% endif %}
 		{% if site.data.baqaro.paper_url %}
-		<a class="btn" href="{{ site.data.baqaro.paper_url }}"><i class="fas fa-file-lines"></i>&nbsp; Paper</a>
+		<a class="btn" href="{{ site.data.baqaro.paper_url }}"><svg class="icon" aria-hidden="true"><use href="#i-file-lines"/></svg>&nbsp; Paper</a>
 		{% endif %}
 	</p>
 
@@ -345,5 +417,23 @@ y = predict(emu, [-1.2355, 0.8327, 0.5075, 5.8947, -6.4694, 0.5056])
 
 <script type="module">
 	import { initExplorer } from "./assets/js/baqaro-explorer.js";
-	initExplorer(document.getElementById("baqaro-explorer"));
+	import { initTutorial } from "./assets/js/baqaro-tutorial.js";
+
+	initTutorial();
+
+	// The explorer pulls ~600 KB of emulator before it can draw anything, and it
+	// sits below the tutorial, so building it at load delays the whole page for
+	// something nobody is looking at yet. Start it a screen before it arrives.
+	const explorer = document.getElementById("baqaro-explorer");
+	if ("IntersectionObserver" in window) {
+		const io = new IntersectionObserver((entries) => {
+			if (!entries.some((e) => e.isIntersecting)) return;
+			io.disconnect();
+			initExplorer(explorer);
+		}, { rootMargin: "600px 0px" });
+		io.observe(explorer);
+	} else {
+		initExplorer(explorer);
+	}
+
 </script>

@@ -8,7 +8,8 @@
  */
 
 // ---------------------------------------------------------------------------
-// 1. Accretion: the Eddington-ratio distribution
+// 1. Accretion: the distribution of eta_acc = Mdot_BH,acc / Mdot_Edd
+//    (a dimensionless accretion rate, NOT the Eddington ratio L/L_Edd)
 //
 //     mu    = eta_0 + eta_evol * log10(sSAR_cold)
 //     sigma = sigma_0                              (independent of everything)
@@ -161,4 +162,55 @@ export function runningMean(theta, { windowMyr = 200, n = 900, logSSAR = 0.4, se
 		out[j] = Math.log10((cum[whole] + partial) / elapsed);
 	}
 	return out;
+}
+
+/**
+ * Eddington ratio from the dimensionless accretion rate.
+ *
+ * eta_acc is Mdot/Mdot_Edd; lambda_Edd is L/L_Edd. They are NOT the same,
+ * because the radiative efficiency depends on the accretion rate:
+ *
+ *     L = eps(eta) Mdot c^2,   L_Edd = eps_base Mdot_Edd c^2
+ *     => lambda_Edd = eta * eps(eta) / eps_base
+ *
+ * with the Madau et al. (2014) Eq. 2 fit used by the model
+ * (bh_accretion_fast.py, _MA/_MB/_MC). The eta cancels, leaving:
+ */
+const MA = 1.8260922439282448, MB = 0.7586284639465684, MC = 0.01611606486191978;
+export function lambdaEdd(eta) {
+	if (!(eta > 0)) return 0;
+	return MA * (0.985 / (1.6 / eta + MB) + 0.015 / (1.6 / eta + MC));
+}
+
+/** Radiative efficiency at this accretion rate (Madau+ 2014, eps_base = 0.1). */
+export function radEfficiency(eta) {
+	return eta > 0 ? 0.1 * lambdaEdd(eta) / eta : 0.1;
+}
+
+/**
+ * Mass growth along a light curve, as log10(M / M_start).
+ *
+ * The model grows a black hole at
+ *     dlnM/dt = eta_acc (1 - eps(eta)) / t_Sal0,
+ * with 1/t_Sal0 = inv_t_Edd_Gyr / eps_base ~= 22.18 per Gyr (the constant that
+ * sets the Salpeter time; see bh_accretion_fast.py). Integrating the SAME
+ * realisation the light curve draws is the point: the mass a black hole ends
+ * with is the accumulated accretion rate, not the average one.
+ *
+ * `steady` integrates instead at a constant eta, which is what the long-run
+ * average would give: the gap between the two is the luck of the draw.
+ */
+const INV_TSAL_PER_MYR = 22.18 / 1000;
+export function growthTrack(theta, { windowMyr = 100, n = 900, logSSAR = 0.4, seed = 1,
+		steadyEta = null } = {}) {
+	const lc = lightcurve(theta, { windowMyr, n, logSSAR, seed });
+	const out = new Float64Array(n);
+	const dt = windowMyr / (n - 1);
+	let lnM = 0;
+	for (let j = 0; j < n; j++) {
+		const eta = steadyEta === null ? Math.pow(10, lc.y[j]) : steadyEta;
+		lnM += eta * (1 - radEfficiency(eta)) * INV_TSAL_PER_MYR * dt;
+		out[j] = lnM / Math.LN10;          // ln -> log10
+	}
+	return { t: lc.t, y: out, lc };
 }

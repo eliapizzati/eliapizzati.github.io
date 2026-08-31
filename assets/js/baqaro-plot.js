@@ -7,6 +7,30 @@
  */
 
 /** Paul Tol's 'bright' qualitative scheme -- the same colours as the paper. */
+/**
+ * Redshift colours, matching the paper.
+ *
+ * plotting_common/plot_config.py colours curves by redshift with
+ * tol_cmap('rainbow_PuRd') under Normalize(vmin=0, vmax=7). These are that
+ * colormap sampled on 33 even stops, so a figure here and a figure in the
+ * paper put the same redshift at the same colour.
+ */
+const Z_CMAP = ["#6f4c9b","#6555a4","#5d5eae","#5568b8","#5173c0","#4e7ec5",
+	"#4d89c6","#4e91c0","#5098ba","#549db4","#57a2ad","#5ba6a6","#5faa9f",
+	"#65ae96","#6cb28c","#75b67f","#82ba72","#91bc64","#a2be57","#b2bd4e",
+	"#c1bb47","#ceb642","#d7b03f","#dea83c","#e39f3a","#e59437","#e78a35",
+	"#e67d33","#e56f30","#e3602c","#e04e29","#dd3825","#da2222"];
+
+/** Colour for redshift `z`, linearly interpolated over 0 <= z <= 7. */
+export function zColour(z) {
+	const u = Math.min(1, Math.max(0, z / 7)) * (Z_CMAP.length - 1);
+	const i = Math.min(Z_CMAP.length - 2, Math.floor(u)), f = u - i;
+	const hex = (s) => [1, 3, 5].map((k) => parseInt(s.slice(k, k + 2), 16));
+	const a = hex(Z_CMAP[i]), b = hex(Z_CMAP[i + 1]);
+	const mix = a.map((v, k) => Math.round(v + (b[k] - v) * f));
+	return `rgb(${mix.join(",")})`;
+}
+
 export const TOL = ["#4477AA", "#EE6677", "#228833", "#CCBB44", "#66CCEE", "#AA3377", "#000000"];
 
 function css(name, fallback) {
@@ -28,12 +52,14 @@ function css(name, fallback) {
  * `[i0, i1]`, or null if nothing is trustworthy.
  */
 // The forward-model tooling treats log10(phi) < -9.5 as an empty bin
-// (data_model_comparison/switcher.py: physical_floor). Use the same number
+// (the reference implementation's physical_floor). Use the same number
 // here rather than inventing a second convention: with the emulators' floor
 // of -10 that is a margin of 0.5.
 export const FLOOR_MARGIN = 0.5;
 
-export function trustedSpan(vals, floor, { margin = FLOOR_MARGIN, riseTol = 0.02 } = {}) {
+export function trustedSpan(vals, floor,
+		{ margin = FLOOR_MARGIN, riseTol = 0.02, minFrac = 0.12,
+		  requireLeft = false, leftFrac = 0.25 } = {}) {
 	const n = vals.length;
 	if (!n) return null;
 	const limit = floor + margin;
@@ -54,6 +80,20 @@ export function trustedSpan(vals, floor, { margin = FLOOR_MARGIN, riseTol = 0.02
 		}
 	}
 	if (!best) return null;               // the whole curve is on the floor
+
+	// Some corners of the parameter box make the GP produce signal ONLY at the
+	// bright end, with the faint end on the floor. For a function that declines
+	// with L or M that is impossible: the faint end is where it is largest. So
+	// for those quantities the trusted run has to reach the left edge.
+	//
+	// Measured over 400 random draws from the prior box: legitimate qlf and bhmf
+	// rows always start at index 0, while the artefacts start beyond 70% of the
+	// grid and are 7-11 bins wide. A width cut alone therefore does not separate
+	// them, which is why this tests WHERE the run sits, not how long it is.
+	// qhmf and cerdf legitimately start mid-grid (up to 48% and 62%), so they
+	// pass requireLeft = false and keep the width test only.
+	if (requireLeft && best[0] > leftFrac * n) return null;
+	if (best[1] - best[0] + 1 < minFrac * n) return null;
 
 	// Within that run, walk outward from its peak and stop as soon as the
 	// curve turns back up: these statistics fall monotonically into both tails.
@@ -95,11 +135,20 @@ export function drawPanel(canvas, spec) {
 	g.setTransform(dpr, 0, 0, dpr, 0, 0);
 	g.clearRect(0, 0, cssW, cssH);
 
-	const ink = css("--text", "#1b1b1b");
-	const muted = css("--muted", "#5b6157");
-	const grid = css("--border", "rgba(0,0,0,0.08)");
+	// deliberately NOT --text/--muted/--border: the figures follow the paper, and
+	// the redshift palette below is calibrated against a white ground, so the
+	// plots stay light whatever the visitor's OS theme is doing.
+	const ink = css("--plot-ink", "#1b1b1b");
+	const muted = css("--plot-muted", "#5b6157");
+	const grid = css("--plot-grid", "rgba(27,27,27,0.10)");
 
-	const pad = { l: 64, r: 16, t: 16, b: 46 };
+	// A stacked pair shares one x axis, so the upper panel passes xLabel "" and
+	// gets its bottom padding back rather than reserving room for nothing.
+	// padRight lets a panel reserve the room a neighbour needs for its right-hand
+	// axis, so two stacked panels share one horizontal scale instead of drifting
+	// apart by the width of a label.
+	const pad = { l: 64, r: spec.padRight ?? (spec.yLabelR ? 62 : 16),
+	              t: 16, b: spec.xLabel ? 46 : 28 };
 	const W = cssW - pad.l - pad.r, H = cssH - pad.t - pad.b;
 	if (W <= 20 || H <= 20) return;
 
@@ -109,11 +158,19 @@ export function drawPanel(canvas, spec) {
 	const x0 = fx(xMin), x1 = fx(xMax), y0 = fy(yMin), y1 = fy(yMax);
 	const X = (v) => pad.l + ((fx(v) - x0) / (x1 - x0)) * W;
 	const Y = (v) => pad.t + (1 - (fy(v) - y0) / (y1 - y0)) * H;
+	// Optional right-hand axis, for a panel carrying two quantities that cannot
+	// share a scale (mass in Msun against luminosity in erg/s). A curve opts in
+	// with axis: "right"; without yMinR/yMaxR nothing changes.
+	const hasR = spec.yMinR !== undefined && spec.yMaxR !== undefined;
+	const YR = hasR
+		? (v) => pad.t + (1 - (v - spec.yMinR) / (spec.yMaxR - spec.yMinR)) * H
+		: Y;
+	const yOf = (c) => (c.axis === "right" ? YR : Y);
 	const xsOf = (c) => c.x || spec.xs;
 
 	// --- grid ---
 	const niceStep = (range) => {
-		const raw = range / 6;
+		const raw = range / 4;          // ~4-5 gridlines: 6 made the panels busy
 		const mag = Math.pow(10, Math.floor(Math.log10(raw)));
 		return [1, 2, 2.5, 5, 10].map((m) => m * mag)
 			.reduce((a, b) => (Math.abs(b - raw) < Math.abs(a - raw) ? b : a));
@@ -182,18 +239,28 @@ export function drawPanel(canvas, spec) {
 
 	// --- curves ---
 	(spec.curves || []).forEach((c, i) => {
+		if (!c.y) return;          // legend-only entry (a marker series has no line)
 		const xs = xsOf(c);
 		const [a, b] = c.span || [0, xs.length - 1];
 		g.strokeStyle = c.colour || TOL[i % TOL.length];
 		g.lineWidth = c.dashed ? 1.4 : 2.2;
-		g.setLineDash(c.dashed ? [5, 4] : []);
-		g.globalAlpha = c.dashed ? 0.55 : 1;
+		g.setLineDash(c.dotted ? [1.5, 3] : c.dashed ? [5, 4] : []);
+		g.globalAlpha = c.dashed || c.dotted ? 0.55 : 1;
 		g.beginPath();
 		let started = false;
+		const Yc = yOf(c);
+		// `step` draws steps-mid, matching how the reference implementation plots a histogram
+		const half = c.step && xs.length > 1 ? (xs[1] - xs[0]) / 2 : 0;
 		for (let j = a; j <= b; j++) {
 			const v = c.y[j];
 			if (!isFinite(v) || (logY && v <= 0)) { started = false; continue; }
-			started ? g.lineTo(X(xs[j]), Y(v)) : g.moveTo(X(xs[j]), Y(v));
+			if (c.step) {
+				const lo = X(xs[j] - half), hi = X(xs[j] + half), yy = Yc(v);
+				started ? g.lineTo(lo, yy) : g.moveTo(lo, yy);
+				g.lineTo(hi, yy);
+			} else {
+				started ? g.lineTo(X(xs[j]), Yc(v)) : g.moveTo(X(xs[j]), Yc(v));
+			}
 			started = true;
 		}
 		g.stroke();
@@ -226,7 +293,12 @@ export function drawPanel(canvas, spec) {
 				continue;
 			}
 			if (eu > 0 || ed > 0) {
-				const y0 = Y(p.y[j] - ed), y1 = Y(p.y[j] + eu);
+				// On a log axis y-err is often <= 0 (9 of 11 Shen+07 points are), and
+				// Y() of that is NaN, so the whole bar vanished. Clamp the lower end
+				// to the frame instead: the bar is then open-ended, which is what the
+				// measurement actually says.
+				const lower = logY ? Math.max(p.y[j] - ed, yMin) : p.y[j] - ed;
+				const y0 = Y(lower), y1 = Y(p.y[j] + eu);
 				g.beginPath(); g.moveTo(px, y0); g.lineTo(px, y1); g.stroke();
 				g.beginPath(); g.moveTo(px - 3, y0); g.lineTo(px + 3, y0);
 				g.moveTo(px - 3, y1); g.lineTo(px + 3, y1); g.stroke();
@@ -241,6 +313,25 @@ export function drawPanel(canvas, spec) {
 	}
 	g.restore();
 
+	if (hasR) {
+		g.strokeStyle = muted; g.lineWidth = 1;
+		g.textAlign = "left"; g.textBaseline = "middle";
+		g.fillStyle = spec.colourR || muted;
+		const st = niceStep(spec.yMaxR - spec.yMinR);
+		for (let v = Math.ceil(spec.yMinR / st) * st; v <= spec.yMaxR + 1e-9; v += st) {
+			g.beginPath(); g.moveTo(pad.l + W, YR(v)); g.lineTo(pad.l + W + 4, YR(v)); g.stroke();
+			g.fillText(String(Number(v.toPrecision(4))), pad.l + W + 8, YR(v));
+		}
+		if (spec.yLabelR) {
+			g.save();
+			g.translate(cssW - 4, pad.t + H / 2);
+			g.rotate(Math.PI / 2);
+			g.textAlign = "center"; g.textBaseline = "top";
+			g.fillText(spec.yLabelR, 0, 0);
+			g.restore();
+		}
+	}
+
 	// --- frame + axis labels ---
 	g.strokeStyle = muted; g.lineWidth = 1.2;
 	g.strokeRect(pad.l, pad.t, W, H);
@@ -252,21 +343,51 @@ export function drawPanel(canvas, spec) {
 	g.textBaseline = "top"; g.fillText(spec.yLabel, 0, 0);
 	g.restore();
 
+	// --- annotations: label a reference line where it sits, not in the legend ---
+	(spec.annotations || []).forEach((a) => {
+		g.save();
+		g.beginPath(); g.rect(pad.l, pad.t, W, H); g.clip();
+		g.fillStyle = a.colour || muted;
+		g.font = "12px Inter, sans-serif";
+		g.textAlign = a.align || "left";
+		g.textBaseline = a.baseline || "bottom";
+		g.fillText(a.text, X(a.x), Y(a.y));
+		g.restore();
+	});
+
 	// --- legend ---
 	if (spec.legend !== false) {
 		const entries = (spec.curves || []).filter((c) => c.label);
 		g.font = "12px Inter, sans-serif"; g.textAlign = "left"; g.textBaseline = "middle";
+		// Several short entries stacked in one column sit on top of the curves.
+		// Flowing them across `legendCols` columns keeps them in the top strip.
+		const cols = Math.max(1, spec.legendCols || 1);
+		const colW = W / cols;
+		const rows = Math.ceil(entries.length / cols);
 		let ly = pad.t + 12;
 		const x0 = spec.legendLeft ? pad.l + 12 : pad.l + W - 104;
+		let k = -1;
 		for (const c of entries) {
-			g.strokeStyle = c.colour || TOL[entries.indexOf(c) % TOL.length];
-			g.lineWidth = c.dashed ? 1.4 : 2.2;
-			g.setLineDash(c.dashed ? [5, 4] : []);
-			g.globalAlpha = c.dashed ? 0.6 : 1;
-			g.beginPath(); g.moveTo(x0, ly); g.lineTo(x0 + 24, ly); g.stroke();
-			g.setLineDash([]); g.globalAlpha = 1;
-			g.fillStyle = ink; g.fillText(c.label, x0 + 30, ly);
-			ly += 17;
+			k++;
+			if (cols > 1) {
+				ly = pad.t + 12 + (k % rows) * 17;
+				var xCol = pad.l + 12 + Math.floor(k / rows) * colW;
+			}
+			const col = c.colour || TOL[entries.indexOf(c) % TOL.length];
+			const xs0 = cols > 1 ? xCol : x0;
+			if (c.marker) {                     // a series drawn as points, not a line
+				g.fillStyle = col;
+				g.beginPath(); g.arc(xs0 + 12, ly, 3.4, 0, 2 * Math.PI); g.fill();
+			} else {
+				g.strokeStyle = col;
+				g.lineWidth = c.dashed || c.dotted ? 1.4 : 2.2;
+				g.setLineDash(c.dotted ? [1.5, 3] : c.dashed ? [5, 4] : []);
+				g.globalAlpha = c.dashed || c.dotted ? 0.6 : 1;
+				g.beginPath(); g.moveTo(xs0, ly); g.lineTo(xs0 + 24, ly); g.stroke();
+				g.setLineDash([]); g.globalAlpha = 1;
+			}
+			g.fillStyle = ink; g.fillText(c.label, xs0 + 30, ly);
+			if (cols === 1) ly += 17;
 		}
 	}
 }

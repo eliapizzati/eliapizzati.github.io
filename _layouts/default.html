@@ -18,7 +18,6 @@
 		<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-		<link rel="stylesheet" href="assets/css/fontawesome-all.min.css" />
 		<link rel="stylesheet" href="assets/css/site.css" />
 		{% if page.mathjax %}
 		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -26,17 +25,24 @@
 	</head>
 	<body>
 
+		{% include icons.html %}
+
 		{% include nav.html %}
 
 		{% if page.hero == "large" %}
 		<header class="hero">
 			<h1>{{ page.heading | default: site.title }}</h1>
 			{% if page.role %}<p class="role">{{ page.role }}</p>{% endif %}
-			<a class="scroll" href="#main"><i class="fas fa-chevron-down"></i></a>
+			<a class="scroll" href="#main"><svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg></a>
 		</header>
 		{% else %}
 		<header class="page-header">
+			{% if page.logo %}
+			<h1 class="with-logo"><img src="{{ page.logo }}" width="1200" height="1030" decoding="async" alt="{{ page.heading | default: page.title }}" /></h1>
+			{% if page.logo_caption %}<p class="logo-caption">{{ page.logo_caption }}</p>{% endif %}
+			{% else %}
 			<h1>{{ page.heading | default: page.title }}</h1>
+			{% endif %}
 			{% if page.subheading %}<p>{{ page.subheading }}</p>{% endif %}
 		</header>
 		{% endif %}

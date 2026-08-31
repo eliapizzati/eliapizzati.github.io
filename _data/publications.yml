@@ -4,6 +4,12 @@
 # For preprints set venue: '<i>submitted</i>.' and point url at the arXiv abstract.
 
 first_author:
+  - title: 'BAQARO: Tracing Stochastic Black Hole Growth Histories and Quasar Lightcurves in a Cosmological Context'
+    year: 2026
+    authors: '<b>Elia Pizzati</b>, Joseph F Hennawi, Joop Schaye'
+    venue: '<i>submitted to MNRAS</i>.'
+    url: 'https://github.com/eliapizzati/baqaro'
+    url_label: 'code: github.com/eliapizzati/baqaro'
   - title: '&ldquo;Little Red Dots&rdquo; cannot reside in the same dark matter halos as comparably luminous unobscured quasars'
     year: 2025
     authors: '<b>Elia Pizzati</b>, Joseph F Hennawi, Joop Schaye, Anna-Christina Eilers, Jiamu Huang, Jan-Torge Schindler, Feige Wang'

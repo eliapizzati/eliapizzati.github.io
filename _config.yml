@@ -20,4 +20,5 @@ exclude:
   - vendor
   - .idea
   - two-sidebar.html
+  - tools
   - "*.iml"

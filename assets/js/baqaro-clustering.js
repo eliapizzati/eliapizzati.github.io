@@ -1,7 +1,7 @@
 /**
  * Quasar clustering in the browser: QHMF -> xi(r) -> w_p(r_p).
  *
- * A port of the chain `data_model_comparison/switcher.py` runs, which is the
+ * A port of the chain the reference implementation runs, which is the
  * same one the clustering likelihood uses:
  *
  *   1. the QHMF emulator gives the quasar host halo mass function;
@@ -31,7 +31,7 @@ function trapz(y, x) {
  *
  * w_i = <phi>_i * dlogm / integral(phi), the mean of phi over the fine-grid
  * points inside bin i. Here the fine grid and the bin centres are the same
- * axis, which is how switcher.py calls it.
+ * axis, which is how the reference implementation calls it.
  */
 function massWeights(centres, logMAxis, phi) {
 	const n = centres.length;
@@ -159,6 +159,51 @@ export async function loadClustering(base) {
  * it is interpolated onto the triangle's mass axis first, exactly as the
  * reference chain does.
  */
+/**
+ * Volume of a sphere of radius r intersected with a cylindrical annulus.
+ *
+ * Port of qhtools _sphere_cyl_volume: integrate analytically over pi from 0 to
+ * pimax, the inner rp-integral being (r^2-pi^2-rp_lo^2)/2 or (rp_hi^2-rp_lo^2)/2
+ * depending on whether the sphere boundary falls inside or outside the annulus.
+ */
+function sphereCylVolume(r, rpLo, rpHi, pimax) {
+	const rpLo2 = rpLo * rpLo, rpHi2 = rpHi * rpHi, r2 = r * r;
+	if (r <= rpLo) return 0;
+	const piB = Math.sqrt(r2 - rpLo2);
+	const piA = r > rpHi ? Math.sqrt(r2 - rpHi2) : 0;
+	const a = Math.min(piA, pimax), b = Math.min(piB, pimax);
+	const I1 = ((rpHi2 - rpLo2) / 2) * a;
+	const I2 = b > a
+		? ((r2 - rpLo2) / 2) * (b - a) - (b * b * b - a * a * a) / 6
+		: 0;
+	return 4 * Math.PI * (I1 + I2);
+}
+
+/**
+ * Volume-averaged xi in cylindrical annuli, for piecewise-constant xi.
+ *
+ * This is what a cross-correlation measured in cylindrical bins actually is:
+ * DD/RR - 1 over a finite bin is the volume average of xi across it, not xi at
+ * the bin centre. The z = 6.1 panel is this quantity, not w_p / r_p.
+ */
+function xiVolPiecewise(outEdges, corr, edges, pimax) {
+	const out = new Float64Array(outEdges.length - 1);
+	for (let i = 0; i < out.length; i++) {
+		const rpLo = outEdges[i], rpHi = outEdges[i + 1];
+		const vCyl = 2 * Math.PI * pimax * (rpHi * rpHi - rpLo * rpLo);
+		let s = 0;
+		for (let j = 0; j < corr.length; j++) {
+			const rLo = edges[j], rHi = edges[j + 1];
+			if (rHi <= rpLo) continue;
+			if (rLo * rLo > rpHi * rpHi + pimax * pimax) break;
+			s += corr[j] * (sphereCylVolume(rHi, rpLo, rpHi, pimax)
+			              - sphereCylVolume(rLo, rpLo, rpHi, pimax));
+		}
+		out[i] = s / vCyl;
+	}
+	return out;
+}
+
 export function clusteringCurve(panel, logMbinsEmul, logQhmfSlice) {
 	const axis = panel.log_m_axis;
 	const phi = new Float64Array(axis.length);
@@ -177,8 +222,11 @@ export function clusteringCurve(panel, logMbinsEmul, logQhmfSlice) {
 	const xi = xiFromTriangle(panel.triangle, panel.nM, panel.nR, w, w2);
 	const edges = centresToEdges(Float64Array.from(panel.rbins));
 	const { subEdges, subCorr } = refineBins(xi, edges, N_SUB);
-	const wp = wpPiecewise(Float64Array.from(panel.rpbins), subCorr, subEdges, panel.pimax);
 
+	if (panel.out_edges) {          // cross: volume-averaged xi, already the observable
+		return xiVolPiecewise(Float64Array.from(panel.out_edges), subCorr, subEdges, panel.pimax);
+	}
+	const wp = wpPiecewise(Float64Array.from(panel.rpbins), subCorr, subEdges, panel.pimax);
 	const out = new Float64Array(wp.length);
 	for (let i = 0; i < wp.length; i++) out[i] = wp[i] / panel.rpbins[i];
 	return out;

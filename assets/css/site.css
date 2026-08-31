@@ -72,6 +72,33 @@ nav.site a.link.active::after {
   height: 2px; width: 100%; background: var(--primary-bright); border-radius: 2px;
 }
 
+/* ---------- Nav dropdown ---------- */
+nav.site li.menu { position: relative; }
+nav.site .menu-trigger {
+  background: none; border: 0; padding: 0; cursor: pointer; font: inherit;
+  color: var(--muted); font-weight: 500; font-size: 0.95rem;
+  display: inline-flex; align-items: center; gap: 0.35rem;
+}
+nav.site .menu-trigger:hover { color: var(--text); }
+nav.site .menu-trigger .fa-chevron-down { font-size: 0.68em; transition: transform 0.15s ease; }
+nav.site li.menu:hover .fa-chevron-down,
+nav.site li.menu:focus-within .fa-chevron-down { transform: rotate(180deg); }
+nav.site .menu-panel {
+  position: absolute; top: calc(100% + 0.9rem); left: 50%; transform: translateX(-50%);
+  display: none; flex-direction: column; gap: 0.6rem;
+  min-width: 8.5rem; padding: 0.75rem 1rem; list-style: none;
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 0.6rem; box-shadow: var(--shadow-md);
+}
+/* bridges the gap under the trigger so the hover is not lost crossing it */
+nav.site .menu-panel::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -0.9rem; height: 0.9rem;
+}
+nav.site li.menu:hover .menu-panel,
+nav.site li.menu:focus-within .menu-panel { display: flex; }
+nav.site .menu-panel a.link { white-space: nowrap; }
+nav.site .menu-panel a.link.active::after { display: none; }   /* underline is for the bar, not the panel */
+
 /* ---------- Hero (home): generative deep-space / cosmic-web backdrop ---------- */
 header.hero {
   position: relative; text-align: center; color: #fff; overflow: hidden;
@@ -138,6 +165,20 @@ header.page-header {
 }
 header.page-header h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; letter-spacing: 0.4px; }
 header.page-header p { margin-top: 0.4rem; opacity: 0.95; font-weight: 500; }
+/* A logo carries its own wordmark, so it stands IN for the h1 text while the
+   h1 itself stays: the heading level and the accessible name are unchanged. */
+header.page-header h1.with-logo { line-height: 0; }
+header.page-header h1.with-logo img {
+  display: block; margin: 0 auto; width: min(290px, 62vw); height: auto;
+}
+@media (max-width: 640px) { header.page-header h1.with-logo img { width: 62vw; } }
+/* Sits tight under the wordmark as its caption, below the tagline in weight so
+   the hierarchy stays logo -> tagline -> aside. */
+header.page-header p.logo-caption {
+  margin-top: 0.55rem; font-size: 0.8rem; font-weight: 400;
+  font-style: italic; opacity: 0.72;
+}
+header.page-header p.logo-caption + p { margin-top: 0.75rem; }
 
 /* ---------- Layout ---------- */
 main { width: 100%; max-width: 1040px; margin: 0 auto; padding: 0 1.25rem; flex: 1 0 auto; }
@@ -323,10 +364,13 @@ table.params td:last-child { color: var(--muted); }
   cursor: pointer; font-variant-numeric: tabular-nums;
 }
 .zchip:hover { color: var(--text); }
-.zchip.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+/* Selected chips take their own redshift colour, the same rainbow_PuRd the
+   curves use, so chip and curve are matched by eye. */
+.zchip.on { background: var(--zc, var(--primary)); border-color: var(--zc, var(--primary)); color: #fff; }
+.zchip:not(.on) { border-left: 3px solid var(--zc, transparent); }
 
-.slider-row { margin-bottom: 0.85rem; }
-.slider-row label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.2rem; }
+.slider-row { margin-bottom: 0.45rem; }
+.slider-row label { display: block; font-size: 0.9rem; color: var(--text); font-weight: 500; margin-bottom: 0.1rem; }
 .slider-row input[type=range] { width: 100%; accent-color: var(--primary); }
 .slider-row output {
   display: block; text-align: right; font-size: 0.8rem; font-weight: 600;
@@ -365,3 +409,122 @@ footer.site .copyright { max-width: 1040px; margin: 1.8rem auto 0; padding-top: 
   nav.site { flex-direction: column; gap: 0.5rem; padding: 0.75rem 1rem; }
   nav.site ul { gap: 0.7rem 1.1rem; justify-content: center; font-size: 0.9rem; }
 }
+
+/* ---------- Inline SVG icons (replaces Font Awesome) ---------- */
+.icon {
+  width: 1em; height: 1em; fill: currentColor;
+  display: inline-block; vertical-align: -0.125em; flex: none;
+}
+
+/* ---------- "coming soon" chip on a section heading ---------- */
+.soon {
+  display: inline-block; vertical-align: 0.22em; margin-left: 0.55rem;
+  font-size: 0.5em; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--muted); border: 1px solid var(--border);
+  border-radius: 999px; padding: 0.2em 0.65em;
+}
+
+/* ---------- "open this explorer panel" chips ---------- */
+.panel-links { margin-top: 1rem; }
+.panel-links a {
+  display: inline-block; margin: 0.35rem 0.4rem 0 0;
+  padding: 0.3rem 0.8rem; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--card-bg);
+  font-size: 0.9rem; font-weight: 600; color: var(--primary);
+}
+.panel-links a:hover { border-color: var(--primary); text-decoration: none; }
+
+/* ---------- Tutorial: three single-panel explorers ---------- */
+.tut { margin: 2.2rem 0 2.6rem; }
+.tut h3 { font-size: 1.15rem; display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.7rem; }
+.tut h3 .step {
+  flex: none; width: 1.7rem; height: 1.7rem; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--primary); color: #fff; font-size: 0.85rem; font-weight: 700;
+}
+.tut-panel {
+  margin-top: 1rem; padding: 1rem 1.1rem 1.1rem;
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 0.9rem; box-shadow: var(--shadow-sm);
+}
+.tut-panel canvas { width: 100%; height: 300px; display: block; }
+.tut-panel .sliders { margin-top: 0.8rem; }
+.tut-panel .reset {
+  margin-top: 0.6rem; padding: 0.3rem 0.8rem; border-radius: 999px;
+  border: 1px solid var(--border); background: none; cursor: pointer;
+  font: inherit; font-size: 0.85rem; color: var(--muted);
+}
+.tut-panel .reset:hover { color: var(--text); border-color: var(--primary); }
+
+/* ---------- Interactive widgets stay light in both themes ----------
+   The plots reproduce the paper's figures, and the redshift palette
+   (tol_cmap 'rainbow_PuRd') is calibrated against a white ground, so inverting
+   them for OS dark mode makes them disagree with the paper. Canvas colours come
+   from the --plot-* tokens, which never flip; the surrounding chrome is pinned
+   here so the widget does not read as a light hole in a dark page. */
+:root {
+  --plot-bg: #ffffff;
+  --plot-ink: #1b1b1b;
+  --plot-muted: #5b6157;
+  --plot-grid: rgba(27, 27, 27, 0.10);
+}
+.explorer, .tut-panel {
+  --card-bg: #ffffff;
+  --text: #1b1b1b;
+  --muted: #5b6157;
+  --border: rgba(27, 27, 27, 0.12);
+  color: var(--text);
+  background: var(--card-bg);
+}
+.explorer canvas, .tut-panel canvas { background: var(--plot-bg); }
+.explorer .slider-row output, .tut-panel .slider-row output { color: var(--text); }
+
+/* ---------- Full-width figure (the model overview) ---------- */
+.wide-fig { margin: 0 0 1.6rem; }
+.wide-fig img { width: 100%; height: auto; display: block; border-radius: 0.6rem; }
+.wide-fig figcaption { margin-top: 0.6rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+/* ---------- Tutorial: steps 1 and 2 side by side ---------- */
+.tut-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; align-items: start; }
+.tut-row .tut { margin: 2.2rem 0 0; }
+.tut-row .tut-panel canvas { height: 260px; }
+@media (max-width: 900px) { .tut-row { grid-template-columns: 1fr; gap: 0; } }
+
+/* ---------- Tutorial sliders: label and value share a line ----------
+   The default row stacks label / track / value on three lines, which with
+   three sliders costs more vertical space than the plot above it. */
+.tut-panel .slider-row {
+  display: grid; grid-template-columns: 1fr auto;
+  column-gap: 0.6rem; align-items: baseline;
+  margin-bottom: 0.15rem;
+}
+.tut-panel .slider-row label { grid-column: 1; margin-bottom: 0; line-height: 1.3; }
+.tut-panel .slider-row output { grid-column: 2; margin-top: 0; }
+.tut-panel .slider-row input[type=range] {
+  grid-column: 1 / -1; margin: 0.1rem 0 0; height: 1rem; display: block;
+}
+.tut-panel .sliders { margin-top: 0.5rem; }
+.tut-panel { padding: 0.9rem 1rem 0.85rem; }
+.tut-panel .reset { margin-top: 0.45rem; }
+.zrow > span em { font-style: normal; opacity: 0.65; font-size: 0.9em; }
+
+/* The corner plot is the densest figure on the page: give it the full column
+   rather than the narrow floated slot the other figures use. */
+.corner-fig { margin: 1.6rem auto 2rem; max-width: 480px; }
+.corner-fig img { width: 100%; height: auto; display: block; }
+.corner-fig figcaption { margin-top: 0.7rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+/* A tutorial panel may stack two canvases sharing one set of sliders. */
+.tut-panel canvas + canvas { margin-top: 0.15rem; }
+/* the stacked pair: two shorter canvases instead of one tall panel */
+.tut-panel[data-panel~="growth"] canvas { height: 215px; }
+/* the cERDF's second panel, shown only on that tab */
+.explorer-plot canvas[data-role=canvas2] {
+  width: 100%; height: 300px; display: block; margin-top: 0.5rem;
+  background: var(--plot-bg); border-radius: 0.5rem;
+}
+.explorer-plot canvas[data-role=canvas2][hidden] { display: none; }
+
+/* ---------- Results figures ---------- */
+.result-fig { margin: 1rem 0 2rem; }
+.result-fig img { width: 100%; height: auto; display: block; border-radius: 0.5rem; }
+.result-fig figcaption { margin-top: 0.6rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }

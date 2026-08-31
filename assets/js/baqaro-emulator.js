@@ -1,11 +1,11 @@
 /**
  * BAQARO emulator, in the browser.
  *
- * A direct port of `predict.py`, the reference implementation that ships with
- * the data release. Given six parameters it returns log10 of a summary
- * statistic, in a couple of milliseconds, with no server and no dependencies.
+ * A direct port of the reference implementation, exported from the fitted
+ * emulators. Given six parameters it returns log10 of a summary statistic, in
+ * a couple of milliseconds, with no server and no dependencies.
  *
- * The arrays are float32 on the wire (see tools/export_web_emulator.py) but
+ * The arrays are float32 on the wire (exported from the fitted emulators) but
  * every arithmetic operation here is float64, because that is the only kind of
  * arithmetic JavaScript has -- reading an element out of a Float32Array widens
  * it to a double. So the only error inherited from the export is the storage

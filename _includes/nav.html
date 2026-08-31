@@ -7,7 +7,14 @@
 		<li><a class="link{% if page.active == "cv" %} active{% endif %}" href="cv.html">CV</a></li>
 		<li><a class="link{% if page.active == "research" %} active{% endif %}" href="research.html">Research</a></li>
 		<li><a class="link{% if page.active == "publications" %} active{% endif %}" href="publications.html">Publications</a></li>
-		<li><a class="link{% if page.active == "baqaro" %} active{% endif %}" href="baqaro.html">BAQARO</a></li>
-		<li><a class="link" href="thesis_webpage/">Thesis</a></li>
+		<li class="menu">
+			<button type="button" class="link menu-trigger{% if page.active == "baqaro" %} active{% endif %}" aria-haspopup="true">
+				Resources <svg class="icon" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+			</button>
+			<ul class="menu-panel">
+				<li><a class="link{% if page.active == "baqaro" %} active{% endif %}" href="baqaro.html">BAQARO</a></li>
+				<li><a class="link" href="thesis_webpage/">Ph.D. Thesis</a></li>
+			</ul>
+		</li>
 	</ul>
 </nav>

@@ -4,10 +4,9 @@
 
 version:   "1.0"
 code_url:  "https://github.com/eliapizzati/baqaro"
-docs_url:  "https://github.com/eliapizzati/baqaro/tree/main/docs"
-data_url:  ""            # DOI landing page for the data release
+data_url:  ""            # DOI landing page for the data products
 data_doi:  ""            # e.g. 10.5281/zenodo.XXXXXXX
-paper_url: ""            # arXiv abstract page — fill on submission
+paper_url: ""            # arXiv abstract page, fill on submission
 paper_title: "BAQARO: Tracing Stochastic Black Hole Growth Histories and Quasar Lightcurves in a Cosmological Context"
 paper_authors: "Elia Pizzati, Joseph F. Hennawi & Joop Schaye"
 paper_journal: "MNRAS, submitted"
@@ -18,9 +17,9 @@ paper_ads: ""            # ADS bibcode link
 #    the paper quotes M_seed at the pivot halo mass. log M_seed = log f_seed + 10.5.
 # NB single quotes: double-quoted YAML eats the backslashes in the LaTeX.
 params:
-  - { sym: '\log_{10}(M_{\rm seed}/{\rm M_\odot})', val: '4.03', prior: '[3.0, 7.0]', desc: 'seed mass at the pivot halo mass 10^10.5 M_sun' }
-  - { sym: '\sigma_{\rm seed}', val: '0.51', prior: '[0.2, 1.5]', desc: 'scatter in the seed mass at fixed halo mass [dex]' }
-  - { sym: '\log_{10}\eta_{\rm av,0}', val: '-1.24', prior: '[-2.5, -0.5]', desc: 'average accretion rate at a cold-gas supply of 1/Gyr' }
-  - { sym: '\eta_{\rm av,slope}', val: '0.83', prior: '[0.2, 2.0]', desc: 'how that average tracks the cold-gas supply' }
-  - { sym: '\sigma_{\rm acc}', val: '0.51', prior: '[0.2, 1.0]', desc: 'scatter in the accretion rate [dex]' }
-  - { sym: '\log_{10}(\tau_{\rm coherence}/{\rm yr})', val: '5.90', prior: '[3.5, 7.3]', desc: 'coherence timescale of accretion' }
+  - { sym: 'log<sub>10</sub>(<i>M</i><sub>seed</sub>/<i>M</i><sub>&#9737;</sub>)', val: '4.03', prior: '[3.0, 7.0]', desc: 'seed mass at the pivot halo mass 10^10.5 M_sun' }
+  - { sym: '<i>&sigma;</i><sub>seed</sub>', val: '0.51', prior: '[0.2, 1.5]', desc: 'scatter in the seed mass at fixed halo mass [dex]' }
+  - { sym: 'log<sub>10</sub> <i>&eta;</i><sub>av,0</sub>', val: '-1.24', prior: '[-2.5, -0.5]', desc: 'average accretion rate at a cold-gas supply of 1/Gyr' }
+  - { sym: '<i>&eta;</i><sub>av,slope</sub>', val: '0.83', prior: '[0.2, 2.0]', desc: 'how that average tracks the cold-gas supply' }
+  - { sym: '<i>&sigma;</i><sub>acc</sub>', val: '0.51', prior: '[0.2, 1.0]', desc: 'scatter in the accretion rate [dex]' }
+  - { sym: 'log<sub>10</sub>(<i>&tau;</i><sub>coherence</sub>/yr)', val: '5.90', prior: '[3.5, 7.3]', desc: 'coherence timescale of accretion' }
