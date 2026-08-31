@@ -59,7 +59,7 @@ description: BAQARO, an empirical model for supermassive black hole growth and q
 				<i>{{ site.data.baqaro.paper_title }}</i><br>
 				{{ site.data.baqaro.paper_authors }}. {{ site.data.baqaro.paper_journal }}.
 			</p>
-			{% if site.data.baqaro.paper_url %}
+			{% if site.data.baqaro.paper_url and site.data.baqaro.paper_url != "" %}
 			<a class="cta" href="{{ site.data.baqaro.paper_url }}">Read it &rarr;</a>
 			{% else %}
 			<a class="cta" href="publications.html">Submitted to MNRAS &rarr;</a>
@@ -400,15 +400,15 @@ description: BAQARO, an empirical model for supermassive black hole growth and q
 
 	<p>
 		If you use BAQARO, please cite the model paper. If you use the data products,
-		please cite its DOI as well{% if site.data.baqaro.data_doi %} (<code>{{ site.data.baqaro.data_doi }}</code>){% endif %}.
+		please cite its DOI as well{% if site.data.baqaro.data_doi and site.data.baqaro.data_doi != "" %} (<code>{{ site.data.baqaro.data_doi }}</code>){% endif %}.
 	</p>
 
 	<p>
 		<a class="btn" href="{{ site.data.baqaro.code_url }}"><svg class="icon" aria-hidden="true"><use href="#i-github"/></svg>&nbsp; Code</a>
-		{% if site.data.baqaro.data_url %}
+		{% if site.data.baqaro.data_url and site.data.baqaro.data_url != "" %}
 		<a class="btn" href="{{ site.data.baqaro.data_url }}"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg>&nbsp; Data</a>
 		{% endif %}
-		{% if site.data.baqaro.paper_url %}
+		{% if site.data.baqaro.paper_url and site.data.baqaro.paper_url != "" %}
 		<a class="btn" href="{{ site.data.baqaro.paper_url }}"><svg class="icon" aria-hidden="true"><use href="#i-file-lines"/></svg>&nbsp; Paper</a>
 		{% endif %}
 	</p>
