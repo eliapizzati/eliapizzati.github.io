@@ -515,8 +515,11 @@ footer.site .copyright { max-width: 1040px; margin: 1.8rem auto 0; padding-top: 
 .corner-fig figcaption { margin-top: 0.7rem; font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
 /* A tutorial panel may stack two canvases sharing one set of sliders. */
 .tut-panel canvas + canvas { margin-top: 0.15rem; }
-/* the stacked pair: two shorter canvases instead of one tall panel */
-.tut-panel[data-panel~="growth"] canvas { height: 215px; }
+/* the stacked pair: two shorter canvases instead of one tall panel. The
+   upper (accretion history) is context; the lower (what it builds, with
+   the Eddington-locked twin axis) carries the point, so it gets the height. */
+.tut-panel[data-panel~="growth"] canvas { height: 175px; }
+.tut-panel[data-panel~="growth"] canvas + canvas { height: 255px; }
 /* the cERDF's second panel, shown only on that tab */
 .explorer-plot canvas[data-role=canvas2] {
   width: 100%; height: 300px; display: block; margin-top: 0.5rem;

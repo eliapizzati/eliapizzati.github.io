@@ -361,24 +361,34 @@ export function growthSpec(theta) {
 	const mass = Float64Array.from(lucky.y, (g) => M_START_DEX + g);
 	const massSteady = Float64Array.from(steady.y, (g) => M_START_DEX + g);
 	// L_bol = lambda_Edd * L_Edd(M) ; log10 L_Edd/erg/s = log10 M + 38.1
+	const LOGL_EDD = 38.1;
 	const lbol = Float64Array.from(lucky.lc.y, (ly, j) =>
-		mass[j] + 38.1 + Math.log10(Math.max(lambdaEdd(Math.pow(10, ly)), 1e-12)));
+		mass[j] + LOGL_EDD + Math.log10(Math.max(lambdaEdd(Math.pow(10, ly)), 1e-12)));
 
 	const span = (arr, padLo, padHi) => {
 		let lo = Infinity, hi = -Infinity;
 		arr.forEach((v) => { if (isFinite(v)) { if (v < lo) lo = v; if (v > hi) hi = v; } });
 		return [lo - padLo, hi + padHi];
 	};
-	const [mLo, mHi] = span([...mass, ...massSteady], 0.03, 0.06);
-	const [lLo, lHi] = span(lbol, 0.3, 0.5);
+	// The two axes are LOCKED with the Eddington offset, exactly as in
+	// plotting_lightcurves_highz.py (L window = mass window + log_csi in erg/s):
+	// the L_bol curve then touches the M_BH curve wherever the object radiates
+	// at Eddington. The shared window covers the masses plus the luminosity in
+	// Eddington-mass units; dips more than 2 dex below Eddington of the current
+	// mass are allowed to clip, like the paper's fixed lambda window.
+	const massEq = Float64Array.from(lbol, (v, j) =>
+		Math.max(v - LOGL_EDD, mass[j] - 2));
+	const [mLo, mHi] = span([...mass, ...massSteady, ...massEq], 0.08, 0.1);
 
 	return {
 		xs: lucky.t, xLabel: "time  [Myr]", yLabel: "log₁₀ M_BH  [M☉]",
 		xMin: 0, xMax: W, yMin: mLo, yMax: mHi,
-		yMinR: lLo, yMaxR: lHi, yLabelR: "log₁₀ L_bol  [erg s⁻¹]", colourR: COL_LBOL,
+		yMinR: mLo + LOGL_EDD, yMaxR: mHi + LOGL_EDD,
+		yLabelR: "log₁₀ L_bol  [erg s⁻¹]", colourR: COL_LBOL,
 		curves: [
 			{ x: lucky.t, y: lbol, colour: COL_LBOL, axis: "right", label: "L_bol" },
-			{ x: steady.t, y: massSteady, colour: TOL[3], dashed: true, label: "M_BH at the average rate" },
+			{ x: steady.t, y: massSteady, colour: COL_AVG, dashed: true, width: 2.2,
+			  alpha: 0.95, label: "M_BH at the average rate" },
 			{ x: lucky.t, y: mass, colour: COL_MASS, label: "M_BH" },
 		],
 		legendLeft: true, legendCols: 3,
@@ -462,6 +472,9 @@ export function seedingSpec(theta, bhmf) {
 // Colours from plotting_lightcurves_highz.py, so the panel and the paper's
 // lightcurve figure read the same way: eta_acc grey behind, lambda_Edd purple.
 const COL_MDOT = "#a6a6a6", COL_ETA = "#5e4fa2", COL_MASS = "#a00c1d", COL_LBOL = "#06437F";
+// The "average" reference lines (running mean, long-run value, mass at the
+// average rate). TOL[3] mustard was too light to see against the noise.
+const COL_AVG = "#b8860b";
 
 export function variabilitySpec(theta) {
 	const W = 100;
@@ -484,9 +497,9 @@ export function variabilitySpec(theta) {
 		curves: [
 			{ x: cur.t, y: cur.y, colour: COL_MDOT, label: "η_acc" },
 			{ x: cur.t, y: lam, colour: COL_ETA, label: "λ_Edd" },
-			{ x: cur.t, y: mean, colour: TOL[3], label: "η_acc averaged so far" },
-			{ x: [0, W], y: [logMeanEta, logMeanEta], colour: TOL[3], dashed: true,
-			  label: "its long-run value" },
+			{ x: cur.t, y: mean, colour: COL_AVG, width: 2.6, label: "η_acc averaged so far" },
+			{ x: [0, W], y: [logMeanEta, logMeanEta], colour: COL_AVG, dashed: true,
+			  width: 2.2, alpha: 0.95, label: "its long-run value" },
 			// last, so with 5 entries over 3 columns it sits alone on the right
 			{ x: [0, W], y: [0, 0], colour: "#8b1a1a", dotted: true, label: "η_acc = 1" },
 		],

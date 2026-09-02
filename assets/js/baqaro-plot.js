@@ -243,9 +243,9 @@ export function drawPanel(canvas, spec) {
 		const xs = xsOf(c);
 		const [a, b] = c.span || [0, xs.length - 1];
 		g.strokeStyle = c.colour || TOL[i % TOL.length];
-		g.lineWidth = c.dashed ? 1.4 : 2.2;
+		g.lineWidth = c.width ?? (c.dashed ? 1.4 : 2.2);
 		g.setLineDash(c.dotted ? [1.5, 3] : c.dashed ? [5, 4] : []);
-		g.globalAlpha = c.dashed || c.dotted ? 0.55 : 1;
+		g.globalAlpha = c.alpha ?? (c.dashed || c.dotted ? 0.55 : 1);
 		g.beginPath();
 		let started = false;
 		const Yc = yOf(c);
@@ -380,9 +380,9 @@ export function drawPanel(canvas, spec) {
 				g.beginPath(); g.arc(xs0 + 12, ly, 3.4, 0, 2 * Math.PI); g.fill();
 			} else {
 				g.strokeStyle = col;
-				g.lineWidth = c.dashed || c.dotted ? 1.4 : 2.2;
+				g.lineWidth = c.width ?? (c.dashed || c.dotted ? 1.4 : 2.2);
 				g.setLineDash(c.dotted ? [1.5, 3] : c.dashed ? [5, 4] : []);
-				g.globalAlpha = c.dashed || c.dotted ? 0.6 : 1;
+				g.globalAlpha = c.alpha ?? (c.dashed || c.dotted ? 0.6 : 1);
 				g.beginPath(); g.moveTo(xs0, ly); g.lineTo(xs0 + 24, ly); g.stroke();
 				g.setLineDash([]); g.globalAlpha = 1;
 			}
