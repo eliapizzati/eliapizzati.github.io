@@ -205,12 +205,34 @@ export function growthTrack(theta, { windowMyr = 100, n = 900, logSSAR = 0.4, se
 		steadyEta = null } = {}) {
 	const lc = lightcurve(theta, { windowMyr, n, logSSAR, seed });
 	const out = new Float64Array(n);
-	const dt = windowMyr / (n - 1);
-	let lnM = 0;
+	const rate = (eta) => eta * (1 - radEfficiency(eta)) * INV_TSAL_PER_MYR;
+
+	if (steadyEta !== null) {
+		const r = rate(steadyEta);
+		for (let j = 0; j < n; j++) out[j] = (r * lc.t[j]) / Math.LN10;
+		return { t: lc.t, y: out, lc };
+	}
+
+	// Integrate over the coherence blocks that ELAPSED, not the points that
+	// happen to be plotted -- the same trap runningMean documents. Summing the
+	// 900 displayed samples caps the number of independent draws at the pixel
+	// count, so at short tau the track kept a ~6x too-large scatter around the
+	// average-rate line instead of self-averaging onto it (variance ~ tau).
+	const [eta0, etaEvol, sigma0, logTau] = theta;
+	const mu = eta0 + etaEvol * logSSAR;
+	const tauMyr = Math.max(Math.pow(10, logTau - 6), windowMyr / MAX_BLOCKS);
+	const nBlocks = Math.max(1, Math.ceil(windowMyr / tauMyr));
+
+	const cum = new Float64Array(nBlocks + 1);   // ln-growth after each block
+	for (let b = 0; b < nBlocks; b++) {
+		cum[b + 1] = cum[b] + rate(Math.pow(10, mu + sigma0 * gaussAt(b, seed))) * tauMyr;
+	}
 	for (let j = 0; j < n; j++) {
-		const eta = steadyEta === null ? Math.pow(10, lc.y[j]) : steadyEta;
-		lnM += eta * (1 - radEfficiency(eta)) * INV_TSAL_PER_MYR * dt;
-		out[j] = lnM / Math.LN10;          // ln -> log10
+		const whole = Math.min(Math.floor(lc.t[j] / tauMyr), nBlocks);
+		const frac = Math.max(0, Math.min(lc.t[j] / tauMyr - whole, 1));
+		const partial = whole < nBlocks
+			? frac * tauMyr * rate(Math.pow(10, mu + sigma0 * gaussAt(whole, seed))) : 0;
+		out[j] = (cum[whole] + partial) / Math.LN10;   // ln -> log10
 	}
 	return { t: lc.t, y: out, lc };
 }
