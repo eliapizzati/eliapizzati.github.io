@@ -370,26 +370,18 @@ export function growthSpec(theta) {
 		arr.forEach((v) => { if (isFinite(v)) { if (v < lo) lo = v; if (v > hi) hi = v; } });
 		return [lo - padLo, hi + padHi];
 	};
-	// The two axes are LOCKED with the Eddington offset, exactly as in
-	// plotting_lightcurves_highz.py (L window = mass window + log_csi in erg/s):
-	// the L_bol curve then touches the M_BH curve wherever the object radiates
-	// at Eddington. The shared window covers the masses plus the luminosity in
-	// Eddington-mass units; dips more than 2 dex below Eddington of the current
-	// mass are allowed to clip, like the paper's fixed lambda window.
-	const massEq = Float64Array.from(lbol, (v, j) =>
-		Math.max(v - LOGL_EDD, mass[j] - 2));
-	const [mLo, mHi] = span([...mass, ...massSteady, ...massEq], 0.08, 0.1);
+	const [mLo, mHi] = span([...mass, ...massSteady], 0.03, 0.06);
+	const [lLo, lHi] = span(lbol, 0.3, 0.5);
 
 	return {
 		xs: lucky.t, xLabel: "time  [Myr]", yLabel: "log₁₀ M_BH  [M☉]",
 		xMin: 0, xMax: W, yMin: mLo, yMax: mHi,
-		yMinR: mLo + LOGL_EDD, yMaxR: mHi + LOGL_EDD,
-		yLabelR: "log₁₀ L_bol  [erg s⁻¹]", colourR: COL_LBOL,
+		yMinR: lLo, yMaxR: lHi, yLabelR: "log₁₀ L_bol  [erg s⁻¹]", colourR: COL_LBOL,
 		curves: [
 			{ x: lucky.t, y: lbol, colour: COL_LBOL, axis: "right", label: "L_bol" },
-			{ x: steady.t, y: massSteady, colour: COL_AVG, dashed: true, width: 2.2,
-			  alpha: 0.95, label: "M_BH at the average rate" },
 			{ x: lucky.t, y: mass, colour: COL_MASS, label: "M_BH" },
+			{ x: steady.t, y: massSteady, colour: COL_MASS, dashed: true, width: 2.2,
+			  alpha: 0.9, label: "M_BH at the average rate" },
 		],
 		legendLeft: true, legendCols: 3,
 		title: "What that history builds",
@@ -499,9 +491,9 @@ export function variabilitySpec(theta) {
 			{ x: cur.t, y: lam, colour: COL_ETA, label: "λ_Edd" },
 			{ x: cur.t, y: mean, colour: COL_AVG, width: 2.6, label: "η_acc averaged so far" },
 			{ x: [0, W], y: [logMeanEta, logMeanEta], colour: COL_AVG, dashed: true,
-			  width: 2.2, alpha: 0.95, label: "its long-run value" },
+			  width: 2.2, alpha: 0.95, label: "its long-run value (population average)" },
 			// last, so with 5 entries over 3 columns it sits alone on the right
-			{ x: [0, W], y: [0, 0], colour: "#8b1a1a", dotted: true, label: "η_acc = 1" },
+			{ x: [0, W], y: [0, 0], colour: "#c0c0c0", dotted: true, label: "η_acc = 1" },
 		],
 		legendLeft: true, legendCols: 3,
 		padRight: 62,          // match the growth panel's right axis, so the two align
