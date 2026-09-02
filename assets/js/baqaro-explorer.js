@@ -493,7 +493,7 @@ export function variabilitySpec(theta) {
 			{ x: [0, W], y: [logMeanEta, logMeanEta], colour: COL_AVG, dashed: true,
 			  width: 2.2, alpha: 0.95, label: "its long-run value (population average)" },
 			// last, so with 5 entries over 3 columns it sits alone on the right
-			{ x: [0, W], y: [0, 0], colour: "#c0c0c0", dotted: true, label: "η_acc = 1" },
+			{ x: [0, W], y: [0, 0], colour: "#a9a9a9", dotted: true, label: "η_acc = 1" },
 		],
 		legendLeft: true, legendCols: 3,
 		padRight: 62,          // match the growth panel's right axis, so the two align
