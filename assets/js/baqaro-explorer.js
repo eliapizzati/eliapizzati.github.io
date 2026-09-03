@@ -74,6 +74,10 @@ const EMULATED = {
 // has none, because the uniqueness guard gives the z = 0.2 data to z = 0.261.
 /** Whole redshifts 1 to 6; each has a snapshot within 0.15. */
 const DEFAULT_Z = [1, 2, 3, 4, 5, 6];
+/** The QLF also opens with z = 0.3 (0.261 slice), where it has low-z data;
+ *  the cERDF and the rest keep the shared 1-6 set. Selections are remembered
+ *  PER PANEL, so toggling chips on one panel does not restyle another. */
+const DEFAULT_Z_BY_PANEL = { qlf: [0.3, 1, 2, 3, 4, 5, 6] };
 /** How many curves one panel may carry before it stops reading as a plot. */
 const MAX_Z = 7;
 const Z_AXIS = [7.315, 6.708, 6.145, 5.377, 5.024, 4.532, 3.937, 3.534,
@@ -81,7 +85,7 @@ const Z_AXIS = [7.315, 6.708, 6.145, 5.377, 5.024, 4.532, 3.937, 3.534,
 
 const state = {
 	shared: null, emus: {}, fiducialCache: {}, population: null, obs: null,
-	clustering: null, clusterZ: "4.0",
+	clustering: null, clusterZ: "2.5",
 	showObs: true,
 	panel: "qlf", theta: FIDUCIAL.slice(), zPicked: null, iThreshold: 0,
 	clusterThreshold: null, cerdfObs: null,
@@ -561,8 +565,12 @@ export async function initExplorer(root) {
 		});
 	});
 
-	state.zPicked = DEFAULT_Z.map((z) =>
+	const zIndices = (zs) => zs.map((z) =>
 		Z_AXIS.reduce((best, v, k) => (Math.abs(v - z) < Math.abs(Z_AXIS[best] - z) ? k : best), 0));
+	const zDefaultsFor = (panel) => zIndices(DEFAULT_Z_BY_PANEL[panel] || DEFAULT_Z);
+	state.zPicked = zDefaultsFor(state.panel);
+	state.zSaved = {};
+	state.zPanelOwner = state.panel;
 	// one chip per clustering panel -- a different, single-select set
 	["2.5", "4.0", "6.1"].forEach((key) => {
 		const b = document.createElement("button");
@@ -605,6 +613,14 @@ export async function initExplorer(root) {
 			root.querySelectorAll("[data-panel]").forEach((b) => b.classList.remove("on"));
 			btn.classList.add("on");
 			state.panel = btn.dataset.panel;
+			// swap in this panel's own redshift selection (kept per panel)
+			if (EMULATED[state.panel] && state.panel !== state.zPanelOwner) {
+				state.zSaved[state.zPanelOwner] = state.zPicked;
+				state.zPicked = state.zSaved[state.panel] || zDefaultsFor(state.panel);
+				state.zPanelOwner = state.panel;
+				zEl.querySelectorAll("[data-zkind=emul]").forEach((el, idx) =>
+					el.classList.toggle("on", state.zPicked.includes(idx)));
+			}
 			if (EMULATED[state.panel]) await ensureQuantity(state.panel, statusEl);
 			// the observed cERDF: 37 KB, only fetched if that panel is opened
 			if (state.panel === "cerdf" && !state.cerdfObs) {
