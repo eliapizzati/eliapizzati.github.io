@@ -522,6 +522,17 @@ footer.site .copyright { max-width: 1040px; margin: 1.8rem auto 0; padding-top: 
 .tut-panel[data-panel~="drwgrowth"] canvas { height: 175px; }
 .tut-panel[data-panel~="growth"] canvas + canvas,
 .tut-panel[data-panel~="drwgrowth"] canvas + canvas { height: 255px; }
+/* The DRW section folds away until asked for: the whole heading is the
+   toggle, and the "+" chip rotates into a x while it is open. */
+.tut-fold summary { cursor: pointer; list-style: none; }
+.tut-fold summary::-webkit-details-marker { display: none; }
+.tut-fold summary h3 { margin-bottom: 0; }
+.tut-fold[open] summary h3 { margin-bottom: 0.7rem; }
+.tut-fold summary .step { transition: transform 0.25s ease; }
+.tut-fold[open] summary .step { transform: rotate(45deg); }
+.tut-fold summary:hover .step { background: var(--primary-bright); }
+.tut-fold summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; border-radius: 0.4rem; }
+@media (prefers-reduced-motion: reduce) { .tut-fold summary .step { transition: none; } }
 /* the cERDF's second panel, shown only on that tab */
 .explorer-plot canvas[data-role=canvas2] {
   width: 100%; height: 300px; display: block; margin-top: 0.5rem;

@@ -134,6 +134,16 @@ export function initTutorial() {
 	const panels = document.querySelectorAll("[data-tutorial-panel]");
 	if (!panels.length) return;
 
+	// A panel inside a folded <details> mounts only once it is opened (a closed
+	// details never intersects). For the already-mounted case, re-dispatch
+	// resize on open: a redraw while collapsed sizes the canvas backing store
+	// to zero, and the debounced redraw restores it at the real width.
+	document.querySelectorAll("details.tut-fold").forEach((d) => {
+		d.addEventListener("toggle", () => {
+			if (d.open) window.dispatchEvent(new Event("resize"));
+		});
+	});
+
 	const mount = (el) => {
 		if (el.dataset.mounted) return;
 		el.dataset.mounted = "1";

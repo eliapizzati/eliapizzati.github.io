@@ -225,29 +225,33 @@ description: BAQARO, an empirical model for supermassive black hole growth and q
 	</section>
 
 	<section class="tut">
-		<h3><span class="step">+</span> The same physics with a real lightcurve: a damped random walk</h3>
-		<div class="research-text">
-			The lightcurve above is a poor man's one: the model redraws the rate
-			once per coherence time and holds it flat in between, because that is
-			what it can afford across two billion subhalos. But it captures the
-			key point, which is what the flickering does to the growth. To see
-			this, the two panels are repeated here for a more realistic
-			lightcurve: a <b>damped random walk</b> with the same coherence time
-			<i>&tau;</i> and the same distribution of rates. Everything about the
-			growth carries over: the average converges on the same long-run value
-			at a pace set by <i>&tau;</i>, and a lucky stretch still puts a black
-			hole well ahead of the average. Growth does not care about the
-			small-scale variability of the lightcurve; quasar <b>proximity
-			zones</b> do, and it is for those that the model's lightcurves take
-			this more realistic form, feeding the radiative-transfer simulations
-			of Pizzati et al. (in&nbsp;prep.).
-		</div>
-		<div class="tut-panel" data-tutorial-panel data-panel="drw drwgrowth">
-			<canvas height="175"></canvas>
-			<canvas height="255"></canvas>
-			<div class="sliders" data-role="sliders"></div>
-			<button type="button" class="reset" data-role="reset">Reset to the best fit</button>
-		</div>
+		<details class="tut-fold">
+			<summary>
+				<h3><span class="step">+</span> The same physics with a real lightcurve: a damped random walk</h3>
+			</summary>
+			<div class="research-text">
+				The lightcurve above is a poor man's one: the model redraws the rate
+				once per coherence time and holds it flat in between, because that is
+				what it can afford across two billion subhalos. But it captures the
+				key point, which is what the flickering does to the growth. To see
+				this, the two panels are repeated here for a more realistic
+				lightcurve: a <b>damped random walk</b> with the same coherence time
+				<i>&tau;</i> and the same distribution of rates. Everything about the
+				growth carries over: the average converges on the same long-run value
+				at a pace set by <i>&tau;</i>, and a lucky stretch still puts a black
+				hole well ahead of the average. Growth does not care about the
+				small-scale variability of the lightcurve; quasar <b>proximity
+				zones</b> do, and it is for those that the model's lightcurves take
+				this more realistic form, feeding the radiative-transfer simulations
+				of Pizzati et al. (in&nbsp;prep.).
+			</div>
+			<div class="tut-panel" data-tutorial-panel data-panel="drw drwgrowth">
+				<canvas height="175"></canvas>
+				<canvas height="255"></canvas>
+				<div class="sliders" data-role="sliders"></div>
+				<button type="button" class="reset" data-role="reset">Reset to the best fit</button>
+			</div>
+		</details>
 	</section>
 
 	<p>
