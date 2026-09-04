@@ -16,6 +16,7 @@ import { drawPanel } from "./baqaro-plot.js";
 import {
 	FIDUCIAL, LABELS, toDisplay,
 	accretionSpec, seedingSpec, variabilitySpec, growthSpec,
+	drwVariabilitySpec, drwGrowthSpec,
 } from "./baqaro-explorer.js";
 
 const BASE = "assets/emulator";
@@ -24,12 +25,14 @@ const BASE = "assets/emulator";
 // The lightcurve level comes from eta_av,0 + eta_av,slope * logSSAR with width
 // sigma_acc, and only its block length from log tau: all four matter here.
 const PARAMS = { accretion: [0, 1, 2], seeding: [4, 5], variability: [0, 1, 2, 3],
-	growth: [0, 1, 2, 3] };
+	growth: [0, 1, 2, 3], drw: [0, 1, 2, 3] };
 const SPEC = {
 	accretion: (theta, extra) => accretionSpec(theta, extra),
 	seeding: (theta, extra) => seedingSpec(theta, extra),
 	variability: (theta) => variabilitySpec(theta),
 	growth: (theta) => growthSpec(theta),
+	drw: (theta) => drwVariabilitySpec(theta),
+	drwgrowth: (theta) => drwGrowthSpec(theta),
 };
 
 /** Fetched once and shared by every instance on the page. */

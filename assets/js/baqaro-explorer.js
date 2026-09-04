@@ -15,7 +15,8 @@
 
 import { loadShared, loadQuantity, predict, outOfBounds } from "./baqaro-emulator.js";
 import { drawPanel, trustedSpan, TOL, zColour, FLOOR_MARGIN } from "./baqaro-plot.js";
-import { erdfRelation, lightcurve, runningMean, lambdaEdd, growthTrack } from "./baqaro-physics.js";
+import { erdfRelation, lightcurve, runningMean, lambdaEdd, growthTrack,
+	drwTrack, growthRatePerMyr } from "./baqaro-physics.js";
 import { loadClustering, clusteringCurve } from "./baqaro-clustering.js";
 
 const BASE = "assets/emulator";
@@ -355,6 +356,14 @@ export function accretionSpec(theta, population) {
  * the luminosities that come out of it are the ones a survey would see.
  */
 const M_START_DEX = 8.0;
+// L_bol = lambda_Edd * L_Edd(M) ; log10 L_Edd/erg/s = log10 M + 38.1
+const LOGL_EDD = 38.1;
+
+const spanPadded = (arr, padLo, padHi) => {
+	let lo = Infinity, hi = -Infinity;
+	arr.forEach((v) => { if (isFinite(v)) { if (v < lo) lo = v; if (v > hi) hi = v; } });
+	return [lo - padLo, hi + padHi];
+};
 
 export function growthSpec(theta) {
 	const W = 100, SEED = 21;   // the same realisation as the panel above
@@ -364,18 +373,11 @@ export function growthSpec(theta) {
 
 	const mass = Float64Array.from(lucky.y, (g) => M_START_DEX + g);
 	const massSteady = Float64Array.from(steady.y, (g) => M_START_DEX + g);
-	// L_bol = lambda_Edd * L_Edd(M) ; log10 L_Edd/erg/s = log10 M + 38.1
-	const LOGL_EDD = 38.1;
 	const lbol = Float64Array.from(lucky.lc.y, (ly, j) =>
 		mass[j] + LOGL_EDD + Math.log10(Math.max(lambdaEdd(Math.pow(10, ly)), 1e-12)));
 
-	const span = (arr, padLo, padHi) => {
-		let lo = Infinity, hi = -Infinity;
-		arr.forEach((v) => { if (isFinite(v)) { if (v < lo) lo = v; if (v > hi) hi = v; } });
-		return [lo - padLo, hi + padHi];
-	};
-	const [mLo, mHi] = span([...mass, ...massSteady], 0.03, 0.06);
-	const [lLo, lHi] = span(lbol, 0.3, 0.5);
+	const [mLo, mHi] = spanPadded([...mass, ...massSteady], 0.03, 0.06);
+	const [lLo, lHi] = spanPadded(lbol, 0.3, 0.5);
 
 	return {
 		xs: lucky.t, xLabel: "time  [Myr]", yLabel: "log₁₀ M_BH  [M☉]",
@@ -502,6 +504,71 @@ export function variabilitySpec(theta) {
 		legendLeft: true, legendCols: 3,
 		padRight: 62,          // match the growth panel's right axis, so the two align
 		title: `Accretion history: ${cur.nBlocks < 1 ? "less than one" : Math.round(cur.nBlocks)} independent draw${Math.round(cur.nBlocks) === 1 ? "" : "s"} in ${W} Myr`,
+	};
+}
+
+// ---------------------------------------------------------------------------
+// The DRW twin of the two panels above: identical layout, labels and colours,
+// with the block process replaced by the damped random walk (baqaro-physics.js
+// section 4). Same window, same seed constant, so the two pairs read as the
+// same experiment with one ingredient swapped.
+// ---------------------------------------------------------------------------
+
+const DRW_SEED = 21;
+
+/** ~2 significant figures, for the damping time in the panel title. */
+const fmtMyr = (v) => Number(v.toPrecision(2)).toString();
+
+export function drwVariabilitySpec(theta) {
+	const W = 100;
+	const d = drwTrack(theta, { windowMyr: W, seed: DRW_SEED });
+	const lam = Float64Array.from(d.y, (ly) => Math.log10(Math.max(lambdaEdd(Math.pow(10, ly)), 1e-10)));
+	const logMeanEta = d.mu + 0.5 * Math.LN10 * theta[2] * theta[2];
+
+	return {
+		xs: d.t, xLabel: "", yLabel: "log₁₀ η_acc ,  log₁₀ λ_Edd",
+		xMin: 0, xMax: W, yMin: -2.5, yMax: 2,
+		curves: [
+			{ x: d.t, y: d.y, colour: COL_MDOT, label: "η_acc" },
+			{ x: d.t, y: lam, colour: COL_ETA, label: "λ_Edd" },
+			{ x: d.t, y: d.mean, colour: COL_AVG, width: 2.6, label: "η_acc averaged so far" },
+			{ x: [0, W], y: [logMeanEta, logMeanEta], colour: COL_AVG, dashed: true,
+			  width: 2.2, alpha: 0.95, label: "its long-run value (population average)" },
+			// last, so with 5 entries over 3 columns it sits alone on the right
+			{ x: [0, W], y: [0, 0], colour: "#a9a9a9", dotted: true, label: "η_acc = 1" },
+		],
+		legendLeft: true, legendCols: 3,
+		padRight: 62,          // match the growth panel's right axis, so the two align
+		title: `Correlated accretion history: damping time ${fmtMyr(d.tauDrwMyr)} Myr`,
+	};
+}
+
+export function drwGrowthSpec(theta) {
+	const W = 100;
+	const d = drwTrack(theta, { windowMyr: W, seed: DRW_SEED });
+	const meanEta = Math.pow(10, d.mu + 0.5 * Math.LN10 * theta[2] * theta[2]);
+	const steadyRate = growthRatePerMyr(meanEta);
+
+	const mass = Float64Array.from(d.growth, (g) => M_START_DEX + g);
+	const massSteady = Float64Array.from(d.t, (tj) => M_START_DEX + (steadyRate * tj) / Math.LN10);
+	const lbol = Float64Array.from(d.y, (ly, j) =>
+		mass[j] + LOGL_EDD + Math.log10(Math.max(lambdaEdd(Math.pow(10, ly)), 1e-12)));
+
+	const [mLo, mHi] = spanPadded([...mass, ...massSteady], 0.03, 0.06);
+	const [lLo, lHi] = spanPadded(lbol, 0.3, 0.5);
+
+	return {
+		xs: d.t, xLabel: "time  [Myr]", yLabel: "log₁₀ M_BH  [M☉]",
+		xMin: 0, xMax: W, yMin: mLo, yMax: mHi,
+		yMinR: lLo, yMaxR: lHi, yLabelR: "log₁₀ L_bol  [erg s⁻¹]", colourR: COL_LBOL,
+		curves: [
+			{ x: d.t, y: lbol, colour: COL_LBOL, axis: "right", label: "L_bol" },
+			{ x: d.t, y: mass, colour: COL_MASS, label: "M_BH" },
+			{ x: d.t, y: massSteady, colour: COL_MASS, dashed: true, width: 2.2,
+			  alpha: 0.9, label: "M_BH at the average rate" },
+		],
+		legendLeft: true, legendCols: 3,
+		title: "What the correlated history builds",
 	};
 }
 

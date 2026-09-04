@@ -518,8 +518,10 @@ footer.site .copyright { max-width: 1040px; margin: 1.8rem auto 0; padding-top: 
 /* the stacked pair: two shorter canvases instead of one tall panel. The
    upper (accretion history) is context; the lower (what it builds, with
    the Eddington-locked twin axis) carries the point, so it gets the height. */
-.tut-panel[data-panel~="growth"] canvas { height: 175px; }
-.tut-panel[data-panel~="growth"] canvas + canvas { height: 255px; }
+.tut-panel[data-panel~="growth"] canvas,
+.tut-panel[data-panel~="drwgrowth"] canvas { height: 175px; }
+.tut-panel[data-panel~="growth"] canvas + canvas,
+.tut-panel[data-panel~="drwgrowth"] canvas + canvas { height: 255px; }
 /* the cERDF's second panel, shown only on that tab */
 .explorer-plot canvas[data-role=canvas2] {
   width: 100%; height: 300px; display: block; margin-top: 0.5rem;
