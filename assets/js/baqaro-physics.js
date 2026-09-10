@@ -125,7 +125,8 @@ export function lightcurve(theta, { windowMyr = 200, n = 900, logSSAR = 0.4, see
 	return { t, y, tauMyr, mu, nBlocks: windowMyr / tauMyr };
 }
 
-/** Blocks are capped so a 3 kyr coherence time cannot lock up the page. */
+/** Blocks are capped so a very short coherence time cannot lock up the page
+ *  (the sliders stop at 10 kyr, where the cap is far from binding). */
 const MAX_BLOCKS = 250000;
 
 /**

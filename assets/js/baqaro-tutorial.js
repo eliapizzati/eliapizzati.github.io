@@ -14,7 +14,7 @@
 
 import { drawPanel } from "./baqaro-plot.js";
 import {
-	FIDUCIAL, LABELS, toDisplay,
+	FIDUCIAL, LABELS, toDisplay, sliderRange,
 	accretionSpec, seedingSpec, variabilitySpec, growthSpec,
 	drwVariabilitySpec, drwGrowthSpec,
 } from "./baqaro-explorer.js";
@@ -80,7 +80,7 @@ export async function initTutorialPanel(root) {
 
 	PARAMS[panel].forEach((i) => {
 		const name = shared.param_names[i];
-		const [lo, hi] = shared.param_ranges[i];
+		const [lo, hi] = sliderRange(name, shared.param_ranges[i]);
 		const show = (v) => toDisplay(name, v).toFixed(3);
 		const row = document.createElement("div");
 		row.className = "slider-row";

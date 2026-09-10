@@ -34,6 +34,25 @@ export const LABELS = {
 };
 
 /**
+ * Where a slider may go, when that is narrower than the training box.
+ *
+ * The training design reaches log τ = 3.5, but the emulated statistics below
+ * log τ = 4.0 do not hold up and are not worth showing (that corner of the
+ * box is also where the forward model's sub-step count runs far past the cap
+ * of the transfer table it samples from, a known residual), so the τ slider
+ * stops at 4.0. The tutorial's lightcurve panels share the floor: they take
+ * log τ from the same slider, and a 3 kyr coherence time is not a regime the
+ * model is used in. The manifest's `param_ranges` keeps its full extent: it
+ * is the training box, and outOfBounds() still reports against it.
+ */
+export const SLIDER_FLOOR = { logtcoherence: 4.0 };
+
+/** The [lo, hi] a slider for parameter `name` spans, given its training range. */
+export function sliderRange(name, [lo, hi]) {
+	return [Math.max(lo, SLIDER_FLOOR[name] ?? -Infinity), hi];
+}
+
+/**
  * Display transforms between the code's parameters and the paper's.
  *
  * The seeding parameter is the same relation written two ways. The code stores
@@ -614,7 +633,7 @@ export async function initExplorer(root) {
 
 	const rows = [];
 	state.shared.paramNames.forEach((name, i) => {
-		const [lo, hi] = state.shared.paramRanges[i];
+		const [lo, hi] = sliderRange(name, state.shared.paramRanges[i]);
 		const show = (v) => toDisplay(name, v).toFixed(3);
 		const row = document.createElement("div");
 		row.className = "slider-row";

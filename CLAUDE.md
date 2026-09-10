@@ -70,6 +70,18 @@ can't run full Jekyll; GitHub Pages Ruby 3.x builds fine) and by checking the li
 - Convert remaining research figures to WebP; lazy-load images.
 - Optional ADS API auto-fetch script to regenerate `_data/publications.yml`.
 
+## BAQARO page (`baqaro.html` + `assets/js/baqaro-*.js` + `assets/emulator/`)
+- Every slider (main explorer AND the tutorial panels, incl. the two lightcurve
+  panels) takes its bounds from `shared.param_ranges` in `assets/emulator/emulators.json`,
+  which is the emulators' TRAINING box and is what `outOfBounds()` warns against.
+  Narrower display limits live in ONE place, `SLIDER_FLOOR` / `sliderRange()` in
+  `assets/js/baqaro-explorer.js`, imported by `baqaro-tutorial.js`. Since 2026-09-10
+  log τ starts at **4.0** (training box 3.5): the emulated statistics below that are
+  not reliable. Never narrow `param_ranges` itself — the exporter
+  (`swift_smbh_evolution/scripts/export_web_emulator.py`) would regenerate it anyway.
+  Deliberately NOT mentioned in the page prose; `_data/baqaro.yml` keeps the paper's
+  priors verbatim.
+
 ## How to preview locally
 No Jekyll needed: `ruby /tmp/jekyll-verify/render.rb` → `_preview/` (gitignored), then
 `cd _preview && python3 -m http.server`. With a modern Ruby: `bundle install && bundle exec jekyll serve`.
