@@ -6,7 +6,7 @@ version:   "1.0"
 code_url:  "https://github.com/eliapizzati/baqaro"
 data_url:  ""            # DOI landing page for the data products
 data_doi:  ""            # e.g. 10.5281/zenodo.XXXXXXX
-paper_url: ""            # arXiv abstract page, fill on submission
+paper_url: "https://arxiv.org/abs/2609.12061"
 paper_title: "BAQARO: Tracing Stochastic Black Hole Growth Histories and Quasar Lightcurves in a Cosmological Context"
 paper_authors: "Elia Pizzati, Joseph F. Hennawi & Joop Schaye"
 paper_journal: "MNRAS, submitted"
