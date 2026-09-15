@@ -260,10 +260,17 @@ export function growthTrack(theta, { windowMyr = 100, n = 900, logSSAR = 0.4, se
 // correlation than a block process of the same tau (a factor 2 in log space;
 // R(sigma) after the exponential map to eta), so a DRW at the raw tau would
 // grow slightly fatter bright tails. Setting tau_drw = tau / R(sigma)
-// (~0.72 tau at the best-fit sigma) makes the walk bank the same integrated
+// (0.7226 tau at the best-fit sigma) makes the walk bank the same integrated
 // variability -- and therefore build the same black hole masses -- as the
-// block model it replaces. That calibration is applied here too, and the
-// growth panel is comparable to the block one above it because of it.
+// block model it replaces, and the growth panel is comparable to the block
+// one above it because of it.
+//
+// The factor is FROZEN at the best-fit sigma here, as it is in the model's
+// own DRW lightcurves. Evaluating R at the slider's sigma made the sigma
+// slider move the damping time (0.53 tau at sigma 0.2, 2.1 tau at sigma 1)
+// and, through the fine step, re-draw the noise field, so a wider scatter
+// looked like a slower and different walk. With the factor fixed, sigma only
+// scales the same walk about its mean, which is what the slider means.
 // ---------------------------------------------------------------------------
 
 /** OU/block integrated-autocovariance ratio in eta-space (DRW_DELTA_T_TAU.md). */
@@ -291,10 +298,15 @@ export function areaRatioR(sigma) {
  * step cap. Integrating on this grid rather than over plotted points avoids
  * the pixel-capped-draws trap documented at runningMean.
  */
+/** sigma_acc of the best fit: the one place the DRW calibration is evaluated. */
+const SIGMA_FIDUCIAL = 0.507524;
+/** tau_drw / tau, the model's own value (1 / R at the best-fit sigma). */
+export const TAU_DRW_SCALE = 1 / areaRatioR(SIGMA_FIDUCIAL);
+
 export function drwTrack(theta, { windowMyr = 100, n = 900, logSSAR = 0.4, seed = 1 } = {}) {
 	const [eta0, etaEvol, sigma0, logTau] = theta;
 	const mu = eta0 + etaEvol * logSSAR;
-	const tauDrw = Math.pow(10, logTau - 6) / areaRatioR(sigma0);
+	const tauDrw = Math.pow(10, logTau - 6) * TAU_DRW_SCALE;
 	const dt = Math.max(Math.min(tauDrw / 8, windowMyr / (n - 1)), windowMyr / MAX_BLOCKS);
 	const K = Math.ceil(windowMyr / dt);
 	const rho = Math.exp(-dt / tauDrw);
