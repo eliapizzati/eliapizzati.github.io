@@ -95,9 +95,10 @@ const EMULATED = {
 /** Whole redshifts 1 to 6; each has a snapshot within 0.15. */
 const DEFAULT_Z = [1, 2, 3, 4, 5, 6];
 /** The QLF also opens with z = 0.3 (0.261 slice), where it has low-z data;
+ *  the BHMF opens with z = 0, the curve its local compilation is set against;
  *  the cERDF and the rest keep the shared 1-6 set. Selections are remembered
  *  PER PANEL, so toggling chips on one panel does not restyle another. */
-const DEFAULT_Z_BY_PANEL = { qlf: [0.3, 1, 2, 3, 4, 5, 6] };
+const DEFAULT_Z_BY_PANEL = { qlf: [0.3, 1, 2, 3, 4, 5, 6], bhmf: [0, 1, 2, 3, 4, 5, 6] };
 /** The local BHMF compilation: the plots' own muted grey, not a redshift colour,
  *  so it reads as background whichever z = 0 chip is picked. */
 const LOCAL_BHMF_GREY = "#5b6157";
