@@ -98,6 +98,9 @@ const DEFAULT_Z = [1, 2, 3, 4, 5, 6];
  *  the cERDF and the rest keep the shared 1-6 set. Selections are remembered
  *  PER PANEL, so toggling chips on one panel does not restyle another. */
 const DEFAULT_Z_BY_PANEL = { qlf: [0.3, 1, 2, 3, 4, 5, 6] };
+/** The local BHMF compilation: the plots' own muted grey, not a redshift colour,
+ *  so it reads as background whichever z = 0 chip is picked. */
+const LOCAL_BHMF_GREY = "#5b6157";
 /** How many curves one panel may carry before it stops reading as a plot. */
 const MAX_Z = 7;
 const Z_AXIS = [7.315, 6.708, 6.145, 5.377, 5.024, 4.532, 3.937, 3.534,
@@ -202,6 +205,17 @@ function emulatedSpec(emu) {
 	});
 	spec.points.forEach((pt) => pt.y.forEach((v) => { if (isFinite(v) && v > top) top = v; }));
 	spec.yMax = Math.max(cfg.yMax, Math.ceil((top + 0.25) * 2) / 2);
+
+	// The local (z ~ 0) mass function, whatever redshifts are picked: the end
+	// point the mass assembly has to reach. One faint band per determination,
+	// so where they agree the grey deepens. Added after the axis is sized: a
+	// background must not push the frame.
+	const local = emu.name === "bhmf" && state.obs && state.obs.bhmf_local;
+	if (local && local.length) {
+		spec.bands = local.map((d) => ({ x: d.x, lo: d.lo, hi: d.hi,
+			colour: LOCAL_BHMF_GREY, alpha: 0.12 }));
+		spec.curves.push({ label: "z ≈ 0 data", colour: LOCAL_BHMF_GREY, swatch: true });
+	}
 
 	return spec;
 }

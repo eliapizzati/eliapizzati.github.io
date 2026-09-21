@@ -119,6 +119,8 @@ export function trustedSpan(vals, floor,
  * spec = {
  *   xs, xLabel, yLabel, xMin, xMax, yMin, yMax,
  *   curves: [{ x?, y, label?, colour?, dashed?, span? }],
+ *           (no y: a legend-only entry, drawn as a dot with marker, a filled
+ *           patch with swatch, else a line)
  *   bands:  [{ x?, lo, hi, colour?, alpha? }],
  *   points: [{ x, y, colour?, label? }],
  *   vlines: [{ x, label?, colour? }],
@@ -378,6 +380,10 @@ export function drawPanel(canvas, spec) {
 			if (c.marker) {                     // a series drawn as points, not a line
 				g.fillStyle = col;
 				g.beginPath(); g.arc(xs0 + 12, ly, 3.4, 0, 2 * Math.PI); g.fill();
+			} else if (c.swatch) {              // stands for a shaded band
+				g.fillStyle = col; g.globalAlpha = 0.3;
+				g.fillRect(xs0, ly - 5, 24, 10);
+				g.globalAlpha = 1;
 			} else {
 				g.strokeStyle = col;
 				g.lineWidth = c.width ?? (c.dashed || c.dotted ? 1.4 : 2.2);

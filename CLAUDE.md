@@ -81,6 +81,11 @@ can't run full Jekyll; GitHub Pages Ruby 3.x builds fine) and by checking the li
   (`swift_smbh_evolution/scripts/export_web_emulator.py`) would regenerate it anyway.
   Deliberately NOT mentioned in the page prose; `_data/baqaro.yml` keeps the paper's
   priors verbatim.
+- `assets/emulator/obs_data.json` is written by `swift_smbh_evolution/scripts/export_web_obsdata.py`
+  (`--out` this directory); edit the exporter, not the JSON. Since 2026-09-21 the BHMF panel
+  shows only the local z ≈ 0 compilation (`bhmf_local`, five determinations, one grey band
+  each, behind every redshift, clipped as in the paper's local-BHMF panel); the z = 4–6
+  active BHMFs are no longer exported, so `bhmf` is empty.
 
 ## How to preview locally
 No Jekyll needed: `ruby /tmp/jekyll-verify/render.rb` → `_preview/` (gitignored), then
